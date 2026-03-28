@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <!-- Init dark mode before CSS loads to prevent flash -->
+  <script>
+    (function() {
+      var saved = localStorage.getItem('theme');
+      var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', saved || (dark ? 'dark' : 'light'));
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading… — The Unconscious Consumer</title>
+  <meta name="description" content="Exploring the hidden forces that shape consumer behaviour — psychology, behavioural economics, and UX by Dr. Adam Spadaro." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-main">The Unconscious Consumer</span>
+        <span class="logo-sub">by Dr. Adam Spadaro</span>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <a href="/" class="nav-link">All Articles</a>
+        <a href="/?filter=consumer-psychology" class="nav-link">Consumer Psychology</a>
+        <a href="/?filter=behavioural-economics" class="nav-link">Behavioural Economics</a>
+        <a href="/?filter=user-experience" class="nav-link">User Experience</a>
+        <a href="/?filter=undercurrents" class="nav-link">Undercurrents</a>
+        <a href="/#about" class="nav-link">About</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          Subscribe
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <script src="articles-data.js"></script>
+
+  <!-- ===== ARTICLE ===== -->
+  <main class="article-page-main">
+    <div class="article-container">
+
+      <!-- Article content injected here -->
+      <div id="article-content" class="article-content-wrap"></div>
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-main">The Unconscious Consumer</span>
+        <p>Exploring the hidden forces that shape every decision we make.</p>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/in/adamspadaro/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" aria-label="Substack">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Categories</h4>
+          <a href="/">Consumer Psychology</a>
+          <a href="/">Behavioural Economics</a>
+          <a href="/">User Experience</a>
+          <a href="/">Undercurrents</a>
+        </div>
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="/#about">About Adam</a>
+          <a href="/#reading">Reading List</a>
+          <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener">Substack</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© 2024 The Unconscious Consumer · Dr. Adam Spadaro</span>
+        <span>Built with ♥ for mindful consumption</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== DARK MODE TOGGLE =====
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // ===== HEADER SCROLL =====
+    var header = document.getElementById('site-header');
+    window.addEventListener('scroll', function() {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // ===== MOBILE MENU =====
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      document.body.classList.toggle('mobile-nav-open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!header.contains(e.target)) {
+        document.body.classList.remove('mobile-nav-open');
+      }
+    });
+
+    // ===== CATEGORY HELPERS =====
+    var CAT_LABELS = {
+      'consumer-psychology': 'Consumer Psychology',
+      'behavioural-economics': 'Behavioural Economics',
+      'user-experience': 'User Experience',
+      'undercurrents': 'Undercurrents'
+    };
+    var CAT_CLASSES = {
+      'consumer-psychology': 'tag-cp',
+      'behavioural-economics': 'tag-be',
+      'user-experience': 'tag-ux',
+      'undercurrents': 'tag-uc'
+    };
+
+    // ===== RENDER =====
+    function renderArticle(article) {
+      document.title = article.title + ' — The Unconscious Consumer';
+      document.querySelector('meta[name="description"]').setAttribute('content', article.excerpt);
+
+      var tagClass = CAT_CLASSES[article.category] || 'tag-cp';
+      var tagLabel = CAT_LABELS[article.category] || article.category;
+
+      var bodySection;
+      if (article.bodyHtml) {
+        bodySection = '<div class="article-body">' + article.bodyHtml + '</div>';
+      } else {
+        // No local content — show Substack subscribe CTA
+        var substackLink = article.substackUrl || 'https://theunconsciousconsumer.substack.com';
+        bodySection = [
+          '<div class="article-subscribe-cta">',
+          '  <div class="subscribe-cta-inner">',
+          '    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="substack-icon-lg"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>',
+          '    <h2>Read this on Substack</h2>',
+          '    <p>This article is published as part of The Unconscious Consumer newsletter on Substack — where new essays land directly in your inbox every week.</p>',
+          '    <a href="' + substackLink + '" target="_blank" rel="noopener" class="btn btn-substack-large">',
+          '      Read on Substack →',
+          '    </a>',
+          '    <span class="substack-note">Free to subscribe · No spam · Unsubscribe anytime</span>',
+          '  </div>',
+          '</div>'
+        ].join('\n');
+      }
+
+      document.getElementById('article-content').innerHTML = [
+        '<div class="article-header">',
+        '  <a href="/" class="article-back">← All Articles</a>',
+        '  <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
+        '  <h1 class="article-title">' + article.emoji + ' ' + article.title + '</h1>',
+        '  <p class="article-excerpt">' + article.excerpt + '</p>',
+        '  <div class="article-meta-row">',
+        '    <span class="article-date">' + article.date + '</span>',
+        '    <span class="article-dot">·</span>',
+        '    <span class="article-read-time">' + article.readTime + '</span>',
+        '  </div>',
+        '</div>',
+        bodySection,
+        article.bodyHtml ? [
+          '<div class="article-footer-nav">',
+          '  <a href="/" class="btn btn-outline">← Back to All Articles</a>',
+          '  <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">',
+          '    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>',
+          '    Subscribe for more',
+          '  </a>',
+          '</div>'
+        ].join('\n') : ''
+      ].join('\n');
+
+    }
+
+    // ===== LOAD ARTICLE =====
+    var slug = new URLSearchParams(window.location.search).get('slug');
+
+    if (!slug) {
+      window.location.href = '/';
+    } else {
+      var article = ARTICLES_DATA.find(function(a) { return a.slug === slug; });
+      if (!article) {
+        window.location.href = '/';
+      } else if (!article.bodyHtml && article.substackUrl) {
+        window.location.href = article.substackUrl;
+      } else {
+        renderArticle(article);
+      }
+    }
+  </script>
+
+</body>
+</html>

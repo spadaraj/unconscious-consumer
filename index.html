@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Unconscious Consumer</title>
+  <meta name="description" content="Exploring the hidden forces that shape consumer behaviour — psychology, behavioural economics, and UX by Dr. Adam Spadaro." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <span class="logo-main">The Unconscious Consumer</span>
+        <span class="logo-sub">by Dr. Adam Spadaro</span>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <a href="#articles" class="nav-link" data-filter="all">All Articles</a>
+        <a href="#articles" class="nav-link" data-filter="consumer-psychology">Consumer Psychology</a>
+        <a href="#articles" class="nav-link" data-filter="behavioural-economics">Behavioural Economics</a>
+        <a href="#articles" class="nav-link" data-filter="user-experience">User Experience</a>
+        <a href="#articles" class="nav-link" data-filter="undercurrents">Undercurrents</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          Subscribe
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Consumer Psychology · Behavioural Economics · UX</span>
+        <h1 class="hero-title">Understanding the <em>invisible forces</em> shaping every decision you make</h1>
+        <p class="hero-desc">Behavioural science meets everyday life. Explore how psychology, design, and economics quietly steer what we buy, click, and believe — and what it means for brands and people.</p>
+        <div class="hero-cta">
+          <a href="#articles" class="btn btn-primary">Read the Articles</a>
+          <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+            Join on Substack
+          </a>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>15+</strong>
+            <span>Years Research</span>
+          </div>
+          <div class="hero-meta-divider"></div>
+          <div class="hero-meta-item">
+            <strong>Ph.D.</strong>
+            <span>Cognitive Psychology</span>
+          </div>
+          <div class="hero-meta-divider"></div>
+          <div class="hero-meta-item">
+            <strong>HubSpot</strong>
+            <span>Principal UX Researcher</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card-stack">
+          <div class="hero-card hero-card-3">
+            <span class="card-tag tag-ux">User Experience</span>
+            <p>Behind Dark Patterns: Unpacking Digital Deceptions</p>
+          </div>
+          <div class="hero-card hero-card-2">
+            <span class="card-tag tag-be">Behavioural Economics</span>
+            <p>Nudge Theory for Climate Action</p>
+          </div>
+          <div class="hero-card hero-card-1">
+            <span class="card-tag tag-cp">Consumer Psychology</span>
+            <p>The Rise of the Skeptical Shopper</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED ARTICLES ===== -->
+  <section class="featured-section" id="featured">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Editor's Pick</span>
+        <h2 class="section-title">Featured Articles</h2>
+      </div>
+      <div class="featured-grid">
+        <article class="featured-card featured-card-large">
+          <div class="featured-card-img" style="background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);">
+            <div class="featured-card-img-text">🧬</div>
+          </div>
+          <div class="featured-card-body">
+            <span class="card-tag tag-cp">Consumer Psychology</span>
+            <h3 class="featured-card-title">From Page to Practice: Wearing Our Genes on Our Sleeves with 'Spent'</h3>
+            <p class="featured-card-excerpt">Geoffrey Miller's evolutionary lens on modern shopping reveals how ancient biological signals quietly guide our purchasing decisions — from luxury brands to status symbols.</p>
+            <div class="card-footer">
+              <span class="card-date">Feb 12, 2024</span>
+              <a href="#" class="card-read-more">Read Article →</a>
+            </div>
+          </div>
+        </article>
+        <div class="featured-side">
+          <article class="featured-card featured-card-small">
+            <div class="featured-card-body">
+              <span class="card-tag tag-cp">Consumer Psychology</span>
+              <h3 class="featured-card-title">Is This Legit? The Rise of the Skeptical Shopper</h3>
+              <p class="featured-card-excerpt">Five major trends driving consumer skepticism — from misinformation to ethical consumption demands.</p>
+              <div class="card-footer">
+                <span class="card-date">Aug 12, 2023</span>
+                <a href="#" class="card-read-more">Read →</a>
+              </div>
+            </div>
+          </article>
+          <article class="featured-card featured-card-small">
+            <div class="featured-card-body">
+              <span class="card-tag tag-cp">Consumer Psychology</span>
+              <h3 class="featured-card-title">Less is More: Unpacking the Power of Scarcity Bias</h3>
+              <p class="featured-card-excerpt">How scarcity bias operates unconsciously and its ethical implications for modern marketing.</p>
+              <div class="card-footer">
+                <span class="card-date">Aug 4, 2023</span>
+                <a href="#" class="card-read-more">Read →</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SUBSTACK BANNER ===== -->
+  <section class="substack-banner">
+    <div class="container substack-inner">
+      <div class="substack-text">
+        <div class="substack-logo-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          <span>Now on Substack</span>
+        </div>
+        <h2>Get the latest insights delivered to your inbox</h2>
+        <p>Join readers who explore the psychology of everyday decisions — weekly essays, the Undercurrents trend series, and deep-dives into behavioural science.</p>
+      </div>
+      <div class="substack-actions">
+        <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack-large">
+          Subscribe on Substack — It's Free
+        </a>
+        <span class="substack-note">No spam. Unsubscribe anytime.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ALL ARTICLES (INFINITE SCROLL) ===== -->
+  <section class="articles-section" id="articles">
+    <div class="container">
+      <div class="section-header articles-header">
+        <div>
+          <span class="section-label">Archive</span>
+          <h2 class="section-title">All Articles</h2>
+        </div>
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="consumer-psychology">Consumer Psychology</button>
+          <button class="filter-btn" data-filter="behavioural-economics">Behavioural Economics</button>
+          <button class="filter-btn" data-filter="user-experience">User Experience</button>
+          <button class="filter-btn" data-filter="undercurrents">Undercurrents</button>
+        </div>
+      </div>
+
+      <div class="articles-grid" id="articles-grid">
+        <!-- Articles injected by JS -->
+      </div>
+
+      <div class="load-more-zone" id="load-more-zone">
+        <div class="loader" id="loader">
+          <div class="loader-dot"></div>
+          <div class="loader-dot"></div>
+          <div class="loader-dot"></div>
+        </div>
+        <p class="no-more-articles" id="no-more-msg" style="display:none;">You've read everything — for now.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about-section" id="about">
+    <div class="container about-inner">
+      <div class="about-image-col">
+        <div class="about-avatar">
+          <div class="about-avatar-placeholder">AS</div>
+        </div>
+        <div class="about-credentials">
+          <div class="credential-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>Ph.D. Cognitive Psychology</span>
+          </div>
+          <div class="credential-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <span>Principal UX Researcher, HubSpot</span>
+          </div>
+          <div class="credential-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            <span>15+ Years in Behavioural Research</span>
+          </div>
+          <div class="credential-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l16 16M4 20L20 4"/></svg>
+            <span>CBC National · Huffington Post</span>
+          </div>
+        </div>
+        <div class="about-social">
+          <a href="https://www.linkedin.com/in/adamspadaro/" target="_blank" rel="noopener" class="social-link social-linkedin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="social-link social-substack">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+            Substack
+          </a>
+        </div>
+      </div>
+      <div class="about-text-col">
+        <span class="section-label">About</span>
+        <h2 class="about-title">Connecting the dots between psychology, technology, and the invisible forces shaping our choices</h2>
+        <div class="about-body">
+          <p>I'm Dr. Adam Spadaro — a cognitive psychologist and UX researcher obsessed with one question: <em>why do people do what they do?</em></p>
+          <p>After more than 15 years bridging human behaviour and product strategy, I've learned that the most powerful influences on our decisions are the ones we never notice. The default setting. The colour of a button. The way scarcity is framed. These invisible design nudges shape billions of consumer choices every day.</p>
+          <p>As Principal UX Researcher at HubSpot — leading research across Growth and AI divisions — and through prior roles at Shopify and Super.com, I've had a front-row seat to how behavioural science translates into real product outcomes. My work is about turning research into strategy: helping teams build the <em>right</em> thing, not just build things right.</p>
+          <p>This publication is where I think out loud. Expect deep-dives into consumer psychology, honest critiques of dark patterns, behavioural economics applied to real decisions, and a weekly trend series — <strong>Undercurrents</strong> — on what's quietly reshaping culture and commerce.</p>
+          <p>My work has been featured on <strong>CBC's The National</strong>, <strong>The Huffington Post</strong>, and in peer-reviewed scientific journals.</p>
+        </div>
+        <div class="about-highlights">
+          <div class="highlight-item">
+            <span class="highlight-icon">🔬</span>
+            <div>
+              <strong>Research-led</strong>
+              <p>Every piece is grounded in peer-reviewed science and real-world application.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">🧠</span>
+            <div>
+              <strong>Behavioural Science</strong>
+              <p>Cognitive psychology meets product strategy, UX, and consumer culture.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">⚖️</span>
+            <div>
+              <strong>Ethically minded</strong>
+              <p>Exploring not just how influence works, but whether it should.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== READING LIST ===== -->
+  <section class="books-section" id="reading">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Recommended Reading</span>
+        <h2 class="section-title">The Bookshelf</h2>
+        <p class="section-desc">The books that shaped how I think about consumer behaviour, cognition, and design.</p>
+      </div>
+      <div class="books-grid">
+        <div class="book-card">
+          <div class="book-spine" style="background: linear-gradient(160deg, #1a3a5c, #2d6a9f);">
+            <span class="book-spine-title">Thinking, Fast and Slow</span>
+          </div>
+          <div class="book-info">
+            <h3>Thinking, Fast and Slow</h3>
+            <p class="book-author">Daniel Kahneman</p>
+            <p class="book-desc">The definitive guide to the two systems driving our decisions — and why we're far less rational than we think.</p>
+          </div>
+        </div>
+        <div class="book-card">
+          <div class="book-spine" style="background: linear-gradient(160deg, #2d4a1e, #4a7c2f);">
+            <span class="book-spine-title">Nudge</span>
+          </div>
+          <div class="book-info">
+            <h3>Nudge</h3>
+            <p class="book-author">Richard H. Thaler & Cass R. Sunstein</p>
+            <p class="book-desc">How small design choices in our environment can steer behaviour toward better outcomes — without removing freedom of choice.</p>
+          </div>
+        </div>
+        <div class="book-card">
+          <div class="book-spine" style="background: linear-gradient(160deg, #4a1a1a, #8b3535);">
+            <span class="book-spine-title">Strangers to Ourselves</span>
+          </div>
+          <div class="book-info">
+            <h3>Strangers to Ourselves</h3>
+            <p class="book-author">Timothy D. Wilson</p>
+            <p class="book-desc">A compelling exploration of the adaptive unconscious — the vast mental processes that operate below our awareness and shape our lives.</p>
+          </div>
+        </div>
+        <div class="book-card">
+          <div class="book-spine" style="background: linear-gradient(160deg, #3a1a4a, #6b35a0);">
+            <span class="book-spine-title">Spent</span>
+          </div>
+          <div class="book-info">
+            <h3>Spent</h3>
+            <p class="book-author">Geoffrey Miller</p>
+            <p class="book-desc">An evolutionary psychologist's take on consumerism — how ancient instincts for signalling fitness drive modern purchasing behaviour.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-main">The Unconscious Consumer</span>
+        <p>Exploring the hidden forces that shape every decision we make.</p>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/in/adamspadaro/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" aria-label="Substack">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Categories</h4>
+          <a href="#articles">Consumer Psychology</a>
+          <a href="#articles">Behavioural Economics</a>
+          <a href="#articles">User Experience</a>
+          <a href="#articles">Undercurrents</a>
+        </div>
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="#about">About Adam</a>
+          <a href="#reading">Reading List</a>
+          <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener">Substack</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© 2024 The Unconscious Consumer · Dr. Adam Spadaro</span>
+        <span>Built with ♥ for mindful consumption</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

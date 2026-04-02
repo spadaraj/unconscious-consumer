@@ -59,7 +59,7 @@ function createArticleCard(article) {
     <div class="article-card-accent" style="background: ${article.accentColor};"></div>
     <div class="article-card-body">
       <span class="card-tag ${tag.cls}">${tag.label}</span>
-      <h3 class="article-card-title">${article.emoji} ${article.title}</h3>
+      <h3 class="article-card-title">${article.title}</h3>
       <p class="article-card-excerpt">${article.excerpt}</p>
       <div class="article-card-meta">
         <span class="article-card-date">${article.date} · ${article.readTime}</span>

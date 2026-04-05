@@ -207,7 +207,7 @@ themeToggle.addEventListener('click', () => {
   localStorage.setItem('theme', next);
 });
 
-// ===== HEADER COLLAPSE ON SCROLL =====
+// ===== HEADER SHRINK ON SCROLL =====
 let lastScrollY = 0;
 window.addEventListener('scroll', () => {
   const currentScrollY = window.scrollY;
@@ -218,11 +218,11 @@ window.addEventListener('scroll', () => {
     header.classList.remove('scrolled');
   }
 
-  // Hide header on scroll down, show on scroll up
+  // Shrink header on scroll down, expand on scroll up
   if (currentScrollY > lastScrollY && currentScrollY > 100) {
-    header.classList.add('hidden');
+    header.classList.add('shrink');
   } else {
-    header.classList.remove('hidden');
+    header.classList.remove('shrink');
   }
 
   lastScrollY = currentScrollY;

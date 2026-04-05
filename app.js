@@ -12,6 +12,7 @@ let displayedCount = 0;
 const BATCH_SIZE = 6;
 let isLoading = false;
 let allLoaded = false;
+let searchQuery = '';
 
 // ===== DOM REFS =====
 const grid = document.getElementById('articles-grid');
@@ -19,8 +20,12 @@ const loader = document.getElementById('loader');
 const noMoreMsg = document.getElementById('no-more-msg');
 const loadMoreZone = document.getElementById('load-more-zone');
 const themeToggle = document.getElementById('theme-toggle');
-const menuToggle = document.getElementById('menu-toggle');
 const header = document.getElementById('site-header');
+const discoveryBar = document.getElementById('discovery-bar');
+const discoveryPills = document.querySelectorAll('.discovery-pill:not(.discovery-search-toggle)');
+const discoverySearchToggle = document.getElementById('discovery-search-toggle');
+const discoverySearchWrapper = document.getElementById('discovery-search-wrapper');
+const discoverySearchInput = document.getElementById('discovery-search-input');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const navLinks = document.querySelectorAll('.nav-link[data-filter]');
 
@@ -46,8 +51,20 @@ function getCategoryTag(cat) {
 }
 
 function getFilteredArticles() {
-  if (currentFilter === 'all') return ARTICLES;
-  return ARTICLES.filter(a => a.category === currentFilter);
+  let filtered = ARTICLES;
+
+  // Apply search filter if active
+  if (searchQuery.trim()) {
+    filtered = filtered.filter(a =>
+      a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  } else if (currentFilter !== 'all') {
+    // Apply category filter only if not searching
+    filtered = filtered.filter(a => a.category === currentFilter);
+  }
+
+  return filtered;
 }
 
 function createArticleCard(article) {
@@ -140,6 +157,18 @@ filterBtns.forEach(btn => {
     currentFilter = filter;
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+
+    // Update discovery pills
+    discoveryPills.forEach(p => {
+      p.classList.toggle('active', p.dataset.filter === filter);
+    });
+
+    // Close search if open
+    if (discoverySearchWrapper.classList.contains('active')) {
+      discoverySearchWrapper.classList.remove('active');
+      discoverySearchInput.value = '';
+    }
+
     resetAndLoad();
   });
 });
@@ -178,25 +207,71 @@ themeToggle.addEventListener('click', () => {
   localStorage.setItem('theme', next);
 });
 
-// ===== HEADER SCROLL EFFECT =====
+// ===== DISCOVERY BAR SCROLL BEHAVIOR =====
+let lastScrollY = 0;
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 20) {
+  const currentScrollY = window.scrollY;
+
+  if (currentScrollY > 20) {
     header.classList.add('scrolled');
   } else {
     header.classList.remove('scrolled');
   }
+
+  // Hide discovery bar on scroll down, show on scroll up
+  if (currentScrollY > lastScrollY && currentScrollY > 100) {
+    discoveryBar.classList.add('hidden');
+  } else {
+    discoveryBar.classList.remove('hidden');
+  }
+
+  lastScrollY = currentScrollY;
 }, { passive: true });
 
-// ===== MOBILE MENU =====
-menuToggle.addEventListener('click', () => {
-  document.body.classList.toggle('mobile-nav-open');
+// ===== DISCOVERY BAR PILLS =====
+discoveryPills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    const filter = pill.dataset.filter;
+    if (filter === currentFilter) return;
+
+    currentFilter = filter;
+    discoveryPills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+
+    // Update old filter buttons too
+    filterBtns.forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === filter);
+    });
+
+    resetAndLoad();
+    document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
+  });
 });
 
-// Close mobile nav on outside click
-document.addEventListener('click', (e) => {
-  if (!header.contains(e.target)) {
-    document.body.classList.remove('mobile-nav-open');
+// ===== DISCOVERY SEARCH =====
+discoverySearchToggle.addEventListener('click', () => {
+  discoverySearchWrapper.classList.toggle('active');
+  if (discoverySearchWrapper.classList.contains('active')) {
+    discoverySearchInput.focus();
+  } else {
+    // Clear search and reset to all articles
+    discoverySearchInput.value = '';
+    searchQuery = '';
+    discoveryPills.forEach(p => p.classList.remove('disabled'));
+    resetAndLoad();
   }
+});
+
+discoverySearchInput.addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim();
+
+  // Don't change currentFilter when searching - just update the query
+  // But disable category pills while searching
+  discoveryPills.forEach(p => {
+    p.classList.toggle('disabled', searchQuery.trim() !== '');
+  });
+
+  resetAndLoad();
 });
 
 // ===== INIT =====

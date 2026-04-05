@@ -625,7 +625,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
    ============================================ */
 .substack-banner {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-  padding: 64px 0;
+  padding: 80px 0;
   overflow: hidden;
   position: relative;
 }
@@ -925,8 +925,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   transition: all var(--transition);
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
-.book-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.book-card:hover { transform: translateY(-4px) scale(1.03); box-shadow: var(--shadow-lg); }
 .book-spine {
   height: 140px;
   display: flex;

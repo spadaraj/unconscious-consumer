@@ -207,7 +207,7 @@ themeToggle.addEventListener('click', () => {
   localStorage.setItem('theme', next);
 });
 
-// ===== DISCOVERY BAR SCROLL BEHAVIOR =====
+// ===== HEADER COLLAPSE ON SCROLL =====
 let lastScrollY = 0;
 window.addEventListener('scroll', () => {
   const currentScrollY = window.scrollY;
@@ -218,11 +218,11 @@ window.addEventListener('scroll', () => {
     header.classList.remove('scrolled');
   }
 
-  // Hide discovery bar on scroll down, show on scroll up
+  // Hide header on scroll down, show on scroll up
   if (currentScrollY > lastScrollY && currentScrollY > 100) {
-    discoveryBar.classList.add('hidden');
+    header.classList.add('hidden');
   } else {
-    discoveryBar.classList.remove('hidden');
+    header.classList.remove('hidden');
   }
 
   lastScrollY = currentScrollY;

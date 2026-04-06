@@ -20,36 +20,38 @@
 </head>
 <body>
 
-  <!-- ===== NAVIGATION ===== -->
+  <div id="reading-progress"></div>
+
+  <!-- ===== LAYER 1: FIXED HEADER ===== -->
   <header class="site-header" id="site-header">
-    <div class="container header-inner">
-      <a href="/" class="logo">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
         <span class="logo-main">The Unconscious Consumer</span>
-        <span class="logo-sub">by Dr. Adam Spadaro</span>
       </a>
-      <nav class="main-nav" id="main-nav">
-        <a href="/" class="nav-link">All Articles</a>
-        <a href="/?filter=consumer-psychology" class="nav-link">Consumer Psychology</a>
-        <a href="/?filter=behavioural-economics" class="nav-link">Behavioural Economics</a>
-        <a href="/?filter=user-experience" class="nav-link">User Experience</a>
-        <a href="/?filter=undercurrents" class="nav-link">Undercurrents</a>
-        <a href="/#about" class="nav-link">About</a>
-      </nav>
       <div class="header-actions">
         <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
           Subscribe
         </a>
+        <a href="index.html#about" class="nav-link">About</a>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
           <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-          <span></span><span></span><span></span>
-        </button>
       </div>
     </div>
   </header>
+
+  <!-- ===== LAYER 2: DISCOVERY BAR ===== -->
+  <nav class="discovery-bar" id="discovery-bar">
+    <div class="discovery-bar-inner">
+      <a href="index.html" class="discovery-pill" id="pill-all">All</a>
+      <a href="index.html?filter=consumer-psychology" class="discovery-pill" id="pill-consumer-psychology">Consumer Psychology</a>
+      <a href="index.html?filter=behavioural-economics" class="discovery-pill" id="pill-behavioural-economics">Behavioural Economics</a>
+      <a href="index.html?filter=user-experience" class="discovery-pill" id="pill-user-experience">User Experience</a>
+      <a href="index.html?filter=undercurrents" class="discovery-pill" id="pill-undercurrents">Undercurrents</a>
+    </div>
+  </nav>
 
   <script src="articles-data.js"></script>
 
@@ -111,21 +113,34 @@
       localStorage.setItem('theme', next);
     });
 
-    // ===== HEADER SCROLL =====
+    // ===== HEADER SHRINK + READING PROGRESS =====
     var header = document.getElementById('site-header');
+    var progressBar = document.getElementById('reading-progress');
+    var lastScrollY = 0;
     window.addEventListener('scroll', function() {
-      header.classList.toggle('scrolled', window.scrollY > 20);
-    }, { passive: true });
+      var currentScrollY = window.scrollY;
 
-    // ===== MOBILE MENU =====
-    document.getElementById('menu-toggle').addEventListener('click', function() {
-      document.body.classList.toggle('mobile-nav-open');
-    });
-    document.addEventListener('click', function(e) {
-      if (!header.contains(e.target)) {
-        document.body.classList.remove('mobile-nav-open');
+      // Header scrolled / shrink state
+      if (currentScrollY > 20) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
       }
-    });
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        header.classList.add('shrink');
+      } else {
+        header.classList.remove('shrink');
+      }
+      lastScrollY = currentScrollY;
+
+      // Reading progress bar
+      var articleEl = document.querySelector('.article-page-main');
+      if (articleEl) {
+        var scrollable = articleEl.offsetTop + articleEl.offsetHeight - window.innerHeight;
+        var pct = scrollable > 0 ? Math.min(100, (currentScrollY / scrollable) * 100) : 0;
+        progressBar.style.setProperty('--progress', pct);
+      }
+    }, { passive: true });
 
     // ===== CATEGORY HELPERS =====
     var CAT_LABELS = {
@@ -170,11 +185,19 @@
         ].join('\n');
       }
 
+      // Mark the matching category pill as active
+      var activePill = document.getElementById('pill-' + article.category);
+      if (activePill) {
+        activePill.classList.add('active');
+      } else {
+        document.getElementById('pill-all').classList.add('active');
+      }
+
       document.getElementById('article-content').innerHTML = [
         '<div class="article-header">',
         '  <a href="/" class="article-back">← All Articles</a>',
         '  <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
-        '  <h1 class="article-title">' + article.emoji + ' ' + article.title + '</h1>',
+        '  <h1 class="article-title">' + article.title + '</h1>',
         '  <p class="article-excerpt">' + article.excerpt + '</p>',
         '  <div class="article-meta-row">',
         '    <span class="article-date">' + article.date + '</span>',

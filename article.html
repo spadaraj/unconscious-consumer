@@ -12,7 +12,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Loading… — The Unconscious Consumer</title>
-  <meta name="description" content="Exploring the hidden forces that shape consumer behaviour — psychology, behavioural economics, and UX by Dr. Adam Spadaro." />
+  <meta name="description" content="" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="The Unconscious Consumer" />
+  <meta property="og:title" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  <link rel="canonical" href="" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -155,9 +162,28 @@
     };
 
     // ===== RENDER =====
+    var BASE_URL = 'https://theunconsciousconsumer.com';
+
     function renderArticle(article) {
+      var articleUrl = BASE_URL + '/article.html?slug=' + article.slug;
+
+      // Title + meta description
       document.title = article.title + ' — The Unconscious Consumer';
       document.querySelector('meta[name="description"]').setAttribute('content', article.excerpt);
+
+      // Open Graph
+      document.querySelector('meta[property="og:title"]').setAttribute('content', article.title);
+      document.querySelector('meta[property="og:description"]').setAttribute('content', article.excerpt);
+      document.querySelector('meta[property="og:url"]').setAttribute('content', articleUrl);
+
+      // og:image — use first image in bodyHtml if available
+      var firstImg = article.bodyHtml && article.bodyHtml.match(/src="(images\/[^"]+)"/);
+      if (firstImg) {
+        document.querySelector('meta[property="og:image"]').setAttribute('content', BASE_URL + '/' + firstImg[1]);
+      }
+
+      // Canonical URL
+      document.querySelector('link[rel="canonical"]').setAttribute('href', articleUrl);
 
       var tagClass = CAT_CLASSES[article.category] || 'tag-cp';
       var tagLabel = CAT_LABELS[article.category] || article.category;

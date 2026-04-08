@@ -53,8 +53,6 @@
     </div>
   </nav>
 
-  <script src="articles-data.js"></script>
-
   <!-- ===== ARTICLE ===== -->
   <main class="article-page-main">
     <div class="article-container">
@@ -225,14 +223,21 @@
     if (!slug) {
       window.location.href = '/';
     } else {
-      var article = ARTICLES_DATA.find(function(a) { return a.slug === slug; });
-      if (!article) {
-        window.location.href = '/';
-      } else if (!article.bodyHtml && article.substackUrl) {
-        window.location.href = article.substackUrl;
-      } else {
-        renderArticle(article);
-      }
+      fetch('articles.json')
+        .then(function(r) { return r.json(); })
+        .then(function(articles) {
+          var article = articles.find(function(a) { return a.slug === slug; });
+          if (!article) {
+            window.location.href = '/';
+          } else if (!article.bodyHtml && article.substackUrl) {
+            window.location.href = article.substackUrl;
+          } else {
+            renderArticle(article);
+          }
+        })
+        .catch(function() {
+          window.location.href = '/';
+        });
     }
   </script>
 

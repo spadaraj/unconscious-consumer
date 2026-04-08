@@ -276,8 +276,30 @@ discoverySearchInput.addEventListener('input', (e) => {
 
 // ===== INIT =====
 initTheme();
-ARTICLES = ARTICLES_DATA;
-resetAndLoad();
+
+fetch('articles.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    ARTICLES = data;
+
+    // Apply ?filter= URL param if present (e.g. coming from an article page category pill)
+    var filterParam = new URLSearchParams(window.location.search).get('filter');
+    if (filterParam && filterParam !== 'all') {
+      currentFilter = filterParam;
+      discoveryPills.forEach(function(p) {
+        p.classList.toggle('active', p.dataset.filter === filterParam);
+      });
+      filterBtns.forEach(function(b) {
+        b.classList.toggle('active', b.dataset.filter === filterParam);
+      });
+    }
+
+    resetAndLoad();
+  })
+  .catch(function() {
+    grid.innerHTML = '<p style="padding: 2rem; color: var(--text-2);">Could not load articles. Please refresh the page.</p>';
+    if (loader) loader.classList.add('hidden');
+  });
 
 // Highlight active nav on scroll
 const sections = ['articles', 'about', 'reading'];

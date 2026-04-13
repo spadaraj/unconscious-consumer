@@ -161,38 +161,56 @@
       'undercurrents': 'tag-uc'
     };
 
-    // ===== RENDER =====
+    // ===== HELPERS =====
     var BASE_URL = 'https://theunconsciousconsumer.com';
 
+    function stripEmoji(str) {
+      return str.replace(/[\u{1F300}-\u{1FAD6}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|\uFE0F|\u20E3/gu, '').trim();
+    }
+
+    function stripImages(html) {
+      // All <img> tags are removed before rendering.
+      // To show a book cover or data visualisation, add it back manually in
+      // articles.json with class="book-cover" or class="data-viz" on the <img>.
+      return html
+        .replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '')
+        .replace(/<img[^>]*\/?>/gi, '');
+    }
+
+    // ===== RENDER =====
     function renderArticle(article) {
       var articleUrl = BASE_URL + '/article.html?slug=' + article.slug;
+      var cleanTitle = stripEmoji(article.title);
 
-      // Title + meta description
-      document.title = article.title + ' — The Unconscious Consumer';
+      // Head meta
+      document.title = cleanTitle + ' — The Unconscious Consumer';
       document.querySelector('meta[name="description"]').setAttribute('content', article.excerpt);
-
-      // Open Graph
-      document.querySelector('meta[property="og:title"]').setAttribute('content', article.title);
+      document.querySelector('meta[property="og:title"]').setAttribute('content', cleanTitle);
       document.querySelector('meta[property="og:description"]').setAttribute('content', article.excerpt);
       document.querySelector('meta[property="og:url"]').setAttribute('content', articleUrl);
 
-      // og:image — use first image in bodyHtml if available
+      // og:image — use first image in bodyHtml before stripping
       var firstImg = article.bodyHtml && article.bodyHtml.match(/src="(images\/[^"]+)"/);
       if (firstImg) {
         document.querySelector('meta[property="og:image"]').setAttribute('content', BASE_URL + '/' + firstImg[1]);
       }
-
-      // Canonical URL
       document.querySelector('link[rel="canonical"]').setAttribute('href', articleUrl);
 
       var tagClass = CAT_CLASSES[article.category] || 'tag-cp';
       var tagLabel = CAT_LABELS[article.category] || article.category;
 
+      // Mark the matching discovery pill as active
+      var activePill = document.getElementById('pill-' + article.category);
+      if (activePill) {
+        activePill.classList.add('active');
+      } else {
+        document.getElementById('pill-all').classList.add('active');
+      }
+
       var bodySection;
       if (article.bodyHtml) {
-        bodySection = '<div class="article-body">' + article.bodyHtml + '</div>';
+        bodySection = '<div class="article-body">' + stripImages(article.bodyHtml) + '</div>';
       } else {
-        // No local content — show Substack subscribe CTA
         var substackLink = article.substackUrl || 'https://theunconsciousconsumer.substack.com';
         bodySection = [
           '<div class="article-subscribe-cta">',
@@ -200,7 +218,7 @@
           '    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="substack-icon-lg"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>',
           '    <h2>Read this on Substack</h2>',
           '    <p>This article is published as part of The Unconscious Consumer newsletter on Substack — where new essays land directly in your inbox every week.</p>',
-          '    <a href="' + substackLink + '" target="_blank" rel="noopener" class="btn btn-substack-large">',
+          '    <a href="' + substackLink + '" target="_blank" rel="noopener" class="btn btn-substack">',
           '      Read on Substack →',
           '    </a>',
           '    <span class="substack-note">Free to subscribe · No spam · Unsubscribe anytime</span>',
@@ -209,19 +227,36 @@
         ].join('\n');
       }
 
-      // Mark the matching category pill as active
-      var activePill = document.getElementById('pill-' + article.category);
-      if (activePill) {
-        activePill.classList.add('active');
-      } else {
-        document.getElementById('pill-all').classList.add('active');
-      }
+      var endingSection = article.bodyHtml ? [
+        '<div class="article-ending">',
+        '  <hr class="article-ending-divider" />',
+        '  <p class="continue-label">Continue reading</p>',
+        '  <div class="related-cards">',
+        '    <a href="article.html?slug=rise-of-the-skeptical-shopper" class="related-card">',
+        '      <span class="card-tag tag-cp">Consumer Psychology</span>',
+        '      <h3 class="related-card-title">Is This Legit? The Rise of the Skeptical Shopper</h3>',
+        '      <p class="related-card-excerpt">Five major trends driving consumer skepticism — from misinformation to ethical consumption demands.</p>',
+        '      <span class="related-card-link">Read →</span>',
+        '    </a>',
+        '    <a href="article.html?slug=unpacking-the-power-of-scarcity-bias" class="related-card">',
+        '      <span class="card-tag tag-cp">Consumer Psychology</span>',
+        '      <h3 class="related-card-title">Less is More: Unpacking the Power of Scarcity Bias</h3>',
+        '      <p class="related-card-excerpt">How scarcity bias operates unconsciously and its ethical implications for modern marketing.</p>',
+        '      <span class="related-card-link">Read →</span>',
+        '    </a>',
+        '  </div>',
+        '  <div class="article-footer-nav">',
+        '    <a href="index.html" class="btn btn-outline">← Back to All Articles</a>',
+        '    <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">Subscribe on Substack</a>',
+        '  </div>',
+        '</div>'
+      ].join('\n') : '';
 
       document.getElementById('article-content').innerHTML = [
         '<div class="article-header">',
-        '  <a href="/" class="article-back">← All Articles</a>',
+        '  <a href="index.html" class="article-back">← All Articles</a>',
         '  <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
-        '  <h1 class="article-title">' + article.title + '</h1>',
+        '  <h1 class="article-title">' + cleanTitle + '</h1>',
         '  <p class="article-excerpt">' + article.excerpt + '</p>',
         '  <div class="article-meta-row">',
         '    <span class="article-date">' + article.date + '</span>',
@@ -229,28 +264,10 @@
         '    <span class="article-read-time">' + article.readTime + '</span>',
         '  </div>',
         '</div>',
+        '<hr class="article-header-divider" />',
         bodySection,
-        article.bodyHtml ? [
-          '<div class="article-author-section">',
-          '  <hr class="article-divider" />',
-          '  <div class="article-author">',
-          '    <div class="author-avatar">AS</div>',
-          '    <div class="author-info">',
-          '      <span class="author-name">Dr. Adam Spadaro</span>',
-          '      <p class="author-bio">Principal UX Researcher at HubSpot. Writing about the invisible forces shaping consumer behaviour.</p>',
-          '    </div>',
-          '  </div>',
-          '</div>',
-          '<div class="article-footer-nav">',
-          '  <a href="/" class="btn btn-outline">← Back to All Articles</a>',
-          '  <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">',
-          '    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>',
-          '    Subscribe for more',
-          '  </a>',
-          '</div>'
-        ].join('\n') : ''
+        endingSection
       ].join('\n');
-
     }
 
     // ===== LOAD ARTICLE =====

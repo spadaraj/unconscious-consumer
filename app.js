@@ -28,6 +28,39 @@ const discoverySearchWrapper = document.getElementById('discovery-search-wrapper
 const discoverySearchInput = document.getElementById('discovery-search-input');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const navLinks = document.querySelectorAll('.nav-link[data-filter]');
+const categoryHero = document.getElementById('category-hero');
+const categoryHeroLabel = document.getElementById('category-hero-label');
+
+// ===== CATEGORY LABELS =====
+const HERO_LABELS = {
+  'consumer-psychology': 'Consumer Psychology',
+  'behavioural-economics': 'Behavioural Economics',
+  'user-experience': 'User Experience',
+  'undercurrents': 'Undercurrents'
+};
+
+// ===== CATEGORY HERO =====
+function updateCategoryHero() {
+  if (!categoryHero || !categoryHeroLabel) return;
+  if (currentFilter === 'all' || searchQuery) {
+    categoryHero.classList.add('hidden');
+    categoryHeroLabel.classList.add('hidden');
+    categoryHero.innerHTML = '';
+    return;
+  }
+  categoryHeroLabel.textContent = HERO_LABELS[currentFilter] || currentFilter;
+  categoryHeroLabel.classList.remove('hidden');
+  categoryHero.classList.remove('hidden');
+  var coverHtml = typeof generateCover === 'function' ? generateCover(currentFilter, true) : '';
+  categoryHero.innerHTML = coverHtml;
+  // Execute animation scripts
+  var scripts = categoryHero.querySelectorAll('script');
+  scripts.forEach(function(s) {
+    var newScript = document.createElement('script');
+    newScript.textContent = s.textContent;
+    document.body.appendChild(newScript);
+  });
+}
 
 // ===== ARTICLE LINK HELPERS =====
 function articleHref(article) {
@@ -72,7 +105,7 @@ function createArticleCard(article) {
   const card = document.createElement('article');
   card.className = 'article-card';
   card.dataset.category = article.category;
-  var coverHtml = typeof generateCover === 'function' ? generateCover(article.category, false) : '';
+  var coverHtml = typeof generateCover === 'function' ? generateCover(article.category, false, article.slug) : '';
   card.innerHTML = `
     <div class="article-card-cover">${coverHtml}</div>
     <div class="article-card-body">
@@ -170,6 +203,7 @@ filterBtns.forEach(btn => {
       discoverySearchInput.value = '';
     }
 
+    updateCategoryHero();
     resetAndLoad();
   });
 });
@@ -186,6 +220,7 @@ navLinks.forEach(link => {
     });
 
     document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
+    updateCategoryHero();
     resetAndLoad();
 
     // Close mobile nav
@@ -244,6 +279,7 @@ discoveryPills.forEach(pill => {
       b.classList.toggle('active', b.dataset.filter === filter);
     });
 
+    updateCategoryHero();
     resetAndLoad();
     document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
   });
@@ -272,6 +308,7 @@ discoverySearchInput.addEventListener('input', (e) => {
     p.classList.toggle('disabled', searchQuery.trim() !== '');
   });
 
+  updateCategoryHero();
   resetAndLoad();
 });
 
@@ -295,6 +332,7 @@ fetch('articles.json')
       });
     }
 
+    updateCategoryHero();
     resetAndLoad();
   })
   .catch(function() {

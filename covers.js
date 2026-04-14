@@ -1,30 +1,48 @@
 // ===== GENERATIVE SVG COVER SYSTEM =====
 // Each category gets a unique procedural cover visual.
-// generateCover(category, animated) returns an HTML string.
+// generateCover(category, animated, seed) returns an HTML string.
 // animated=false → static SVG (homepage cards, 180px)
-// animated=true  → SVG + <script> block (article page, 280px)
+// animated=true  → SVG + <script> block (category hero, 220px)
+// seed (string)  → per-article variation via deterministic offset
 
 var COVER_BG = '#1A0E0A';
 var COVER_ACCENT = '#C4531A';
 var COVER_CREAM = '#F5F0E8';
 
+// ===== SEED OFFSET =====
+function seededOffset(seed, index) {
+  var hash = 0;
+  for (var i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  return ((Math.abs(hash) + index * 37) % 60) - 30;
+}
+
 // ===== DISPATCHER =====
-function generateCover(category, animated) {
-  var h = animated ? 280 : 180;
+function generateCover(category, animated, seed) {
+  var h = animated ? 220 : 180;
+  seed = seed || '';
   switch (category) {
-    case 'consumer-psychology':   return coverConsumerPsychology(h, animated);
-    case 'behavioural-economics': return coverBehaviouralEconomics(h, animated);
-    case 'user-experience':       return coverUserExperience(h, animated);
-    case 'undercurrents':         return coverUndercurrents(h, animated);
-    default:                      return coverConsumerPsychology(h, animated);
+    case 'consumer-psychology':   return coverConsumerPsychology(h, animated, seed);
+    case 'behavioural-economics': return coverBehaviouralEconomics(h, animated, seed);
+    case 'user-experience':       return coverUserExperience(h, animated, seed);
+    case 'undercurrents':         return coverUndercurrents(h, animated, seed);
+    default:                      return coverConsumerPsychology(h, animated, seed);
   }
 }
 
 // ===== COVER 1: CONSUMER PSYCHOLOGY =====
 // Dual reality — blurred left vs sharp right, divided by oscillating line
-function coverConsumerPsychology(h, animated) {
+function coverConsumerPsychology(h, animated, seed) {
   var mid = 330;
-  var cy = Math.round(h * 0.5);
+  var baseCy = Math.round(h * 0.5);
+
+  // Per-article seed offsets (clamped to keep geometry visible)
+  var ox = Math.max(-40, Math.min(40, seededOffset(seed, 0)));
+  var oy = Math.max(-30, Math.min(30, seededOffset(seed, 1)));
+
+  var cy = baseCy + oy;
 
   // Shared geometry offsets
   var nodes = [
@@ -34,20 +52,22 @@ function coverConsumerPsychology(h, animated) {
     { x: 35,  y: -40, r: 3 }
   ];
 
-  function drawGroup(cx, baseOpacity, filtered) {
+  function drawGroup(cx) {
     var g = '';
-    // Concentric circles
+    var shiftedCx = cx + ox;
+    // Concentric circles — inner=1.0, middle=0.85, outer=0.7
+    var ringOps = [1.0, 0.85, 0.7];
     [25, 45, 65].forEach(function(r, i) {
-      var op = baseOpacity + i * 0.15;
-      g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + COVER_ACCENT + '" stroke-width="1" opacity="' + op.toFixed(2) + '"/>';
+      g += '<circle cx="' + shiftedCx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + COVER_ACCENT + '" stroke-width="1" opacity="' + ringOps[i].toFixed(2) + '"/>';
     });
     // Scattered nodes
     nodes.forEach(function(n) {
-      g += '<circle cx="' + (cx + n.x) + '" cy="' + (cy + n.y) + '" r="' + n.r + '" fill="' + COVER_ACCENT + '" opacity="' + (baseOpacity * 0.8).toFixed(2) + '"/>';
+      var nop = 0.8 + Math.random() * 0.2;
+      g += '<circle cx="' + (shiftedCx + n.x) + '" cy="' + (cy + n.y) + '" r="' + n.r + '" fill="' + COVER_ACCENT + '" opacity="' + nop.toFixed(2) + '"/>';
     });
     // Connecting lines
-    g += '<line x1="' + (cx + nodes[0].x) + '" y1="' + (cy + nodes[0].y) + '" x2="' + (cx + nodes[2].x) + '" y2="' + (cy + nodes[2].y) + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.15"/>';
-    g += '<line x1="' + (cx + nodes[1].x) + '" y1="' + (cy + nodes[1].y) + '" x2="' + (cx + nodes[3].x) + '" y2="' + (cy + nodes[3].y) + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.15"/>';
+    g += '<line x1="' + (shiftedCx + nodes[0].x) + '" y1="' + (cy + nodes[0].y) + '" x2="' + (shiftedCx + nodes[2].x) + '" y2="' + (cy + nodes[2].y) + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.3"/>';
+    g += '<line x1="' + (shiftedCx + nodes[1].x) + '" y1="' + (cy + nodes[1].y) + '" x2="' + (shiftedCx + nodes[3].x) + '" y2="' + (cy + nodes[3].y) + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.3"/>';
     return g;
   }
 
@@ -67,18 +87,18 @@ function coverConsumerPsychology(h, animated) {
     '<defs>' +
     '<clipPath id="cp-left" class="cp-left-clip"><rect x="0" y="0" width="' + mid + '" height="' + h + '"/></clipPath>' +
     '<clipPath id="cp-right"><rect x="' + mid + '" y="0" width="' + mid + '" height="' + h + '"/></clipPath>' +
-    '<filter id="cp-blur"><feGaussianBlur stdDeviation="4"/></filter>' +
+    '<filter id="cp-blur"><feGaussianBlur stdDeviation="2.5"/></filter>' +
     '</defs>' +
     '<rect width="660" height="' + h + '" fill="' + COVER_BG + '"/>' +
     // Left group — blurred
-    '<g clip-path="url(#cp-left)" filter="url(#cp-blur)">' + drawGroup(165, 0.5, true) + '</g>' +
+    '<g clip-path="url(#cp-left)" filter="url(#cp-blur)">' + drawGroup(165) + '</g>' +
     // Right group — sharp
-    '<g clip-path="url(#cp-right)">' + drawGroup(495, 0.7, false) + '</g>' +
+    '<g clip-path="url(#cp-right)">' + drawGroup(495) + '</g>' +
     // Divider
-    '<line' + lineClass + ' x1="' + mid + '" y1="0" x2="' + mid + '" y2="' + h + '" stroke="' + COVER_ACCENT + '" stroke-width="1" opacity="0.7"/>' +
+    '<line' + lineClass + ' x1="' + mid + '" y1="0" x2="' + mid + '" y2="' + h + '" stroke="' + COVER_ACCENT + '" stroke-width="1.5" opacity="1.0"/>' +
     // Labels
-    '<text x="165" y="16" text-anchor="middle" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="8" letter-spacing="0.1em" opacity="0.35">PERCEIVED</text>' +
-    '<text x="495" y="16" text-anchor="middle" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="8" letter-spacing="0.1em" opacity="0.35">ACTUAL</text>' +
+    '<text x="165" y="16" text-anchor="middle" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="8" letter-spacing="0.1em" opacity="0.6">PERCEIVED</text>' +
+    '<text x="495" y="16" text-anchor="middle" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="8" letter-spacing="0.1em" opacity="0.6">ACTUAL</text>' +
     '</svg>';
 
   return svg;
@@ -86,21 +106,31 @@ function coverConsumerPsychology(h, animated) {
 
 // ===== COVER 2: BEHAVIOURAL ECONOMICS =====
 // Flow field — sinusoidal curves with drifting particles
-function coverBehaviouralEconomics(h, animated) {
+function coverBehaviouralEconomics(h, animated, seed) {
   // Seeded pseudo-random for consistent particle placement
-  var seed = 42;
+  var rseed = 42;
   function rand() {
-    seed = (seed * 16807 + 0) % 2147483647;
-    return (seed - 1) / 2147483646;
+    rseed = (rseed * 16807 + 0) % 2147483647;
+    return (rseed - 1) / 2147483646;
   }
 
+  var flowShiftY = seededOffset(seed, 0);
+  // Vary particle count 16-22 based on seed
+  var seedHash = 0;
+  for (var si = 0; si < seed.length; si++) {
+    seedHash = ((seedHash << 5) - seedHash) + seed.charCodeAt(si);
+    seedHash |= 0;
+  }
+  var numParticles = 16 + (Math.abs(seedHash) % 7);
+
   var numPaths = 5;
-  var numParticles = 20;
 
   // Generate flow paths as sine-based curves
   var paths = [];
   for (var p = 0; p < numPaths; p++) {
-    var baseY = (h / (numPaths + 1)) * (p + 1);
+    var baseY = (h / (numPaths + 1)) * (p + 1) + flowShiftY;
+    // Clamp to stay visible
+    baseY = Math.max(15, Math.min(h - 15, baseY));
     var amp = 12 + rand() * 16;
     var freq = 0.008 + rand() * 0.006;
     var phase = rand() * Math.PI * 2;
@@ -128,7 +158,7 @@ function coverBehaviouralEconomics(h, animated) {
     var startX = rand() * 660;
     var startY = pathY(paths[pIdx], startX);
     var isTerracotta = rand() < 0.3;
-    var opacity = 0.5 + rand() * 0.3;
+    var opacity = isTerracotta ? 1.0 : 0.65;
     var speed = 0.3 + rand() * 0.4;
     particles.push({
       pathIdx: pIdx, x: startX, y: startY,
@@ -142,7 +172,7 @@ function coverBehaviouralEconomics(h, animated) {
 
   // Draw flow paths
   for (var p = 0; p < numPaths; p++) {
-    svg += '<path d="' + pathStrings[p] + '" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.6" opacity="0.2"/>';
+    svg += '<path d="' + pathStrings[p] + '" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.6" opacity="0.45"/>';
   }
 
   // Draw particles
@@ -188,14 +218,19 @@ function coverBehaviouralEconomics(h, animated) {
 
 // ===== COVER 3: USER EXPERIENCE =====
 // Path map — grid, primary path, dashed dead-end secondaries
-function coverUserExperience(h, animated) {
+function coverUserExperience(h, animated, seed) {
   var gridSpacingX = 110;
-  var gridSpacingY = h >= 280 ? 70 : 68;
+  var gridSpacingY = h >= 220 ? 70 : 68;
+
+  // Seed offset for corner variation
+  var cornerOff = seededOffset(seed, 2);
+  var cOffX = Math.max(-25, Math.min(25, cornerOff));
+  var cOffY = Math.max(-20, Math.min(20, cornerOff));
 
   // Key coordinates
   var startPt   = { x: 80,  y: 30 };
-  var corner1   = { x: 80,  y: Math.round(h * 0.55) };
-  var corner2   = { x: 330, y: Math.round(h * 0.55) };
+  var corner1   = { x: 80 + cOffX,  y: Math.round(h * 0.55) + cOffY };
+  var corner2   = { x: 330 + cOffX, y: Math.round(h * 0.55) + cOffY };
   var endPt     = { x: 580, y: Math.round(h * 0.85) };
   var deadEndPt = { x: 400, y: Math.round(h * 0.7) };
   var secBEnd   = { x: 570, y: Math.round(h * 0.2) };
@@ -203,10 +238,10 @@ function coverUserExperience(h, animated) {
   // Grid
   var gridLines = '';
   for (var gx = gridSpacingX; gx < 660; gx += gridSpacingX) {
-    gridLines += '<line x1="' + gx + '" y1="0" x2="' + gx + '" y2="' + h + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.1"/>';
+    gridLines += '<line x1="' + gx + '" y1="0" x2="' + gx + '" y2="' + h + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.18"/>';
   }
   for (var gy = gridSpacingY; gy < h; gy += gridSpacingY) {
-    gridLines += '<line x1="0" y1="' + gy + '" x2="660" y2="' + gy + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.1"/>';
+    gridLines += '<line x1="0" y1="' + gy + '" x2="660" y2="' + gy + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.18"/>';
   }
 
   // Primary path
@@ -230,23 +265,23 @@ function coverUserExperience(h, animated) {
     // Grid
     gridLines +
     // Secondary path A (dashed, dead end)
-    '<path d="' + secAD + '" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.8" stroke-dasharray="4 5" opacity="0.25"/>' +
+    '<path d="' + secAD + '" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.8" stroke-dasharray="4 5" opacity="0.4"/>' +
     // Dead end rect
-    '<rect x="' + (deadEndPt.x - 10) + '" y="' + (deadEndPt.y - 6) + '" width="20" height="12" rx="2" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.8" opacity="0.2"/>' +
+    '<rect x="' + (deadEndPt.x - 10) + '" y="' + (deadEndPt.y - 6) + '" width="20" height="12" rx="2" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.8" opacity="0.4"/>' +
     // Secondary path B (dashed, off edge)
-    '<path d="' + secBD + '" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.6" stroke-dasharray="2 6" opacity="0.15"/>' +
+    '<path d="' + secBD + '" fill="none" stroke="' + COVER_CREAM + '" stroke-width="0.6" stroke-dasharray="2 6" opacity="0.4"/>' +
     // Primary path
-    '<path d="' + primaryD + '" fill="none" stroke="' + COVER_ACCENT + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="' + primaryD + '" fill="none" stroke="' + COVER_ACCENT + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
     // Start and end dots
-    '<circle cx="' + startPt.x + '" cy="' + startPt.y + '" r="4" fill="' + COVER_ACCENT + '"/>' +
-    '<circle cx="' + endPt.x + '" cy="' + endPt.y + '" r="4" fill="' + COVER_ACCENT + '"/>' +
+    '<circle cx="' + startPt.x + '" cy="' + startPt.y + '" r="5" fill="' + COVER_ACCENT + '"/>' +
+    '<circle cx="' + endPt.x + '" cy="' + endPt.y + '" r="5" fill="' + COVER_ACCENT + '"/>' +
     // Corner dots
     '<circle cx="' + corner1.x + '" cy="' + corner1.y + '" r="2.5" fill="' + COVER_ACCENT + '" opacity="0.6"/>' +
     '<circle cx="' + corner2.x + '" cy="' + corner2.y + '" r="2.5" fill="' + COVER_ACCENT + '" opacity="0.6"/>' +
     // Labels
-    '<text x="' + startPt.x + '" y="' + (startPt.y - 10) + '" text-anchor="middle" fill="' + COVER_ACCENT + '" font-family="Inter,sans-serif" font-size="7" letter-spacing="0.06em" opacity="0.6">START</text>' +
-    '<text x="' + endPt.x + '" y="' + (endPt.y - 12) + '" text-anchor="middle" fill="' + COVER_ACCENT + '" font-family="Inter,sans-serif" font-size="7" letter-spacing="0.06em" opacity="0.6">END</text>' +
-    '<text x="' + (deadEndPt.x + 20) + '" y="' + (deadEndPt.y + 4) + '" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="6" opacity="0.2">dead end</text>' +
+    '<text x="' + startPt.x + '" y="' + (startPt.y - 10) + '" text-anchor="middle" fill="' + COVER_ACCENT + '" font-family="Inter,sans-serif" font-size="7" letter-spacing="0.06em" opacity="0.9">START</text>' +
+    '<text x="' + endPt.x + '" y="' + (endPt.y - 12) + '" text-anchor="middle" fill="' + COVER_ACCENT + '" font-family="Inter,sans-serif" font-size="7" letter-spacing="0.06em" opacity="0.9">END</text>' +
+    '<text x="' + (deadEndPt.x + 20) + '" y="' + (deadEndPt.y + 4) + '" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="6" opacity="0.4">dead end</text>' +
     // Traveler dot
     travelerSvg +
     '</svg>';
@@ -314,19 +349,25 @@ function coverUserExperience(h, animated) {
 
 // ===== COVER 4: UNDERCURRENTS =====
 // Scattered dots converging into clusters — trends from noise
-function coverUndercurrents(h, animated) {
-  var seed = 77;
+function coverUndercurrents(h, animated, seed) {
+  var rseed = 77;
   function rand() {
-    seed = (seed * 16807 + 0) % 2147483647;
-    return (seed - 1) / 2147483646;
+    rseed = (rseed * 16807 + 0) % 2147483647;
+    return (rseed - 1) / 2147483646;
   }
 
+  // Seed offsets for cluster positions
   var clusters = [
-    { x: 140, y: Math.round(h * 0.35) },
-    { x: 360, y: Math.round(h * 0.45) },
-    { x: 520, y: Math.round(h * 0.28) },
-    { x: 240, y: Math.round(h * 0.65) }
+    { x: 140 + seededOffset(seed, 0), y: Math.round(h * 0.35) + seededOffset(seed, 4) },
+    { x: 360 + seededOffset(seed, 1), y: Math.round(h * 0.45) + seededOffset(seed, 5) },
+    { x: 520 + seededOffset(seed, 2), y: Math.round(h * 0.28) + seededOffset(seed, 6) },
+    { x: 240 + seededOffset(seed, 3), y: Math.round(h * 0.65) + seededOffset(seed, 7) }
   ];
+  // Clamp clusters to visible area
+  clusters.forEach(function(c) {
+    c.x = Math.max(30, Math.min(630, c.x));
+    c.y = Math.max(20, Math.min(h - 70, c.y));
+  });
 
   var numDots = 70;
   var maxY = h - 60; // avoid bottom text zone
@@ -337,7 +378,7 @@ function coverUndercurrents(h, animated) {
     var startY = rand() * maxY + 10;
     var r = 1.5 + rand() * 1.5;
     var isTerracotta = rand() < 0.2;
-    var opacity = 0.3 + rand() * 0.4;
+    var opacity = isTerracotta ? 0.9 : (0.45 + rand() * 0.25);
     // Static position = 40% lerp toward cluster
     var dispX = startX + (clusters[clusterIdx].x - startX) * 0.4;
     var dispY = startY + (clusters[clusterIdx].y - startY) * 0.4;

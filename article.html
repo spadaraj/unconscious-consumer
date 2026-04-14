@@ -109,7 +109,6 @@
     </div>
   </footer>
 
-  <script src="covers.js"></script>
   <script>
     // ===== DARK MODE TOGGLE =====
     document.getElementById('theme-toggle').addEventListener('click', function() {
@@ -261,11 +260,7 @@
         ].join('\n');
       }
 
-      var coverHtml = typeof generateCover === 'function' ? generateCover(article.category, true) : '';
-
-      var contentEl = document.getElementById('article-content');
-      contentEl.innerHTML = [
-        '<div class="article-cover-header">' + coverHtml + '</div>',
+      document.getElementById('article-content').innerHTML = [
         '<div class="article-header">',
         '  <a href="index.html" class="article-back">← All Articles</a>',
         '  <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
@@ -281,17 +276,6 @@
         bodySection,
         endingSection
       ].join('\n');
-
-      // Execute animation scripts injected via innerHTML
-      var coverContainer = contentEl.querySelector('.article-cover-header');
-      if (coverContainer) {
-        var scripts = coverContainer.querySelectorAll('script');
-        scripts.forEach(function(s) {
-          var newScript = document.createElement('script');
-          newScript.textContent = s.textContent;
-          document.body.appendChild(newScript);
-        });
-      }
     }
 
     // ===== LOAD ARTICLE =====

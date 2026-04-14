@@ -178,7 +178,7 @@
     }
 
     // ===== RENDER =====
-    function renderArticle(article) {
+    function renderArticle(article, allArticles) {
       var articleUrl = BASE_URL + '/article.html?slug=' + article.slug;
       var cleanTitle = stripEmoji(article.title);
 
@@ -227,30 +227,39 @@
         ].join('\n');
       }
 
-      var endingSection = article.bodyHtml ? [
-        '<div class="article-ending">',
-        '  <hr class="article-ending-divider" />',
-        '  <p class="continue-label">Continue reading</p>',
-        '  <div class="related-cards">',
-        '    <a href="article.html?slug=rise-of-the-skeptical-shopper" class="related-card">',
-        '      <span class="card-tag tag-cp">Consumer Psychology</span>',
-        '      <h3 class="related-card-title">Is This Legit? The Rise of the Skeptical Shopper</h3>',
-        '      <p class="related-card-excerpt">Five major trends driving consumer skepticism — from misinformation to ethical consumption demands.</p>',
-        '      <span class="related-card-link">Read →</span>',
-        '    </a>',
-        '    <a href="article.html?slug=unpacking-the-power-of-scarcity-bias" class="related-card">',
-        '      <span class="card-tag tag-cp">Consumer Psychology</span>',
-        '      <h3 class="related-card-title">Less is More: Unpacking the Power of Scarcity Bias</h3>',
-        '      <p class="related-card-excerpt">How scarcity bias operates unconsciously and its ethical implications for modern marketing.</p>',
-        '      <span class="related-card-link">Read →</span>',
-        '    </a>',
-        '  </div>',
-        '  <div class="article-footer-nav">',
-        '    <a href="index.html" class="btn btn-outline">← Back to All Articles</a>',
-        '    <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">Subscribe on Substack</a>',
-        '  </div>',
-        '</div>'
-      ].join('\n') : '';
+      var endingSection = '';
+      if (article.bodyHtml) {
+        var relatedCardsHtml = '';
+        if (article.related && article.related.length > 0 && allArticles) {
+          article.related.forEach(function(relSlug) {
+            var rel = allArticles.find(function(a) { return a.slug === relSlug; });
+            if (rel) {
+              var relTagClass = CAT_CLASSES[rel.category] || 'tag-cp';
+              var relTagLabel = CAT_LABELS[rel.category] || rel.category;
+              var relTitle = stripEmoji(rel.title);
+              relatedCardsHtml += [
+                '<a href="article.html?slug=' + rel.slug + '" class="related-card">',
+                '  <span class="card-tag ' + relTagClass + '">' + relTagLabel + '</span>',
+                '  <h3 class="related-card-title">' + relTitle + '</h3>',
+                '  <p class="related-card-excerpt">' + rel.excerpt + '</p>',
+                '  <span class="related-card-link">Read →</span>',
+                '</a>'
+              ].join('\n');
+            }
+          });
+        }
+        endingSection = [
+          '<div class="article-ending">',
+          '  <hr class="article-ending-divider" />',
+          relatedCardsHtml ? '  <p class="continue-label">Continue reading</p>' : '',
+          relatedCardsHtml ? '  <div class="related-cards">' + relatedCardsHtml + '</div>' : '',
+          '  <div class="article-footer-nav">',
+          '    <a href="index.html" class="btn btn-outline">← Back to All Articles</a>',
+          '    <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">Subscribe on Substack</a>',
+          '  </div>',
+          '</div>'
+        ].join('\n');
+      }
 
       document.getElementById('article-content').innerHTML = [
         '<div class="article-header">',
@@ -285,7 +294,7 @@
           } else if (!article.bodyHtml && article.substackUrl) {
             window.location.href = article.substackUrl;
           } else {
-            renderArticle(article);
+            renderArticle(article, articles);
           }
         })
         .catch(function() {

@@ -72,8 +72,9 @@ function createArticleCard(article) {
   const card = document.createElement('article');
   card.className = 'article-card';
   card.dataset.category = article.category;
+  var coverHtml = typeof generateCover === 'function' ? generateCover(article.category, false) : '';
   card.innerHTML = `
-    <div class="article-card-accent" style="background: ${article.accentColor};"></div>
+    <div class="article-card-cover">${coverHtml}</div>
     <div class="article-card-body">
       <span class="card-tag ${tag.cls}">${tag.label}</span>
       <h3 class="article-card-title">${article.title}</h3>

@@ -169,12 +169,11 @@
     }
 
     function stripImages(html) {
-      // All <img> tags are removed before rendering.
-      // To show a book cover or data visualisation, add it back manually in
-      // articles.json with class="book-cover" or class="data-viz" on the <img>.
+      // Strip <figure> wrappers entirely (scraped, not curated)
+      // Strip <img> tags unless they have class="book-cover" or class="data-viz"
       return html
         .replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '')
-        .replace(/<img[^>]*\/?>/gi, '');
+        .replace(/<img(?![^>]*class="(?:book-cover|data-viz)")[^>]*\/?>/gi, '');
     }
 
     // ===== RENDER =====

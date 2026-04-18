@@ -51,7 +51,7 @@ function updateCategoryHero() {
   categoryHeroLabel.textContent = HERO_LABELS[currentFilter] || currentFilter;
   categoryHeroLabel.classList.remove('hidden');
   categoryHero.classList.remove('hidden');
-  var coverHtml = typeof generateCover === 'function' ? generateCover(currentFilter, true) : '';
+  var coverHtml = typeof generateCover === 'function' ? generateCover(currentFilter, true, '', 'cart') : '';
   categoryHero.innerHTML = coverHtml;
   // Execute animation scripts
   var scripts = categoryHero.querySelectorAll('script');
@@ -105,7 +105,7 @@ function createArticleCard(article) {
   const card = document.createElement('article');
   card.className = 'article-card';
   card.dataset.category = article.category;
-  var coverHtml = typeof generateCover === 'function' ? generateCover(article.category, false, article.slug) : '';
+  var coverHtml = typeof generateCover === 'function' ? generateCover(article.category, false, article.slug, article.coverObject) : '';
   card.innerHTML = `
     <div class="article-card-cover">${coverHtml}</div>
     <div class="article-card-body">

@@ -1,13 +1,17 @@
 // ===== GENERATIVE SVG COVER SYSTEM =====
 // Each category gets a unique procedural cover visual.
-// generateCover(category, animated, seed) returns an HTML string.
-// animated=false → static SVG (homepage cards, 180px)
-// animated=true  → SVG + <script> block (category hero, 220px)
-// seed (string)  → per-article variation via deterministic offset
+// generateCover(category, animated, seed, coverObject) returns an HTML string.
+// animated=false  → static SVG (homepage cards, 180px)
+// animated=true   → SVG + <script> block (category hero, 220px)
+// seed (string)   → per-article variation via deterministic offset
+// coverObject     → consumer-psychology only: PNG filename stem (e.g. 'cart' → images/Covers/cp-cart.png)
 
 var COVER_BG = '#1A0E0A';
 var COVER_ACCENT = '#C4531A';
 var COVER_CREAM = '#F5F0E8';
+
+// Valid coverObject values — used for fallback check
+var CP_KNOWN_OBJECTS = ['cart', 'magnifier', 'hourglass', 'hand', 'scales', 'anchor', 'checkbox'];
 
 // ===== SEED OFFSET =====
 function seededOffset(seed, index) {
@@ -20,56 +24,37 @@ function seededOffset(seed, index) {
 }
 
 // ===== DISPATCHER =====
-function generateCover(category, animated, seed) {
+function generateCover(category, animated, seed, coverObject) {
   var h = animated ? 220 : 180;
   seed = seed || '';
+  coverObject = coverObject || 'cart';
   switch (category) {
-    case 'consumer-psychology':   return coverConsumerPsychology(h, animated, seed);
+    case 'consumer-psychology':   return coverConsumerPsychology(h, animated, seed, coverObject);
     case 'behavioural-economics': return coverBehaviouralEconomics(h, animated, seed);
     case 'user-experience':       return coverUserExperience(h, animated, seed);
     case 'undercurrents':         return coverUndercurrents(h, animated, seed);
-    default:                      return coverConsumerPsychology(h, animated, seed);
+    default:                      return coverConsumerPsychology(h, animated, seed, coverObject);
   }
 }
 
 // ===== COVER 1: CONSUMER PSYCHOLOGY =====
 // Dual reality — blurred left vs sharp right, divided by oscillating line
-function coverConsumerPsychology(h, animated, seed) {
+// PNG illustration centred in both halves; blur filter handles left-side softness
+function coverConsumerPsychology(h, animated, seed, coverObject) {
   var mid = 330;
-  var baseCy = Math.round(h * 0.5);
+  var imgSize = 160;
+  var imgX = Math.round((660 / 2) - (imgSize / 2));  // 250 — centred in full viewBox
+  var imgY = Math.round((h / 2) - (imgSize / 2));
 
-  // Per-article seed offsets (clamped to keep geometry visible)
-  var ox = Math.max(-40, Math.min(40, seededOffset(seed, 0)));
-  var oy = Math.max(-30, Math.min(30, seededOffset(seed, 1)));
+  // Resolve image path — fall back to 'cart' for any unknown or empty value
+  var knownObj = CP_KNOWN_OBJECTS.indexOf(coverObject) !== -1 ? coverObject : 'cart';
+  var imgPath = 'images/Covers/cp-' + knownObj + '.png';
 
-  var cy = baseCy + oy;
-
-  // Shared geometry offsets
-  var nodes = [
-    { x: -85, y: -30, r: 4 },
-    { x: 55,  y: 40,  r: 3 },
-    { x: -35, y: 60,  r: 5 },
-    { x: 35,  y: -40, r: 3 }
-  ];
-
-  function drawGroup(cx) {
-    var g = '';
-    var shiftedCx = cx + ox;
-    // Concentric circles — inner=1.0, middle=0.85, outer=0.7
-    var ringOps = [1.0, 0.85, 0.7];
-    [25, 45, 65].forEach(function(r, i) {
-      g += '<circle cx="' + shiftedCx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + COVER_ACCENT + '" stroke-width="1" opacity="' + ringOps[i].toFixed(2) + '"/>';
-    });
-    // Scattered nodes
-    nodes.forEach(function(n) {
-      var nop = 0.8 + Math.random() * 0.2;
-      g += '<circle cx="' + (shiftedCx + n.x) + '" cy="' + (cy + n.y) + '" r="' + n.r + '" fill="' + COVER_ACCENT + '" opacity="' + nop.toFixed(2) + '"/>';
-    });
-    // Connecting lines
-    g += '<line x1="' + (shiftedCx + nodes[0].x) + '" y1="' + (cy + nodes[0].y) + '" x2="' + (shiftedCx + nodes[2].x) + '" y2="' + (cy + nodes[2].y) + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.3"/>';
-    g += '<line x1="' + (shiftedCx + nodes[1].x) + '" y1="' + (cy + nodes[1].y) + '" x2="' + (shiftedCx + nodes[3].x) + '" y2="' + (cy + nodes[3].y) + '" stroke="' + COVER_CREAM + '" stroke-width="0.5" opacity="0.3"/>';
-    return g;
-  }
+  // The same <image> element appears in both halves;
+  // the blur filter on the left group handles the softness.
+  var imgEl = '<image href="' + imgPath + '" x="' + imgX + '" y="' + imgY + '" ' +
+    'width="' + imgSize + '" height="' + imgSize + '" ' +
+    'preserveAspectRatio="xMidYMid meet"/>';
 
   var animStyle = '';
   var lineClass = '';
@@ -82,7 +67,7 @@ function coverConsumerPsychology(h, animated, seed) {
       '</style>';
   }
 
-  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 ' + h + '" preserveAspectRatio="xMidYMid slice">' +
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 660 ' + h + '" preserveAspectRatio="xMidYMid slice">' +
     animStyle +
     '<defs>' +
     '<clipPath id="cp-left" class="cp-left-clip"><rect x="0" y="0" width="' + mid + '" height="' + h + '"/></clipPath>' +
@@ -90,11 +75,11 @@ function coverConsumerPsychology(h, animated, seed) {
     '<filter id="cp-blur"><feGaussianBlur stdDeviation="2.5"/></filter>' +
     '</defs>' +
     '<rect width="660" height="' + h + '" fill="' + COVER_BG + '"/>' +
-    // Left group — blurred
-    '<g clip-path="url(#cp-left)" filter="url(#cp-blur)">' + drawGroup(165) + '</g>' +
-    // Right group — sharp
-    '<g clip-path="url(#cp-right)">' + drawGroup(495) + '</g>' +
-    // Divider
+    // Left group — same image, blurred
+    '<g clip-path="url(#cp-left)" filter="url(#cp-blur)">' + imgEl + '</g>' +
+    // Right group — same image, sharp
+    '<g clip-path="url(#cp-right)">' + imgEl + '</g>' +
+    // Divider line
     '<line' + lineClass + ' x1="' + mid + '" y1="0" x2="' + mid + '" y2="' + h + '" stroke="' + COVER_ACCENT + '" stroke-width="1.5" opacity="1.0"/>' +
     // Labels
     '<text x="165" y="16" text-anchor="middle" fill="' + COVER_CREAM + '" font-family="Inter,sans-serif" font-size="8" letter-spacing="0.1em" opacity="0.6">PERCEIVED</text>' +

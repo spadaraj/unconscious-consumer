@@ -260,16 +260,23 @@
         ].join('\n');
       }
 
+      var heroHtml = article.coverImage
+        ? '<div class="article-hero"><img src="' + article.coverImage + '" alt="' + cleanTitle + '" class="article-hero-img" loading="eager"></div>'
+        : '';
+
       document.getElementById('article-content').innerHTML = [
-        '<div class="article-header">',
-        '  <a href="index.html" class="article-back">← All Articles</a>',
-        '  <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
-        '  <h1 class="article-title">' + cleanTitle + '</h1>',
-        '  <p class="article-excerpt">' + article.excerpt + '</p>',
-        '  <div class="article-meta-row">',
-        '    <span class="article-date">' + article.date + '</span>',
-        '    <span class="article-dot">·</span>',
-        '    <span class="article-read-time">' + article.readTime + '</span>',
+        '<div class="article-header' + (article.coverImage ? ' article-header--has-hero' : '') + '">',
+        heroHtml,
+        '  <div class="article-header-text">',
+        '    <a href="index.html" class="article-back">← All Articles</a>',
+        '    <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
+        '    <h1 class="article-title">' + cleanTitle + '</h1>',
+        '    <p class="article-excerpt">' + article.excerpt + '</p>',
+        '    <div class="article-meta-row">',
+        '      <span class="article-date">' + article.date + '</span>',
+        '      <span class="article-dot">·</span>',
+        '      <span class="article-read-time">' + article.readTime + '</span>',
+        '    </div>',
         '  </div>',
         '</div>',
         '<hr class="article-header-divider" />',

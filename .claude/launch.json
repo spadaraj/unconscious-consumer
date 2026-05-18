@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "unconscious-consumer",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/uc-serve.py"],
+      "port": 8787
+    }
+  ]
+}

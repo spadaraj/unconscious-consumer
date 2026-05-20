@@ -336,38 +336,53 @@ function renderFeaturedHero(article) {
   var featuredLinkEl = document.getElementById('hero-featured-link');
   if (!bgLayer || !article) return;
 
-  var VW = 1200, VH = 560;
-  var imgW = 480, imgH = 480;
-  var imgX = VW - imgW - 40;
-  var imgY = Math.round((VH - imgH) / 2);
+  var VW = 1200, VH = 580;
+  // Image fills the right ~62% of the viewBox, full height
+  var imgX = Math.round(VW * 0.38);
+  var imgW = VW - imgX + 80; // bleed past right edge
+  var imgH = VH;
+  var imgY = 0;
+
+  // Gradient seals the text zone: solid dark 0→42%, fade out 42→62%
+  // Lens sweeps only through the visible image region: 48%→92%
+  var minPct = 0.48, maxPct = 0.92;
 
   bgLayer.innerHTML =
     '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"' +
-    ' viewBox="0 0 ' + VW + ' ' + VH + '" preserveAspectRatio="xMaxYMid slice"' +
+    ' viewBox="0 0 ' + VW + ' ' + VH + '" preserveAspectRatio="xMidYMid slice"' +
     ' style="width:100%;height:100%;display:block;">' +
     '<defs>' +
-    '<filter id="hero-blur"><feGaussianBlur stdDeviation="6"/></filter>' +
-    '<clipPath id="hero-clip-L"><rect id="hero-rect-L" x="0" y="0" width="600" height="' + VH + '"/></clipPath>' +
-    '<clipPath id="hero-clip-R"><rect id="hero-rect-R" x="600" y="0" width="' + VW + '" height="' + VH + '"/></clipPath>' +
+    '  <filter id="hero-blur"><feGaussianBlur stdDeviation="8"/></filter>' +
+    '  <clipPath id="hero-clip-L"><rect id="hero-rect-L" x="0" y="0" width="576" height="' + VH + '"/></clipPath>' +
+    '  <clipPath id="hero-clip-R"><rect id="hero-rect-R" x="576" y="0" width="' + VW + '" height="' + VH + '"/></clipPath>' +
+    '  <linearGradient id="hero-fade" x1="0" x2="1" y1="0" y2="0">' +
+    '    <stop offset="0%"   stop-color="#0F0B09" stop-opacity="1"/>' +
+    '    <stop offset="42%"  stop-color="#0F0B09" stop-opacity="1"/>' +
+    '    <stop offset="64%"  stop-color="#0F0B09" stop-opacity="0"/>' +
+    '  </linearGradient>' +
     '</defs>' +
+    // Dark base — prevents flash before image loads
+    '<rect width="' + VW + '" height="' + VH + '" fill="#0F0B09"/>' +
+    // Blurred image (left of lens)
     '<g clip-path="url(#hero-clip-L)" filter="url(#hero-blur)">' +
-    '<image href="' + article.coverImage + '" x="' + imgX + '" y="' + imgY + '" width="' + imgW + '" height="' + imgH + '" preserveAspectRatio="xMidYMid meet"/>' +
+    '  <image href="' + article.coverImage + '" x="' + imgX + '" y="' + imgY + '" width="' + imgW + '" height="' + imgH + '" preserveAspectRatio="xMidYMid slice"/>' +
     '</g>' +
+    // Sharp image (right of lens)
     '<g clip-path="url(#hero-clip-R)">' +
-    '<image href="' + article.coverImage + '" x="' + imgX + '" y="' + imgY + '" width="' + imgW + '" height="' + imgH + '" preserveAspectRatio="xMidYMid meet"/>' +
+    '  <image href="' + article.coverImage + '" x="' + imgX + '" y="' + imgY + '" width="' + imgW + '" height="' + imgH + '" preserveAspectRatio="xMidYMid slice"/>' +
     '</g>' +
-    '<rect id="hero-tint" x="0" y="0" width="600" height="' + VH + '" fill="rgba(15,11,9,0.09)"/>' +
-    '<line id="hero-lens-line" x1="600" y1="0" x2="600" y2="' + VH + '" stroke="#C4531A" stroke-width="1" opacity="0.5"/>' +
+    // Gradient fade — always on top, seals the text zone cleanly
+    '<rect width="' + VW + '" height="' + VH + '" fill="url(#hero-fade)" pointer-events="none"/>' +
+    // Lens line — thin terracotta, only visible past the gradient
+    '<line id="hero-lens-line" x1="576" y1="0" x2="576" y2="' + VH + '" stroke="#C4531A" stroke-width="1" opacity="0.38"/>' +
     '</svg>';
 
   var rectL    = document.getElementById('hero-rect-L');
   var rectR    = document.getElementById('hero-rect-R');
   var lensLine = document.getElementById('hero-lens-line');
-  var tint     = document.getElementById('hero-tint');
 
   var phase    = Math.random() * Math.PI * 2;
   var phaseInc = (2 * Math.PI) / (16 * 60);
-  var minPct   = 0.20, maxPct = 0.72;
 
   (function tick() {
     phase += phaseInc;
@@ -377,7 +392,6 @@ function renderFeaturedHero(article) {
     rectR.setAttribute('width', VW - lensX);
     lensLine.setAttribute('x1', lensX);
     lensLine.setAttribute('x2', lensX);
-    tint.setAttribute('width', lensX);
     requestAnimationFrame(tick);
   })();
 

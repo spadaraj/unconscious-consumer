@@ -314,6 +314,82 @@ discoverySearchInput.addEventListener('input', (e) => {
   resetAndLoad();
 });
 
+// ===== FEATURED HERO =====
+
+// SELECTION METHOD: currently random from curated featured set.
+// Future: replace the body of this function with engagement-based
+// social proof logic. Nothing else needs to change.
+function getFeaturedArticle(articles) {
+  var featured = articles.filter(function(a) { return a.featured === true && a.coverImage; });
+  if (featured.length > 0) {
+    return featured[Math.floor(Math.random() * featured.length)];
+  }
+  // Fallback: most recent article that has a coverImage
+  var withImage = articles.filter(function(a) { return a.coverImage; });
+  return withImage.length
+    ? withImage.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); })[0]
+    : null;
+}
+
+function renderFeaturedHero(article) {
+  var bgLayer = document.getElementById('hero-bg-layer');
+  var featuredLinkEl = document.getElementById('hero-featured-link');
+  if (!bgLayer || !article) return;
+
+  var VW = 1200, VH = 560;
+  var imgW = 480, imgH = 480;
+  var imgX = VW - imgW - 40;
+  var imgY = Math.round((VH - imgH) / 2);
+
+  bgLayer.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"' +
+    ' viewBox="0 0 ' + VW + ' ' + VH + '" preserveAspectRatio="xMaxYMid slice"' +
+    ' style="width:100%;height:100%;display:block;">' +
+    '<defs>' +
+    '<filter id="hero-blur"><feGaussianBlur stdDeviation="6"/></filter>' +
+    '<clipPath id="hero-clip-L"><rect id="hero-rect-L" x="0" y="0" width="600" height="' + VH + '"/></clipPath>' +
+    '<clipPath id="hero-clip-R"><rect id="hero-rect-R" x="600" y="0" width="' + VW + '" height="' + VH + '"/></clipPath>' +
+    '</defs>' +
+    '<g clip-path="url(#hero-clip-L)" filter="url(#hero-blur)">' +
+    '<image href="' + article.coverImage + '" x="' + imgX + '" y="' + imgY + '" width="' + imgW + '" height="' + imgH + '" preserveAspectRatio="xMidYMid meet"/>' +
+    '</g>' +
+    '<g clip-path="url(#hero-clip-R)">' +
+    '<image href="' + article.coverImage + '" x="' + imgX + '" y="' + imgY + '" width="' + imgW + '" height="' + imgH + '" preserveAspectRatio="xMidYMid meet"/>' +
+    '</g>' +
+    '<rect id="hero-tint" x="0" y="0" width="600" height="' + VH + '" fill="rgba(15,11,9,0.09)"/>' +
+    '<line id="hero-lens-line" x1="600" y1="0" x2="600" y2="' + VH + '" stroke="#C4531A" stroke-width="1" opacity="0.5"/>' +
+    '</svg>';
+
+  var rectL    = document.getElementById('hero-rect-L');
+  var rectR    = document.getElementById('hero-rect-R');
+  var lensLine = document.getElementById('hero-lens-line');
+  var tint     = document.getElementById('hero-tint');
+
+  var phase    = Math.random() * Math.PI * 2;
+  var phaseInc = (2 * Math.PI) / (16 * 60);
+  var minPct   = 0.20, maxPct = 0.72;
+
+  (function tick() {
+    phase += phaseInc;
+    var lensX = Math.round(VW * (minPct + (maxPct - minPct) * (0.5 + 0.5 * Math.sin(phase))));
+    rectL.setAttribute('width', lensX);
+    rectR.setAttribute('x', lensX);
+    rectR.setAttribute('width', VW - lensX);
+    lensLine.setAttribute('x1', lensX);
+    lensLine.setAttribute('x2', lensX);
+    tint.setAttribute('width', lensX);
+    requestAnimationFrame(tick);
+  })();
+
+  if (featuredLinkEl) {
+    var href   = article.substackUrl || ('article.html?slug=' + article.slug);
+    var target = article.substackUrl ? ' target="_blank" rel="noopener"' : '';
+    featuredLinkEl.innerHTML =
+      'Featured: <a href="' + href + '"' + target + '>' +
+      article.title + ' <span class="featured-arrow">→</span></a>';
+  }
+}
+
 // ===== INIT =====
 initTheme();
 
@@ -321,6 +397,8 @@ fetch('articles.json')
   .then(function(r) { return r.json(); })
   .then(function(data) {
     ARTICLES = data;
+
+    renderFeaturedHero(getFeaturedArticle(data));
 
     // Apply ?filter= URL param if present (e.g. coming from an article page category pill)
     var filterParam = new URLSearchParams(window.location.search).get('filter');

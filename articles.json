@@ -18,7 +18,8 @@
       "rise-of-the-skeptical-shopper"
     ],
     "coverObject": "cart",
-    "coverImage": "images/cp-wearing-genes.png"
+    "coverImage": "images/cp-wearing-genes.png",
+    "featured": true
   },
   {
     "id": 2,
@@ -39,7 +40,8 @@
       "tesla-range-controversy"
     ],
     "coverObject": "magnifier",
-    "coverImage": "images/cp-is-this-legit.png"
+    "coverImage": "images/cp-is-this-legit.png",
+    "featured": true
   },
   {
     "id": 3,
@@ -60,7 +62,8 @@
       "behind-dark-patterns"
     ],
     "coverObject": "hourglass",
-    "coverImage": "images/cp-less-is-more.png"
+    "coverImage": "images/cp-less-is-more.png",
+    "featured": true
   },
   {
     "id": 5,
@@ -80,7 +83,8 @@
       "thinking-fast-and-slow-consumer-behaviour",
       "predictably-irrational-in-an-unpredictable-economy"
     ],
-    "coverImage": "images/be-nudge-theory.png"
+    "coverImage": "images/be-nudge-theory.png",
+    "featured": false
   },
   {
     "id": 6,
@@ -100,7 +104,8 @@
       "thinking-fast-and-slow-consumer-behaviour",
       "nudge-theory-for-climate-action"
     ],
-    "coverImage": "images/be-predictably-irrational.png"
+    "coverImage": "images/be-predictably-irrational.png",
+    "featured": false
   },
   {
     "id": 7,
@@ -120,7 +125,8 @@
       "predictably-irrational-in-an-unpredictable-economy",
       "nudge-theory-for-climate-action"
     ],
-    "coverImage": "images/be-thinking-fast-and-slow.png"
+    "coverImage": "images/be-thinking-fast-and-slow.png",
+    "featured": false
   },
   {
     "id": 9,
@@ -140,7 +146,8 @@
       "ethical-crossroads-of-gamification",
       "wordle-delayed-gratification"
     ],
-    "coverImage": "images/ux-saas-onboarding.png"
+    "coverImage": "images/ux-saas-onboarding.png",
+    "featured": false
   },
   {
     "id": 10,
@@ -160,7 +167,8 @@
       "gamifying-saas-onboarding",
       "behind-dark-patterns"
     ],
-    "coverImage": "images/ux-game-on-or-game-over.png"
+    "coverImage": "images/ux-game-on-or-game-over.png",
+    "featured": false
   },
   {
     "id": 11,
@@ -180,7 +188,8 @@
       "ethical-crossroads-of-gamification",
       "unpacking-the-power-of-scarcity-bias"
     ],
-    "coverImage": "images/ux-behind-dark-patterns.png"
+    "coverImage": "images/ux-behind-dark-patterns.png",
+    "featured": false
   },
   {
     "id": 13,
@@ -195,7 +204,8 @@
     "sourceUrl": null,
     "substackUrl": "https://theunconsciousconsumer.substack.com",
     "bodyHtml": null,
-    "hosting": "substack"
+    "hosting": "substack",
+    "featured": false
   },
   {
     "id": 14,
@@ -210,7 +220,8 @@
     "sourceUrl": null,
     "substackUrl": "https://theunconsciousconsumer.substack.com",
     "bodyHtml": null,
-    "hosting": "substack"
+    "hosting": "substack",
+    "featured": false
   },
   {
     "id": 15,
@@ -225,7 +236,8 @@
     "sourceUrl": null,
     "substackUrl": "https://theunconsciousconsumer.substack.com",
     "bodyHtml": null,
-    "hosting": "substack"
+    "hosting": "substack",
+    "featured": false
   },
   {
     "id": 16,
@@ -240,7 +252,8 @@
     "sourceUrl": null,
     "substackUrl": "https://theunconsciousconsumer.substack.com",
     "bodyHtml": null,
-    "hosting": "substack"
+    "hosting": "substack",
+    "featured": false
   },
   {
     "id": 19,
@@ -255,7 +268,8 @@
     "sourceUrl": null,
     "substackUrl": "https://theunconsciousconsumer.substack.com/p/why-product-teams-misunderstand-their",
     "bodyHtml": null,
-    "hosting": "substack"
+    "hosting": "substack",
+    "featured": false
   },
   {
     "id": 20,
@@ -271,7 +285,8 @@
     "substackUrl": "https://theunconsciousconsumer.substack.com/p/februarys-over-the-gym-is-empty-again",
     "bodyHtml": null,
     "hosting": "substack",
-    "coverObject": "cart"
+    "coverObject": "cart",
+    "featured": false
   },
   {
     "id": 21,
@@ -291,7 +306,8 @@
       "mastering-calm-ux",
       "sound-on-user-experience"
     ],
-    "coverImage": "images/ux-slacking-off-or-on.png"
+    "coverImage": "images/ux-slacking-off-or-on.png",
+    "featured": false
   },
   {
     "id": 22,
@@ -311,7 +327,8 @@
       "spotify-unconscious-ux",
       "sound-on-user-experience"
     ],
-    "coverImage": "images/ux-mastering-the-mind.png"
+    "coverImage": "images/ux-mastering-the-mind.png",
+    "featured": false
   },
   {
     "id": 23,
@@ -331,7 +348,8 @@
       "mastering-calm-ux",
       "spotify-unconscious-ux"
     ],
-    "coverImage": "images/ux-unconscious-influence-sound.png"
+    "coverImage": "images/ux-unconscious-influence-sound.png",
+    "featured": false
   },
   {
     "id": 24,
@@ -351,7 +369,8 @@
       "gamifying-saas-onboarding",
       "ethical-crossroads-of-gamification"
     ],
-    "coverImage": "images/ux-wordle.png"
+    "coverImage": "images/ux-wordle.png",
+    "featured": false
   },
   {
     "id": 25,
@@ -371,7 +390,8 @@
       "spotify-unconscious-ux",
       "mastering-calm-ux"
     ],
-    "coverImage": "images/ux-invisible-impressions-canva.png"
+    "coverImage": "images/ux-invisible-impressions-canva.png",
+    "featured": false
   },
   {
     "id": 26,
@@ -391,7 +411,8 @@
       "canva-unconscious-ux",
       "sound-on-user-experience"
     ],
-    "coverImage": "images/ux-behind-the-beat-spotify.png"
+    "coverImage": "images/ux-behind-the-beat-spotify.png",
+    "featured": false
   },
   {
     "id": 27,
@@ -411,7 +432,8 @@
       "thinking-chatbots-labor-illusion",
       "riding-the-ai-wave"
     ],
-    "coverImage": "images/ux-visionos.png"
+    "coverImage": "images/ux-visionos.png",
+    "featured": false
   },
   {
     "id": 28,
@@ -431,7 +453,8 @@
       "brand-trust-ai-experiences",
       "visionos-apple-spatial-revolution"
     ],
-    "coverImage": "images/ux-thinking-chatbots.png"
+    "coverImage": "images/ux-thinking-chatbots.png",
+    "featured": false
   },
   {
     "id": 29,
@@ -450,7 +473,8 @@
     "related": [
       "rise-of-the-skeptical-shopper",
       "brand-trust-ai-experiences"
-    ]
+    ],
+    "featured": false
   },
   {
     "id": 30,
@@ -469,7 +493,8 @@
     "related": [
       "thinking-chatbots-labor-illusion",
       "tesla-range-controversy"
-    ]
+    ],
+    "featured": false
   },
   {
     "id": 31,
@@ -488,7 +513,8 @@
     "related": [
       "brand-trust-ai-experiences",
       "riding-the-ai-wave"
-    ]
+    ],
+    "featured": false
   },
   {
     "id": 32,
@@ -507,7 +533,8 @@
     "related": [
       "riding-the-ai-wave",
       "twitter-tightrope-walk"
-    ]
+    ],
+    "featured": false
   },
   {
     "id": 33,
@@ -526,7 +553,8 @@
     "related": [
       "chatgpt-threads-hypergrowth",
       "rise-of-the-skeptical-shopper"
-    ]
+    ],
+    "featured": false
   },
   {
     "id": 34,
@@ -545,7 +573,8 @@
     "related": [
       "chatgpt-threads-hypergrowth",
       "brand-trust-ai-experiences"
-    ]
+    ],
+    "featured": false
   },
   {
     "id": 35,
@@ -561,7 +590,8 @@
     "substackUrl": null,
     "bodyHtml": null,
     "hosting": "local",
-    "coverObject": "hand"
+    "coverObject": "hand",
+    "featured": false
   },
   {
     "id": 40,
@@ -582,7 +612,8 @@
       "rise-of-the-skeptical-shopper"
     ],
     "coverObject": "scales",
-    "coverImage": "images/cp-emotion-in-motion.png"
+    "coverImage": "images/cp-emotion-in-motion.png",
+    "featured": false
   },
   {
     "id": 41,
@@ -603,7 +634,8 @@
       "stars-in-our-eyes-power-of-reviews"
     ],
     "coverObject": "magnifier",
-    "coverImage": "images/cp-trust-economics.png"
+    "coverImage": "images/cp-trust-economics.png",
+    "featured": false
   },
   {
     "id": 42,
@@ -624,7 +656,8 @@
       "unpacking-the-power-of-scarcity-bias"
     ],
     "coverObject": "hourglass",
-    "coverImage": "images/cp-rose-tinted-commerce.png"
+    "coverImage": "images/cp-rose-tinted-commerce.png",
+    "featured": false
   },
   {
     "id": 43,
@@ -645,7 +678,8 @@
       "trust-economics"
     ],
     "coverObject": "magnifier",
-    "coverImage": "images/cp-power-of-reviews.png"
+    "coverImage": "images/cp-power-of-reviews.png",
+    "featured": false
   },
   {
     "id": 44,
@@ -666,7 +700,8 @@
       "rose-tinted-commerce"
     ],
     "coverObject": "hand",
-    "coverImage": "images/cp-hidden-influences-scent.png"
+    "coverImage": "images/cp-hidden-influences-scent.png",
+    "featured": false
   },
   {
     "id": 45,
@@ -687,7 +722,8 @@
       "stars-in-our-eyes-power-of-reviews"
     ],
     "coverObject": "cart",
-    "coverImage": "images/cp-influencer-tipping-point.png"
+    "coverImage": "images/cp-influencer-tipping-point.png",
+    "featured": false
   },
   {
     "id": 46,
@@ -708,7 +744,8 @@
       "predictably-irrational-in-an-unpredictable-economy"
     ],
     "coverObject": "anchor",
-    "coverImage": "images/cp-resilience.png"
+    "coverImage": "images/cp-resilience.png",
+    "featured": false
   },
   {
     "id": 47,
@@ -729,7 +766,8 @@
       "invisible-hand-inflation"
     ],
     "coverObject": "checkbox",
-    "coverImage": "images/cp-leap-of-faith.png"
+    "coverImage": "images/cp-leap-of-faith.png",
+    "featured": false
   },
   {
     "id": 48,
@@ -750,7 +788,8 @@
       "predictably-irrational-in-an-unpredictable-economy"
     ],
     "coverObject": "scales",
-    "coverImage": "images/cp-invisible-hand-inflation.png"
+    "coverImage": "images/cp-invisible-hand-inflation.png",
+    "featured": false
   },
   {
     "id": 49,
@@ -771,7 +810,8 @@
       "wearing-our-genes-on-our-sleeves-spent"
     ],
     "coverObject": "cart",
-    "coverImage": "images/cp-superbowl.png"
+    "coverImage": "images/cp-superbowl.png",
+    "featured": false
   },
   {
     "id": 50,
@@ -792,7 +832,8 @@
       "emotions-in-motion-mirror-neurons"
     ],
     "coverObject": "magnifier",
-    "coverImage": "images/cp-voiceover.png"
+    "coverImage": "images/cp-voiceover.png",
+    "featured": false
   },
   {
     "id": 51,
@@ -813,7 +854,8 @@
       "wearing-our-genes-on-our-sleeves-spent"
     ],
     "coverObject": "hourglass",
-    "coverImage": "images/cp-post-hoc-rationalization.png"
+    "coverImage": "images/cp-post-hoc-rationalization.png",
+    "featured": false
   },
   {
     "id": 52,
@@ -834,7 +876,8 @@
       "nudge-theory-for-climate-action"
     ],
     "coverObject": null,
-    "coverImage": "images/be-vegan.png"
+    "coverImage": "images/be-vegan.png",
+    "featured": false
   },
   {
     "id": 53,
@@ -854,7 +897,8 @@
       "predictably-irrational-in-an-unpredictable-economy",
       "thinking-fast-and-slow-consumer-behaviour"
     ],
-    "coverObject": null
+    "coverObject": null,
+    "featured": false
   },
   {
     "id": 54,
@@ -875,7 +919,8 @@
       "predictably-irrational-in-an-unpredictable-economy"
     ],
     "coverObject": null,
-    "coverImage": "images/be-nfts.png"
+    "coverImage": "images/be-nfts.png",
+    "featured": false
   },
   {
     "id": 55,
@@ -896,7 +941,8 @@
       "nft-loss-aversion-fomo"
     ],
     "coverObject": null,
-    "coverImage": "images/be-shifting-sands.png"
+    "coverImage": "images/be-shifting-sands.png",
+    "featured": false
   },
   {
     "id": 56,
@@ -917,7 +963,8 @@
       "predictably-irrational-in-an-unpredictable-economy"
     ],
     "coverObject": null,
-    "coverImage": "images/be-peak-end-rule.png"
+    "coverImage": "images/be-peak-end-rule.png",
+    "featured": false
   },
   {
     "id": 57,
@@ -938,7 +985,8 @@
       "predictably-irrational-in-an-unpredictable-economy"
     ],
     "coverObject": null,
-    "coverImage": "images/be-defence-behavioural-economics.png"
+    "coverImage": "images/be-defence-behavioural-economics.png",
+    "featured": false
   },
   {
     "id": 58,
@@ -959,7 +1007,8 @@
       "thinking-fast-and-slow-consumer-behaviour"
     ],
     "coverObject": null,
-    "coverImage": "images/be-candidate-voice.png"
+    "coverImage": "images/be-candidate-voice.png",
+    "featured": false
   },
   {
     "id": 59,
@@ -980,7 +1029,8 @@
       "nudge-theory-for-climate-action"
     ],
     "coverObject": null,
-    "coverImage": "images/be-distracted-driving.png"
+    "coverImage": "images/be-distracted-driving.png",
+    "featured": false
   },
   {
     "id": 60,
@@ -1001,7 +1051,8 @@
       "mastering-calm-ux"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-unconscious-influence-typography.png"
+    "coverImage": "images/ux-unconscious-influence-typography.png",
+    "featured": false
   },
   {
     "id": 61,
@@ -1022,7 +1073,8 @@
       "behind-dark-patterns"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-behind-the-red-lines.png"
+    "coverImage": "images/ux-behind-the-red-lines.png",
+    "featured": false
   },
   {
     "id": 62,
@@ -1043,7 +1095,8 @@
       "wordle-delayed-gratification"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-reconsidering-ai-ml.png"
+    "coverImage": "images/ux-reconsidering-ai-ml.png",
+    "featured": false
   },
   {
     "id": 63,
@@ -1064,7 +1117,8 @@
       "digital-nudge-returning-customers"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-digital-nudge-paradox-of-choice.png"
+    "coverImage": "images/ux-digital-nudge-paradox-of-choice.png",
+    "featured": false
   },
   {
     "id": 64,
@@ -1085,7 +1139,8 @@
       "digital-nudge-returning-customers"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-digital-nudge-desirable-difficulty.png"
+    "coverImage": "images/ux-digital-nudge-desirable-difficulty.png",
+    "featured": false
   },
   {
     "id": 65,
@@ -1106,7 +1161,8 @@
       "digital-nudge-desirable-difficulty"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-digital-nudge-returning-customers.png"
+    "coverImage": "images/ux-digital-nudge-returning-customers.png",
+    "featured": false
   },
   {
     "id": 66,
@@ -1127,6 +1183,7 @@
       "behind-dark-patterns"
     ],
     "coverObject": null,
-    "coverImage": "images/ux-revolution-not-streamed.png"
+    "coverImage": "images/ux-revolution-not-streamed.png",
+    "featured": false
   }
 ]

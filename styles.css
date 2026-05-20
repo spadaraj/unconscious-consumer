@@ -649,6 +649,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .featured-card-img-text { font-size: 64px; }
 .featured-card-img--text { align-items: flex-end; padding: 24px; }
+.featured-card-img--photo { position: relative; overflow: hidden; }
+.featured-card-img-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.featured-card-img--photo .featured-card-img-overlay { position: relative; z-index: 2; }
+.featured-card-img--photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.2) 60%, transparent 100%); z-index: 1; }
 .featured-card-img-overlay { display: flex; flex-direction: column; gap: 8px; }
 .featured-card-img-label {
   font-size: 11px;

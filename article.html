@@ -11,15 +11,20 @@
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Loading… — The Unconscious Consumer</title>
-  <meta name="description" content="" />
+  <title>The Unconscious Consumer</title>
+  <meta name="description" content="Exploring the hidden forces that shape consumer behaviour — psychology, behavioural economics, and UX by Dr. Adam Spadaro." />
+  <meta name="author" content="Dr. Adam Spadaro" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="The Unconscious Consumer" />
-  <meta property="og:title" content="" />
-  <meta property="og:description" content="" />
-  <meta property="og:url" content="" />
-  <meta property="og:image" content="" />
-  <link rel="canonical" href="" />
+  <meta property="og:title" content="The Unconscious Consumer" />
+  <meta property="og:description" content="Exploring the hidden forces that shape consumer behaviour — psychology, behavioural economics, and UX by Dr. Adam Spadaro." />
+  <meta property="og:url" content="https://theunconsciousconsumer.com/" />
+  <meta property="og:image" content="https://theunconsciousconsumer.com/images/about-adam.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Unconscious Consumer" />
+  <meta name="twitter:description" content="Exploring the hidden forces that shape consumer behaviour — psychology, behavioural economics, and UX by Dr. Adam Spadaro." />
+  <meta name="twitter:image" content="https://theunconsciousconsumer.com/images/about-adam.png" />
+  <link rel="canonical" href="https://theunconsciousconsumer.com/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -187,11 +192,19 @@
       document.querySelector('meta[property="og:title"]').setAttribute('content', cleanTitle);
       document.querySelector('meta[property="og:description"]').setAttribute('content', article.excerpt);
       document.querySelector('meta[property="og:url"]').setAttribute('content', articleUrl);
+      document.querySelector('meta[name="twitter:title"]').setAttribute('content', cleanTitle);
+      document.querySelector('meta[name="twitter:description"]').setAttribute('content', article.excerpt);
 
-      // og:image — use first image in bodyHtml before stripping
-      var firstImg = article.bodyHtml && article.bodyHtml.match(/src="(images\/[^"]+)"/);
-      if (firstImg) {
-        document.querySelector('meta[property="og:image"]').setAttribute('content', BASE_URL + '/' + firstImg[1]);
+      // og:image + twitter:image — prefer article coverImage, then first body image
+      var imgUrl = article.coverImage
+        ? BASE_URL + '/' + article.coverImage
+        : (function() {
+            var m = article.bodyHtml && article.bodyHtml.match(/src="(images\/[^"]+)"/);
+            return m ? BASE_URL + '/' + m[1] : null;
+          })();
+      if (imgUrl) {
+        document.querySelector('meta[property="og:image"]').setAttribute('content', imgUrl);
+        document.querySelector('meta[name="twitter:image"]').setAttribute('content', imgUrl);
       }
       document.querySelector('link[rel="canonical"]').setAttribute('href', articleUrl);
 

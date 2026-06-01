@@ -676,11 +676,12 @@
     // like a road rounding a bend as you journey down.
     function buildPath(w, h) {
       return [
-        `M ${w * 0.92} 0`,
-        // Sweep leftward through the upper half
-        `C ${w * 0.70} ${h * 0.22}, ${w * 0.30} ${h * 0.38}, ${w * 0.50} ${h * 0.50}`,
-        // Continue the arc through the lower half, arriving bottom-left
-        `S ${w * 0.70} ${h * 0.72}, ${w * 0.08} ${h}`
+        `M ${w * 0.94} 0`,
+        // Hard swing leftward — wide arc that crosses the content mid-zone
+        // where section <hr> dividers live (~35–48% scroll)
+        `C ${w * 0.88} ${h * 0.16}, ${w * 0.08} ${h * 0.34}, ${w * 0.38} ${h * 0.47}`,
+        // Recover right then sweep far-left to finish — dramatic lower arc
+        `S ${w * 0.86} ${h * 0.68}, ${w * 0.05} ${h}`
       ].join(' ');
     }
 

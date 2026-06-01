@@ -348,24 +348,25 @@
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
-    /* --- Journey curve (scroll-driven, right margin) --- */
+    /* --- Journey curve (scroll-driven, full viewport sweep) --- */
     #cv-journey {
       position: fixed;
-      /* Sit just outside the right edge of the 780px content column */
-      right: calc(max(0px, (100vw - 780px) / 2) * 0.35);
+      left: 0;
       top: 0;
-      width: 48px;
+      width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 5;
+      z-index: 2;
       color: var(--accent, #A63D2B);
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.5s ease;
     }
     #cv-journey.ready { opacity: 1; }
 
-    #cv-journey-ghost  { opacity: 0.1; }
-    #cv-journey-drawn  { opacity: 1; }
+    /* Ghost shows the full unread path at very low opacity */
+    #cv-journey-ghost { opacity: 0.07; }
+    /* Drawn path is visible but not loud — it's a companion, not a distraction */
+    #cv-journey-drawn { opacity: 0.28; }
 
     #cv-journey-dot {
       transform-box: fill-box;
@@ -373,19 +374,16 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    #cv-journey-dot.active { opacity: 1; }
+    #cv-journey-dot.active { opacity: 0.75; }
 
-    /* Pulse the dot while reading */
     @keyframes cv-dot-pulse {
       0%, 100% { transform: scale(1); }
-        50%     { transform: scale(1.55); opacity: 0.6; }
+        50%     { transform: scale(1.6); opacity: 0.45; }
     }
     #cv-journey-dot.active {
-      animation: cv-dot-pulse 2.4s ease-in-out infinite;
+      animation: cv-dot-pulse 2.6s ease-in-out infinite;
     }
 
-    /* Hide on viewports too narrow to have a right margin */
-    @media (max-width: 900px) { #cv-journey { display: none; } }
     @media (prefers-reduced-motion: reduce) { #cv-journey { display: none; } }
 
     /* --- Responsive --- */
@@ -426,8 +424,8 @@
     <!-- Scroll-journey curve: fixed in the right margin, draws as you read -->
     <svg id="cv-journey" aria-hidden="true" fill="none">
       <path id="cv-journey-ghost" stroke="currentColor" stroke-width="1.5" fill="none"/>
-      <path id="cv-journey-drawn" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <circle id="cv-journey-dot" r="4.5" fill="currentColor"/>
+      <path id="cv-journey-drawn" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle id="cv-journey-dot" r="5.5" fill="currentColor"/>
     </svg>
 
     <div class="cv-wrap">
@@ -673,17 +671,16 @@
     const dot   = document.getElementById('cv-journey-dot');
     if (!svg || !ghost || !drawn || !dot) return;
 
-    const W = 48; // matches CSS width
-
-    // Gentle S-curve top-to-bottom: bends right in the upper half, left in the lower.
-    // Keeps horizontal amplitude modest so it looks like a road rounding a bend.
-    function buildPath(h) {
-      const cx  = W / 2;        // centre x = 24
-      const amp = W * 0.36;     // horizontal amplitude ≈ 17 px each side
+    // Sweeping S-curve across the full viewport.
+    // Starts top-right, curves through the page, ends bottom-left —
+    // like a road rounding a bend as you journey down.
+    function buildPath(w, h) {
       return [
-        `M ${cx} 0`,
-        `C ${cx + amp} ${h * 0.18}, ${cx + amp} ${h * 0.32}, ${cx} ${h * 0.5}`,
-        `S ${cx - amp} ${h * 0.68}, ${cx} ${h}`
+        `M ${w * 0.92} 0`,
+        // Sweep leftward through the upper half
+        `C ${w * 0.70} ${h * 0.22}, ${w * 0.30} ${h * 0.38}, ${w * 0.50} ${h * 0.50}`,
+        // Continue the arc through the lower half, arriving bottom-left
+        `S ${w * 0.70} ${h * 0.72}, ${w * 0.08} ${h}`
       ].join(' ');
     }
 
@@ -691,11 +688,12 @@
     let rafId   = null;
 
     function setup() {
+      const w = window.innerWidth;
       const h = window.innerHeight;
-      const d = buildPath(h);
+      const d = buildPath(w, h);
 
-      svg.setAttribute('viewBox', `0 0 ${W} ${h}`);
-      svg.setAttribute('width',  String(W));
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.setAttribute('width',  String(w));
       svg.setAttribute('height', String(h));
 
       ghost.setAttribute('d', d);

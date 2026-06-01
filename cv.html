@@ -651,45 +651,93 @@
   });
 
   // ===== CURVE DRAW ANIMATION =====
+  // The SVG path starts at M20 380 (bottom-left of the viewBox).
+  // We translate the whole SVG so that point lands exactly on the
+  // period at the end of the headline, then draw the stroke from there.
   (function() {
+    const svg         = document.querySelector('.cv-curve');
     const curvePath   = document.querySelector('.cv-curve path');
     const curveDot    = document.querySelector('.cv-curve circle');
     const heroSection = document.querySelector('.cv-hero');
-    if (!curvePath || !heroSection) return;
+    const headline    = document.querySelector('.cv-headline');
+    if (!svg || !curvePath || !heroSection || !headline) return;
 
-    // Respect reduced-motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Measure the path in SVG units and initialise as hidden
+    // --- Align path start to the period ---
+    // Returns the bounding rect of the final character in the headline.
+    function getPeriodRect() {
+      const walker = document.createTreeWalker(headline, NodeFilter.SHOW_TEXT);
+      let lastNode = null, node;
+      while ((node = walker.nextNode())) lastNode = node;
+      if (!lastNode) return null;
+      const text = lastNode.textContent;
+      // Find the period (last non-whitespace character)
+      const idx = text.trimEnd().length - 1;
+      const range = document.createRange();
+      range.setStart(lastNode, idx);
+      range.setEnd(lastNode, idx + 1);
+      return range.getBoundingClientRect();
+    }
+
+    function alignCurve() {
+      // Reset any previous transform so we get a clean measurement
+      svg.style.transform = '';
+
+      const periodRect = getPeriodRect();
+      if (!periodRect || periodRect.width === 0) return;
+
+      const svgRect = svg.getBoundingClientRect();
+      const vb      = svg.viewBox.baseVal;               // {width:600, height:400}
+      const scaleX  = svgRect.width  / vb.width;
+      const scaleY  = svgRect.height / vb.height;
+
+      // M20 380 in screen-space pixels
+      const pathStartX = svgRect.left + 20  * scaleX;
+      const pathStartY = svgRect.top  + 380 * scaleY;
+
+      // Target: right edge of the period, vertically centred on the glyph
+      const targetX = periodRect.right;
+      const targetY = periodRect.top + periodRect.height * 0.5;
+
+      svg.style.transform = `translate(${targetX - pathStartX}px, ${targetY - pathStartY}px)`;
+    }
+
+    // Wait for web fonts so text layout is final, then align
+    (document.fonts ? document.fonts.ready : Promise.resolve())
+      .then(alignCurve);
+    window.addEventListener('resize', alignCurve, { passive: true });
+
+    // If reduced-motion: just show the curve static, no drawing animation
+    if (reducedMotion) {
+      curvePath.style.strokeDasharray = 'none';
+      curveDot.classList.add('cv-dot-visible');
+      return;
+    }
+
+    // --- Draw animation ---
     const pathLen = Math.ceil(curvePath.getTotalLength());
     curvePath.style.strokeDasharray  = pathLen;
     curvePath.style.strokeDashoffset = pathLen;
 
     let drawn = false;
-
     function drawCurve() {
       if (drawn) return;
       drawn = true;
-
-      // Animate the stroke over 1.8 s with a smooth ease
       curvePath.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
       curvePath.style.strokeDashoffset = 0;
-
-      // Pop the dot into view after the stroke reaches the endpoint (~90% through)
-      setTimeout(() => {
-        curveDot.classList.add('cv-dot-visible');
-      }, 1500);
+      // Dot pops in just as the stroke reaches the end
+      setTimeout(() => curveDot.classList.add('cv-dot-visible'), 1500);
     }
 
-    // Trigger once the hero section enters the viewport
-    const curveObserver = new IntersectionObserver((entries) => {
+    const obs = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        setTimeout(drawCurve, 200); // small delay so page layout has settled
-        curveObserver.disconnect();
+        // Small delay so fonts + alignment have settled
+        setTimeout(drawCurve, 250);
+        obs.disconnect();
       }
     }, { threshold: 0.15 });
-
-    curveObserver.observe(heroSection);
+    obs.observe(heroSection);
   })();
 </script>
 

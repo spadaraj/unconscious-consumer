@@ -17,17 +17,360 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <!-- Privacy-friendly analytics by Plausible -->
+  <!-- Privacy-friendly analytics -->
   <script async src="https://plausible.io/js/pa-Wu5J1YTlqJAKmCxQNz1p-.js"></script>
   <script>window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()</script>
+  <!-- Site base styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Site fonts (for header/footer) -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- CV-specific fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ================================================
+       CV PAGE — scoped styles
+       All rules prefixed with body.cv-page or
+       .cv-wrapper to avoid polluting the global sheet.
+       ================================================ */
+
+    /* --- Body override: warm background + grain --- */
+    body.cv-page {
+      background: #F6F2EA;
+      overflow-x: hidden;
+    }
+    [data-theme="dark"] body.cv-page {
+      background: #15130E;
+    }
+
+    /* Paper grain overlay (fixed, full-viewport) */
+    body.cv-page::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+    }
+    [data-theme="dark"] body.cv-page::before {
+      mix-blend-mode: screen;
+      opacity: 0.6;
+    }
+
+    /* --- Wrapper: colour system + stacking --- */
+    .cv-wrapper {
+      /* Light-mode colour tokens */
+      --bg:        #F6F2EA;
+      --ink:       #211E1A;
+      --muted:     #74695C;
+      --faint:     #9C9182;
+      --line:      #E1D9CB;
+      --accent:    #A63D2B;
+      --card:      #FBF8F2;
+      --card-line: #EAE2D4;
+
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      color: var(--ink);
+
+      /* Body-level typography for CV content */
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 19px;
+      line-height: 1.6;
+      font-optical-sizing: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    [data-theme="dark"] .cv-wrapper {
+      --bg:        #15130E;
+      --ink:       #ECE5D8;
+      --muted:     #9C9182;
+      --faint:     #6E6557;
+      --line:      #2C2820;
+      --accent:    #E07A5F;
+      --card:      #1C1A13;
+      --card-line: #2A261D;
+      color: var(--ink);
+    }
+
+    /* --- Inner wrap: constrained width --- */
+    .cv-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 118px 28px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* --- Masthead --- */
+    .cv-eyebrow {
+      font-family: 'Spline Sans Mono', ui-monospace, monospace;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+    }
+    .cv-name {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-weight: 600;
+      font-optical-sizing: auto;
+      font-size: clamp(40px, 8.5vw, 72px);
+      line-height: 0.96;
+      letter-spacing: -0.02em;
+      margin: 14px 0 8px;
+      color: var(--ink);
+    }
+    .cv-name .cv-deg {
+      color: var(--faint);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 0.42em;
+      letter-spacing: 0;
+    }
+    .cv-title-role {
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .cv-contact {
+      margin-top: 24px;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 18px;
+    }
+    .cv-contact a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s;
+    }
+    .cv-contact a:hover { border-bottom-color: var(--accent); }
+    .cv-masthead-rule {
+      height: 1.5px;
+      background: var(--accent);
+      border: 0;
+      margin: 22px 0 0;
+    }
+
+    /* --- Hero --- */
+    .cv-hero {
+      position: relative;
+      padding: 60px 0 12px;
+      margin-top: 30px;
+    }
+    .cv-curve {
+      position: absolute;
+      right: -60px;
+      top: -30px;
+      width: min(560px, 80%);
+      height: auto;
+      z-index: -1;
+      opacity: 0.16;
+      color: var(--accent);
+      pointer-events: none;
+    }
+    .cv-headline {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-weight: 600;
+      font-optical-sizing: auto;
+      font-size: clamp(34px, 6.2vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      max-width: 15ch;
+      color: var(--ink);
+    }
+    .cv-pivot {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .cv-subhead {
+      margin-top: 26px;
+      font-size: clamp(19px, 2.4vw, 22px);
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 50ch;
+    }
+    .cv-subhead b { color: var(--ink); font-weight: 500; }
+
+    /* --- Section rules --- */
+    .cv-rule {
+      height: 1px;
+      background: var(--line);
+      border: 0;
+      margin: 48px 0;
+    }
+
+    /* --- Lead paragraph --- */
+    .cv-lead {
+      font-size: 20px;
+      line-height: 1.62;
+      color: var(--ink);
+    }
+    .cv-lead .cv-place { font-style: italic; }
+
+    /* --- Section headers --- */
+    .cv-sec {
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin: 0 0 28px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--accent);
+    }
+
+    /* --- Experience rows --- */
+    .cv-roles { display: grid; gap: 0; }
+
+    .cv-role {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+    .cv-role:first-child { border-top: 0; padding-top: 0; }
+
+    .cv-role-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .cv-role-header h3 {
+      font-family: 'EB Garamond', serif;
+      font-weight: 600;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .cv-role-header .cv-when {
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 12.5px;
+      color: var(--faint);
+      white-space: nowrap;
+    }
+    .cv-role-sub {
+      display: block;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .cv-role-desc {
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 60ch;
+      margin: 0;
+    }
+
+    /* --- How I Work rows --- */
+    .cv-methods { display: grid; gap: 0; }
+
+    .cv-method {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 18px;
+      align-items: baseline;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+    .cv-method:first-child { border-top: 0; padding-top: 0; }
+
+    .cv-method-key {
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .cv-method-val {
+      font-size: 17.5px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    /* --- Writing section --- */
+    .cv-writing p {
+      color: var(--muted);
+      max-width: 58ch;
+      font-size: 18px;
+      margin: 0;
+    }
+    .cv-writing p + p { margin-top: 12px; }
+    .cv-credit {
+      font-size: 15px !important;
+      color: var(--faint) !important;
+      margin-top: 14px !important;
+      font-style: italic;
+    }
+    .cv-ext-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      transition: opacity 0.25s;
+    }
+    .cv-ext-link:hover { opacity: 0.72; }
+
+    /* --- Education --- */
+    .cv-edu-entry + .cv-edu-entry { margin-top: 18px; }
+
+    .cv-edu-degree {
+      font-family: 'EB Garamond', serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .cv-edu-school {
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* --- Scroll reveal --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+                  transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 560px) {
+      .cv-wrap { padding: 88px 22px 60px; }
+      .cv-hero { padding: 40px 0 8px; margin-top: 18px; }
+      .cv-method { grid-template-columns: 1fr; gap: 6px; }
+      .cv-role-header { flex-wrap: wrap; gap: 2px 8px; }
+    }
+  </style>
 </head>
 <body class="cv-page">
 
-  <!-- ===== HEADER ===== -->
+  <!-- ===== SITE HEADER (unchanged) ===== -->
   <header class="site-header" id="site-header">
     <div class="header-inner">
       <a href="/" class="logo">
@@ -48,79 +391,103 @@
     </div>
   </header>
 
-  <!-- ===== CV CONTENT ===== -->
-  <main class="cv-main">
+  <!-- ===== CV CONTENT WRAPPER ===== -->
+  <div class="cv-wrapper">
     <div class="cv-wrap">
 
-      <!-- Opening -->
-      <section class="cv-intro">
-        <span class="section-label">Work</span>
-        <h1 class="cv-headline">I help leaders see the move<br>around the curve.</h1>
-        <p class="cv-subhead">I find where what customers want and what a business needs overlap — then show why it works and what to do next. I'm not tied to a single method, so I follow each question across whatever evidence answers it.</p>
+      <!-- Masthead -->
+      <header class="reveal">
+        <span class="cv-eyebrow">Curriculum Vitae</span>
+        <h1 class="cv-name">Adam Spadaro<span class="cv-deg">, PhD</span></h1>
+        <div class="cv-title-role">Principal UX Researcher</div>
+        <div class="cv-contact">
+          <span>Toronto, ON</span>
+          <a href="mailto:adamspadaro@gmail.com">adamspadaro@gmail.com</a>
+          <a href="https://theunconsciousconsumer.com">theunconsciousconsumer.com</a>
+          <a href="https://www.linkedin.com/in/adamspadaro/" rel="me">LinkedIn</a>
+        </div>
+        <hr class="cv-masthead-rule">
+      </header>
+
+      <!-- Hero -->
+      <section class="cv-hero reveal">
+        <svg class="cv-curve" viewBox="0 0 600 400" fill="none" aria-hidden="true">
+          <path d="M20 380 C 200 380, 320 300, 400 180 S 560 30, 580 20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="580" cy="20" r="7" fill="currentColor"/>
+        </svg>
+        <h2 class="cv-headline">I help leaders see the <span class="cv-pivot">move around the curve</span>.</h2>
+        <p class="cv-subhead">I find where what customers want and what a business needs overlap — then show why it works and what to do next. <b>I'm not tied to a single method, so I follow each question across whatever evidence answers it.</b></p>
       </section>
 
-      <p class="cv-lead">For fifteen years I've worked at the seam between the customer and the business, across consumer tech, fintech, and SaaS. The work is connecting evidence that usually lives in separate functions into a single read a leader can act on — including the move they didn't know to look for. Today I'm Principal UX Researcher at HubSpot, with earlier research leadership at Shopify and across tech and advertising.</p>
+      <hr class="cv-rule reveal" />
 
-      <hr class="cv-rule" />
+      <!-- Lead -->
+      <p class="cv-lead reveal">
+        For fifteen years I've worked at the seam between the customer and the business, across
+        <span class="cv-place">consumer tech, fintech, and SaaS</span>. The work is connecting evidence that usually lives in separate functions into a single read a leader can act on — including the move they didn't know to look for.
+        Today I'm Principal UX Researcher at HubSpot, with earlier research leadership at Shopify and across tech and advertising.
+      </p>
+
+      <hr class="cv-rule reveal" />
 
       <!-- Experience -->
-      <section>
-        <h2 class="cv-section-label">Experience</h2>
+      <section class="reveal">
+        <h2 class="cv-sec">Experience</h2>
         <div class="cv-roles">
 
           <div class="cv-role">
             <div class="cv-role-header">
-              <h3 class="cv-role-company">HubSpot</h3>
-              <span class="cv-role-when">2023 — Present</span>
+              <h3>HubSpot</h3>
+              <span class="cv-when">2023 — Present</span>
             </div>
-            <span class="cv-role-title">Principal UX Researcher, UX Measurement</span>
+            <span class="cv-role-sub">Principal UX Researcher, UX Measurement</span>
             <p class="cv-role-desc">Research at the intersection of product quality and customer retention, and the shared systems that make that connection visible across the organisation.</p>
           </div>
 
           <div class="cv-role">
             <div class="cv-role-header">
-              <h3 class="cv-role-company">Super.com</h3>
-              <span class="cv-role-when">2022 — 2023</span>
+              <h3>Super.com</h3>
+              <span class="cv-when">2022 — 2023</span>
             </div>
-            <span class="cv-role-title">Senior Manager, Research &amp; Insights</span>
+            <span class="cv-role-sub">Senior Manager, Research &amp; Insights</span>
             <p class="cv-role-desc">Built the research function and team, making customer evidence a standing input across product, operations, and growth.</p>
           </div>
 
           <div class="cv-role">
             <div class="cv-role-header">
-              <h3 class="cv-role-company">Shopify</h3>
-              <span class="cv-role-when">2017 — 2022</span>
+              <h3>Shopify</h3>
+              <span class="cv-when">2017 — 2022</span>
             </div>
-            <span class="cv-role-title">Research Lead / Senior Researcher</span>
+            <span class="cv-role-sub">Research Lead / Senior Researcher</span>
             <p class="cv-role-desc">End-to-end research from customer understanding to product decisions, pricing models, and go-to-market strategy.</p>
           </div>
 
           <div class="cv-role">
             <div class="cv-role-header">
-              <h3 class="cv-role-company">John St. Advertising</h3>
-              <span class="cv-role-when">2015 — 2017</span>
+              <h3>John St. Advertising</h3>
+              <span class="cv-when">2015 — 2017</span>
             </div>
-            <span class="cv-role-title">Director, Behavioural Insights &amp; Measurement</span>
+            <span class="cv-role-sub">Director, Behavioural Insights &amp; Measurement</span>
             <p class="cv-role-desc">Built a behavioural research practice serving clients across industries.</p>
           </div>
 
           <div class="cv-role">
             <div class="cv-role-header">
-              <h3 class="cv-role-company">McCann</h3>
-              <span class="cv-role-when">2013 — 2014</span>
+              <h3>McCann</h3>
+              <span class="cv-when">2013 — 2014</span>
             </div>
-            <span class="cv-role-title">Planning Analyst</span>
+            <span class="cv-role-sub">Planning Analyst</span>
             <p class="cv-role-desc">Behavioural and predictive analysis in advertising.</p>
           </div>
 
         </div>
       </section>
 
-      <hr class="cv-rule" />
+      <hr class="cv-rule reveal" />
 
       <!-- How I Work -->
-      <section>
-        <h2 class="cv-section-label">How I Work</h2>
+      <section class="reveal">
+        <h2 class="cv-sec">How I Work</h2>
         <div class="cv-methods">
 
           <div class="cv-method">
@@ -146,30 +513,38 @@
         </div>
       </section>
 
-      <hr class="cv-rule" />
+      <hr class="cv-rule reveal" />
+
+      <!-- Writing -->
+      <section class="cv-writing reveal">
+        <h2 class="cv-sec">Writing</h2>
+        <p>
+          I write at <em>The Unconscious Consumer</em> about behavioural science, how value gets measured,
+          and the ways AI is reshaping research itself. It's where the thinking behind the work lives in the open.
+        </p>
+        <p class="cv-credit">Earlier research and commentary have been featured by CBC's The National and the Huffington Post.</p>
+        <a class="cv-ext-link" href="https://theunconsciousconsumer.com">Read The Unconscious Consumer &rarr;</a>
+      </section>
+
+      <hr class="cv-rule reveal" />
 
       <!-- Education -->
-      <section>
-        <h2 class="cv-section-label">Education</h2>
-        <div class="cv-edu">
-
-          <div class="cv-edu-entry">
-            <div class="cv-edu-degree">PhD, Cognitive Science &amp; Experimental Psychology</div>
-            <div class="cv-edu-school">McMaster University</div>
-          </div>
-
-          <div class="cv-edu-entry" style="margin-top: 20px;">
-            <div class="cv-edu-degree">BSc (Honours), Psychology &amp; Behavioural Neuroscience</div>
-            <div class="cv-edu-school">McMaster University</div>
-          </div>
-
+      <section class="reveal">
+        <h2 class="cv-sec">Education</h2>
+        <div class="cv-edu-entry">
+          <div class="cv-edu-degree">PhD, Cognitive Science &amp; Experimental Psychology</div>
+          <div class="cv-edu-school">McMaster University</div>
+        </div>
+        <div class="cv-edu-entry">
+          <div class="cv-edu-degree">BSc (Honours), Psychology &amp; Behavioural Neuroscience</div>
+          <div class="cv-edu-school">McMaster University</div>
         </div>
       </section>
 
     </div>
-  </main>
+  </div><!-- /.cv-wrapper -->
 
-  <!-- ===== FOOTER ===== -->
+  <!-- ===== SITE FOOTER (unchanged) ===== -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
@@ -210,7 +585,7 @@
   </footer>
 
 <script>
-  // Theme init
+  // ===== THEME =====
   (function() {
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -218,7 +593,6 @@
     document.documentElement.setAttribute('data-theme', theme);
   })();
 
-  // Theme toggle
   const themeToggle = document.getElementById('theme-toggle');
   themeToggle.addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme');
@@ -227,19 +601,34 @@
     localStorage.setItem('theme', next);
   });
 
-  // Header shrink on scroll
+  // ===== HEADER SHRINK =====
   const header = document.getElementById('site-header');
   let lastScrollY = 0;
   window.addEventListener('scroll', () => {
-    const currentScrollY = window.scrollY;
-    header.classList.toggle('scrolled', currentScrollY > 20);
-    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+    const y = window.scrollY;
+    header.classList.toggle('scrolled', y > 20);
+    if (y > lastScrollY && y > 100) {
       header.classList.add('shrink');
     } else {
       header.classList.remove('shrink');
     }
-    lastScrollY = currentScrollY;
+    lastScrollY = y;
   }, { passive: true });
+
+  // ===== SCROLL REVEAL =====
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  [...document.querySelectorAll('.reveal')].forEach((el, i) => {
+    el.style.transitionDelay = Math.min(i * 55, 240) + 'ms';
+    io.observe(el);
+  });
 </script>
 
 </body>

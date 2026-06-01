@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/cv", "destination": "/cv.html" }
+  ],
   "redirects": [
     { "source": "/consumer-psychology/from-page-to-practice-wearing-our-genes-on-our-sleeves-with-spent", "destination": "/article.html?slug=wearing-our-genes-on-our-sleeves-spent", "permanent": true },
     { "source": "/consumer-psychology/is-this-legit-the-rise-of-the-skeptical-shopper", "destination": "/article.html?slug=rise-of-the-skeptical-shopper", "permanent": true },

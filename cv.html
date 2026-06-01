@@ -348,61 +348,18 @@
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
-    /* --- Hero curve animation --- */
-    #cv-hero-curve {
-      display: block;
-      width: 100%;
-      max-width: 480px;
-      height: 120px;
-      overflow: visible;
+    /* --- Hero curve motif --- */
+    .curve {
+      position: absolute;
+      right: -60px;
+      top: -30px;
+      width: min(560px, 80%);
+      height: auto;
+      z-index: -1;
+      opacity: 0.16;
+      color: var(--accent);
       pointer-events: none;
-      color: var(--accent, #A63D2B);
-      margin-top: 36px;
     }
-
-    #cv-curve-path {
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-      opacity: 0.35;
-    }
-
-    #cv-curve-dot {
-      fill: currentColor;
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-
-    #cv-hero-curve.animate #cv-curve-path {
-      animation: cv-curve-draw 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    #cv-hero-curve.animate #cv-curve-dot {
-      animation: cv-dot-appear 0.4s ease forwards 1.5s;
-    }
-
-    @keyframes cv-curve-draw {
-      to { stroke-dashoffset: 0; }
-    }
-
-    @keyframes cv-dot-appear {
-      to { opacity: 0.75; }
-    }
-
-    @keyframes cv-dot-pulse {
-      0%, 100% { transform: scale(1); }
-        50%     { transform: scale(1.6); opacity: 0.45; }
-    }
-
-    #cv-hero-curve.animate #cv-curve-dot {
-      animation:
-        cv-dot-appear  0.4s ease           forwards 1.5s,
-        cv-dot-pulse   2.6s ease-in-out    infinite  2.0s;
-    }
-
-    @media (prefers-reduced-motion: reduce) { #cv-hero-curve { display: none; } }
 
     /* --- Responsive --- */
     @media (max-width: 560px) {
@@ -460,9 +417,10 @@
       <section class="cv-hero reveal">
         <h2 class="cv-headline">I help leaders see the <span class="cv-pivot">move around the curve</span>.</h2>
         <p class="cv-subhead">I find where what customers want and what a business needs overlap. Then I show why it works and what to do next. <b>I'm not tied to a single method, so I follow each question across whatever evidence answers it.</b></p>
-        <svg id="cv-hero-curve" aria-hidden="true" viewBox="0 0 480 120" preserveAspectRatio="none">
-          <path id="cv-curve-path" d="M 0 100 C 80 100, 140 20, 240 20 S 400 100, 480 20"/>
-          <circle id="cv-curve-dot" r="5.5" cx="480" cy="20"/>
+        <svg viewBox="0 0 600 400" fill="none" aria-hidden="true" class="curve">
+          <path d="M20 380 C 200 380, 320 300, 400 180 S 560 30, 580 20"
+                stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="580" cy="20" r="7" fill="currentColor"/>
         </svg>
       </section>
 
@@ -677,37 +635,6 @@
     io.observe(el);
   });
 
-  // ===== HERO CURVE ANIMATION =====
-  // Draws itself once when the hero section enters the viewport.
-  (function() {
-    const svg  = document.getElementById('cv-hero-curve');
-    const path = document.getElementById('cv-curve-path');
-    if (!svg || !path) return;
-
-    // Set dasharray once fonts/layout are ready so getTotalLength is accurate
-    function init() {
-      const len = path.getTotalLength();
-      path.style.strokeDasharray  = len;
-      path.style.strokeDashoffset = len;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            svg.classList.add('animate');
-            observer.disconnect();
-          }
-        });
-      }, { threshold: 0.4 });
-
-      observer.observe(svg);
-    }
-
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(init);
-    } else {
-      init();
-    }
-  })();
 </script>
 
 </body>

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CV — Adam Spadaro · Principal UX Researcher</title>
-  <meta name="description" content="Professional background of Dr. Adam Spadaro — Principal UX Researcher at HubSpot, with research leadership at Shopify and Super.com." />
+  <title>CV · Adam Spadaro, Principal UX Researcher</title>
+  <meta name="description" content="Professional background of Dr. Adam Spadaro, Principal UX Researcher at HubSpot with research leadership at Shopify and Super.com." />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="The Unconscious Consumer" />
-  <meta property="og:title" content="CV — Adam Spadaro · Principal UX Researcher" />
-  <meta property="og:description" content="Professional background of Dr. Adam Spadaro — Principal UX Researcher at HubSpot, with research leadership at Shopify and Super.com." />
+  <meta property="og:title" content="CV · Adam Spadaro, Principal UX Researcher" />
+  <meta property="og:description" content="Professional background of Dr. Adam Spadaro, Principal UX Researcher at HubSpot with research leadership at Shopify and Super.com." />
   <meta property="og:url" content="https://theunconsciousconsumer.com/cv" />
   <link rel="canonical" href="https://theunconsciousconsumer.com/cv" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -359,6 +359,26 @@
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
+    /* --- Curve animation --- */
+    /* Path starts hidden; JS sets dasharray/dashoffset then transitions to 0 */
+    .cv-curve path {
+      stroke-dashoffset: 9999; /* overridden by JS; keeps path hidden before JS runs */
+    }
+    /* Circle pops in after path draws — JS adds .cv-dot-visible */
+    .cv-curve circle {
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(0);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cv-curve circle.cv-dot-visible {
+      transform: scale(1);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cv-curve path  { stroke-dashoffset: 0 !important; transition: none !important; }
+      .cv-curve circle { transform: scale(1) !important; transition: none !important; }
+    }
+
     /* --- Responsive --- */
     @media (max-width: 560px) {
       .cv-wrap { padding: 88px 22px 60px; }
@@ -416,7 +436,7 @@
           <circle cx="580" cy="20" r="7" fill="currentColor"/>
         </svg>
         <h2 class="cv-headline">I help leaders see the <span class="cv-pivot">move around the curve</span>.</h2>
-        <p class="cv-subhead">I find where what customers want and what a business needs overlap — then show why it works and what to do next. <b>I'm not tied to a single method, so I follow each question across whatever evidence answers it.</b></p>
+        <p class="cv-subhead">I find where what customers want and what a business needs overlap. Then I show why it works and what to do next. <b>I'm not tied to a single method, so I follow each question across whatever evidence answers it.</b></p>
       </section>
 
       <hr class="cv-rule reveal" />
@@ -424,7 +444,7 @@
       <!-- Lead -->
       <p class="cv-lead reveal">
         For fifteen years I've worked at the seam between the customer and the business, across
-        <span class="cv-place">consumer tech, fintech, and SaaS</span>. The work is connecting evidence that usually lives in separate functions into a single read a leader can act on — including the move they didn't know to look for.
+        <span class="cv-place">consumer tech, fintech, and SaaS</span>. The work is connecting evidence that usually lives in separate functions into a single read a leader can act on. That often includes the move they didn't know to look for.
         Today I'm Principal UX Researcher at HubSpot, with earlier research leadership at Shopify and across tech and advertising.
       </p>
 
@@ -502,12 +522,12 @@
 
           <div class="cv-method">
             <div class="cv-method-key">Reason to the cause</div>
-            <div class="cv-method-val">I don't stop at what happened. I trace why — so a decision rests on a mechanism rather than a coincidence.</div>
+            <div class="cv-method-val">I don't stop at what happened. I trace why, so a decision rests on a mechanism rather than a coincidence.</div>
           </div>
 
           <div class="cv-method">
             <div class="cv-method-key">AI</div>
-            <div class="cv-method-val">AI hasn't just accelerated research — it has opened up questions that weren't practical to ask before, across evidence types and scales that used to sit entirely apart. What it hasn't replaced is the judgment to know which questions are worth asking and whether the answer holds. The constraint now is imagination: how clearly someone can see what just became researchable, and how rigorously they pursue it.</div>
+            <div class="cv-method-val">AI hasn't just accelerated research. It has opened up questions that weren't practical to ask before, across evidence types and scales that used to sit entirely apart. What it hasn't replaced is the judgment to know which questions are worth asking and whether the answer holds. The constraint now is imagination: how clearly someone can see what just became researchable, and how rigorously they pursue it.</div>
           </div>
 
         </div>
@@ -629,6 +649,48 @@
     el.style.transitionDelay = Math.min(i * 55, 240) + 'ms';
     io.observe(el);
   });
+
+  // ===== CURVE DRAW ANIMATION =====
+  (function() {
+    const curvePath   = document.querySelector('.cv-curve path');
+    const curveDot    = document.querySelector('.cv-curve circle');
+    const heroSection = document.querySelector('.cv-hero');
+    if (!curvePath || !heroSection) return;
+
+    // Respect reduced-motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Measure the path in SVG units and initialise as hidden
+    const pathLen = Math.ceil(curvePath.getTotalLength());
+    curvePath.style.strokeDasharray  = pathLen;
+    curvePath.style.strokeDashoffset = pathLen;
+
+    let drawn = false;
+
+    function drawCurve() {
+      if (drawn) return;
+      drawn = true;
+
+      // Animate the stroke over 1.8 s with a smooth ease
+      curvePath.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      curvePath.style.strokeDashoffset = 0;
+
+      // Pop the dot into view after the stroke reaches the endpoint (~90% through)
+      setTimeout(() => {
+        curveDot.classList.add('cv-dot-visible');
+      }, 1500);
+    }
+
+    // Trigger once the hero section enters the viewport
+    const curveObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setTimeout(drawCurve, 200); // small delay so page layout has settled
+        curveObserver.disconnect();
+      }
+    }, { threshold: 0.15 });
+
+    curveObserver.observe(heroSection);
+  })();
 </script>
 
 </body>

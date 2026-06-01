@@ -348,43 +348,61 @@
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
-    /* --- Journey curve (scroll-driven, full viewport sweep) --- */
-    #cv-journey {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      height: 100vh;
+    /* --- Hero curve animation --- */
+    #cv-hero-curve {
+      display: block;
+      width: 100%;
+      max-width: 480px;
+      height: 120px;
+      overflow: visible;
       pointer-events: none;
-      z-index: 2;
       color: var(--accent, #A63D2B);
-      opacity: 0;
-      transition: opacity 0.5s ease;
+      margin-top: 36px;
     }
-    #cv-journey.ready { opacity: 1; }
 
-    /* Ghost shows the full unread path at very low opacity */
-    #cv-journey-ghost { opacity: 0.07; }
-    /* Drawn path is visible but not loud — it's a companion, not a distraction */
-    #cv-journey-drawn { opacity: 0.28; }
+    #cv-curve-path {
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      opacity: 0.35;
+    }
 
-    #cv-journey-dot {
+    #cv-curve-dot {
+      fill: currentColor;
+      opacity: 0;
       transform-box: fill-box;
       transform-origin: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
     }
-    #cv-journey-dot.active { opacity: 0.75; }
+
+    #cv-hero-curve.animate #cv-curve-path {
+      animation: cv-curve-draw 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    #cv-hero-curve.animate #cv-curve-dot {
+      animation: cv-dot-appear 0.4s ease forwards 1.5s;
+    }
+
+    @keyframes cv-curve-draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes cv-dot-appear {
+      to { opacity: 0.75; }
+    }
 
     @keyframes cv-dot-pulse {
       0%, 100% { transform: scale(1); }
         50%     { transform: scale(1.6); opacity: 0.45; }
     }
-    #cv-journey-dot.active {
-      animation: cv-dot-pulse 2.6s ease-in-out infinite;
+
+    #cv-hero-curve.animate #cv-curve-dot {
+      animation:
+        cv-dot-appear  0.4s ease           forwards 1.5s,
+        cv-dot-pulse   2.6s ease-in-out    infinite  2.0s;
     }
 
-    @media (prefers-reduced-motion: reduce) { #cv-journey { display: none; } }
+    @media (prefers-reduced-motion: reduce) { #cv-hero-curve { display: none; } }
 
     /* --- Responsive --- */
     @media (max-width: 560px) {
@@ -421,12 +439,6 @@
   <!-- ===== CV CONTENT WRAPPER ===== -->
   <div class="cv-wrapper">
 
-    <!-- Scroll-journey curve: fixed in the right margin, draws as you read -->
-    <svg id="cv-journey" aria-hidden="true" fill="none">
-      <path id="cv-journey-ghost" stroke="currentColor" stroke-width="1.5" fill="none"/>
-      <path id="cv-journey-drawn" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <circle id="cv-journey-dot" r="5.5" fill="currentColor"/>
-    </svg>
 
     <div class="cv-wrap">
 
@@ -448,6 +460,10 @@
       <section class="cv-hero reveal">
         <h2 class="cv-headline">I help leaders see the <span class="cv-pivot">move around the curve</span>.</h2>
         <p class="cv-subhead">I find where what customers want and what a business needs overlap. Then I show why it works and what to do next. <b>I'm not tied to a single method, so I follow each question across whatever evidence answers it.</b></p>
+        <svg id="cv-hero-curve" aria-hidden="true" viewBox="0 0 480 120" preserveAspectRatio="none">
+          <path id="cv-curve-path" d="M 0 100 C 80 100, 140 20, 240 20 S 400 100, 480 20"/>
+          <circle id="cv-curve-dot" r="5.5" cx="480" cy="20"/>
+        </svg>
       </section>
 
       <hr class="cv-rule reveal" />
@@ -661,80 +677,36 @@
     io.observe(el);
   });
 
-  // ===== SCROLL-JOURNEY CURVE =====
-  // A continuous curve fixed in the right margin that draws itself as you
-  // scroll. The dot always sits at the current tip — your position on the journey.
+  // ===== HERO CURVE ANIMATION =====
+  // Draws itself once when the hero section enters the viewport.
   (function() {
-    const svg   = document.getElementById('cv-journey');
-    const ghost = document.getElementById('cv-journey-ghost');
-    const drawn = document.getElementById('cv-journey-drawn');
-    const dot   = document.getElementById('cv-journey-dot');
-    if (!svg || !ghost || !drawn || !dot) return;
+    const svg  = document.getElementById('cv-hero-curve');
+    const path = document.getElementById('cv-curve-path');
+    if (!svg || !path) return;
 
-    // Sweeping S-curve across the full viewport.
-    // Starts top-right, curves through the page, ends bottom-left —
-    // like a road rounding a bend as you journey down.
-    function buildPath(w, h) {
-      return [
-        `M ${w * 0.94} 0`,
-        // Hard swing leftward — wide arc that crosses the content mid-zone
-        // where section <hr> dividers live (~35–48% scroll)
-        `C ${w * 0.88} ${h * 0.16}, ${w * 0.08} ${h * 0.34}, ${w * 0.38} ${h * 0.47}`,
-        // Recover right then sweep far-left to finish — dramatic lower arc
-        `S ${w * 0.86} ${h * 0.68}, ${w * 0.05} ${h}`
-      ].join(' ');
+    // Set dasharray once fonts/layout are ready so getTotalLength is accurate
+    function init() {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray  = len;
+      path.style.strokeDashoffset = len;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            svg.classList.add('animate');
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.4 });
+
+      observer.observe(svg);
     }
 
-    let pathLen = 0;
-    let rafId   = null;
-
-    function setup() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const d = buildPath(w, h);
-
-      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      svg.setAttribute('width',  String(w));
-      svg.setAttribute('height', String(h));
-
-      ghost.setAttribute('d', d);
-      drawn.setAttribute('d', d);
-
-      pathLen = drawn.getTotalLength();
-      drawn.style.strokeDasharray  = pathLen;
-      drawn.style.strokeDashoffset = pathLen; // fully hidden at start
-
-      svg.classList.add('ready');
-      tick(); // sync to current scroll position immediately
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(init);
+    } else {
+      init();
     }
-
-    function tick() {
-      if (!pathLen) return;
-      const scrolled  = window.scrollY;
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const progress  = Math.min(1, scrolled / maxScroll);
-      const drawnLen  = pathLen * progress;
-
-      drawn.style.strokeDashoffset = pathLen - drawnLen;
-
-      if (drawnLen > 2) {
-        const pt = drawn.getPointAtLength(drawnLen);
-        dot.setAttribute('cx', pt.x);
-        dot.setAttribute('cy', pt.y);
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
-      }
-    }
-
-    function onScroll() {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => { tick(); rafId = null; });
-    }
-
-    setup();
-    window.addEventListener('resize',  setup,    { passive: true });
-    window.addEventListener('scroll',  onScroll, { passive: true });
   })();
 </script>
 

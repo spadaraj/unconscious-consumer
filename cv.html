@@ -169,17 +169,6 @@
       padding: 60px 0 12px;
       margin-top: 30px;
     }
-    .cv-curve {
-      position: absolute;
-      right: -60px;
-      top: -30px;
-      width: min(560px, 80%);
-      height: auto;
-      z-index: -1;
-      opacity: 0.16;
-      color: var(--accent);
-      pointer-events: none;
-    }
     .cv-headline {
       font-family: 'EB Garamond', Georgia, serif;
       font-weight: 600;
@@ -359,25 +348,45 @@
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
-    /* --- Curve animation --- */
-    /* Path starts hidden; JS sets dasharray/dashoffset then transitions to 0 */
-    .cv-curve path {
-      stroke-dashoffset: 9999; /* overridden by JS; keeps path hidden before JS runs */
+    /* --- Journey curve (scroll-driven, right margin) --- */
+    #cv-journey {
+      position: fixed;
+      /* Sit just outside the right edge of the 780px content column */
+      right: calc(max(0px, (100vw - 780px) / 2) * 0.35);
+      top: 0;
+      width: 48px;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 5;
+      color: var(--accent, #A63D2B);
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
-    /* Circle pops in after path draws — JS adds .cv-dot-visible */
-    .cv-curve circle {
+    #cv-journey.ready { opacity: 1; }
+
+    #cv-journey-ghost  { opacity: 0.1; }
+    #cv-journey-drawn  { opacity: 1; }
+
+    #cv-journey-dot {
       transform-box: fill-box;
       transform-origin: center;
-      transform: scale(0);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
-    .cv-curve circle.cv-dot-visible {
-      transform: scale(1);
+    #cv-journey-dot.active { opacity: 1; }
+
+    /* Pulse the dot while reading */
+    @keyframes cv-dot-pulse {
+      0%, 100% { transform: scale(1); }
+        50%     { transform: scale(1.55); opacity: 0.6; }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .cv-curve path  { stroke-dashoffset: 0 !important; transition: none !important; }
-      .cv-curve circle { transform: scale(1) !important; transition: none !important; }
+    #cv-journey-dot.active {
+      animation: cv-dot-pulse 2.4s ease-in-out infinite;
     }
+
+    /* Hide on viewports too narrow to have a right margin */
+    @media (max-width: 900px) { #cv-journey { display: none; } }
+    @media (prefers-reduced-motion: reduce) { #cv-journey { display: none; } }
 
     /* --- Responsive --- */
     @media (max-width: 560px) {
@@ -413,6 +422,14 @@
 
   <!-- ===== CV CONTENT WRAPPER ===== -->
   <div class="cv-wrapper">
+
+    <!-- Scroll-journey curve: fixed in the right margin, draws as you read -->
+    <svg id="cv-journey" aria-hidden="true" fill="none">
+      <path id="cv-journey-ghost" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      <path id="cv-journey-drawn" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <circle id="cv-journey-dot" r="4.5" fill="currentColor"/>
+    </svg>
+
     <div class="cv-wrap">
 
       <!-- Masthead -->
@@ -431,10 +448,6 @@
 
       <!-- Hero -->
       <section class="cv-hero reveal">
-        <svg class="cv-curve" viewBox="0 0 600 400" fill="none" aria-hidden="true">
-          <path d="M20 380 C 200 380, 320 300, 400 180 S 560 30, 580 20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <circle cx="580" cy="20" r="7" fill="currentColor"/>
-        </svg>
         <h2 class="cv-headline">I help leaders see the <span class="cv-pivot">move around the curve</span>.</h2>
         <p class="cv-subhead">I find where what customers want and what a business needs overlap. Then I show why it works and what to do next. <b>I'm not tied to a single method, so I follow each question across whatever evidence answers it.</b></p>
       </section>
@@ -650,94 +663,79 @@
     io.observe(el);
   });
 
-  // ===== CURVE DRAW ANIMATION =====
-  // The SVG path starts at M20 380 (bottom-left of the viewBox).
-  // We translate the whole SVG so that point lands exactly on the
-  // period at the end of the headline, then draw the stroke from there.
+  // ===== SCROLL-JOURNEY CURVE =====
+  // A continuous curve fixed in the right margin that draws itself as you
+  // scroll. The dot always sits at the current tip — your position on the journey.
   (function() {
-    const svg         = document.querySelector('.cv-curve');
-    const curvePath   = document.querySelector('.cv-curve path');
-    const curveDot    = document.querySelector('.cv-curve circle');
-    const heroSection = document.querySelector('.cv-hero');
-    const headline    = document.querySelector('.cv-headline');
-    if (!svg || !curvePath || !heroSection || !headline) return;
+    const svg   = document.getElementById('cv-journey');
+    const ghost = document.getElementById('cv-journey-ghost');
+    const drawn = document.getElementById('cv-journey-drawn');
+    const dot   = document.getElementById('cv-journey-dot');
+    if (!svg || !ghost || !drawn || !dot) return;
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const W = 48; // matches CSS width
 
-    // --- Align path start to the period ---
-    // Returns the bounding rect of the final character in the headline.
-    function getPeriodRect() {
-      const walker = document.createTreeWalker(headline, NodeFilter.SHOW_TEXT);
-      let lastNode = null, node;
-      while ((node = walker.nextNode())) lastNode = node;
-      if (!lastNode) return null;
-      const text = lastNode.textContent;
-      // Find the period (last non-whitespace character)
-      const idx = text.trimEnd().length - 1;
-      const range = document.createRange();
-      range.setStart(lastNode, idx);
-      range.setEnd(lastNode, idx + 1);
-      return range.getBoundingClientRect();
+    // Gentle S-curve top-to-bottom: bends right in the upper half, left in the lower.
+    // Keeps horizontal amplitude modest so it looks like a road rounding a bend.
+    function buildPath(h) {
+      const cx  = W / 2;        // centre x = 24
+      const amp = W * 0.36;     // horizontal amplitude ≈ 17 px each side
+      return [
+        `M ${cx} 0`,
+        `C ${cx + amp} ${h * 0.18}, ${cx + amp} ${h * 0.32}, ${cx} ${h * 0.5}`,
+        `S ${cx - amp} ${h * 0.68}, ${cx} ${h}`
+      ].join(' ');
     }
 
-    function alignCurve() {
-      // Reset any previous transform so we get a clean measurement
-      svg.style.transform = '';
+    let pathLen = 0;
+    let rafId   = null;
 
-      const periodRect = getPeriodRect();
-      if (!periodRect || periodRect.width === 0) return;
+    function setup() {
+      const h = window.innerHeight;
+      const d = buildPath(h);
 
-      const svgRect = svg.getBoundingClientRect();
-      const vb      = svg.viewBox.baseVal;               // {width:600, height:400}
-      const scaleX  = svgRect.width  / vb.width;
-      const scaleY  = svgRect.height / vb.height;
+      svg.setAttribute('viewBox', `0 0 ${W} ${h}`);
+      svg.setAttribute('width',  String(W));
+      svg.setAttribute('height', String(h));
 
-      // M20 380 in screen-space pixels
-      const pathStartX = svgRect.left + 20  * scaleX;
-      const pathStartY = svgRect.top  + 380 * scaleY;
+      ghost.setAttribute('d', d);
+      drawn.setAttribute('d', d);
 
-      // Target: right edge of the period, vertically centred on the glyph
-      const targetX = periodRect.right;
-      const targetY = periodRect.top + periodRect.height * 0.5;
+      pathLen = drawn.getTotalLength();
+      drawn.style.strokeDasharray  = pathLen;
+      drawn.style.strokeDashoffset = pathLen; // fully hidden at start
 
-      svg.style.transform = `translate(${targetX - pathStartX}px, ${targetY - pathStartY}px)`;
+      svg.classList.add('ready');
+      tick(); // sync to current scroll position immediately
     }
 
-    // Wait for web fonts so text layout is final, then align
-    (document.fonts ? document.fonts.ready : Promise.resolve())
-      .then(alignCurve);
-    window.addEventListener('resize', alignCurve, { passive: true });
+    function tick() {
+      if (!pathLen) return;
+      const scrolled  = window.scrollY;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress  = Math.min(1, scrolled / maxScroll);
+      const drawnLen  = pathLen * progress;
 
-    // If reduced-motion: just show the curve static, no drawing animation
-    if (reducedMotion) {
-      curvePath.style.strokeDasharray = 'none';
-      curveDot.classList.add('cv-dot-visible');
-      return;
-    }
+      drawn.style.strokeDashoffset = pathLen - drawnLen;
 
-    // --- Draw animation ---
-    const pathLen = Math.ceil(curvePath.getTotalLength());
-    curvePath.style.strokeDasharray  = pathLen;
-    curvePath.style.strokeDashoffset = pathLen;
-
-    let drawn = false;
-    function drawCurve() {
-      if (drawn) return;
-      drawn = true;
-      curvePath.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
-      curvePath.style.strokeDashoffset = 0;
-      // Dot pops in just as the stroke reaches the end
-      setTimeout(() => curveDot.classList.add('cv-dot-visible'), 1500);
-    }
-
-    const obs = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        // Small delay so fonts + alignment have settled
-        setTimeout(drawCurve, 250);
-        obs.disconnect();
+      if (drawnLen > 2) {
+        const pt = drawn.getPointAtLength(drawnLen);
+        dot.setAttribute('cx', pt.x);
+        dot.setAttribute('cy', pt.y);
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
       }
-    }, { threshold: 0.15 });
-    obs.observe(heroSection);
+    }
+
+    function onScroll() {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => { tick(); rafId = null; });
+    }
+
+    setup();
+    window.addEventListener('resize',  setup,    { passive: true });
+    window.addEventListener('scroll',  onScroll, { passive: true });
   })();
 </script>
 

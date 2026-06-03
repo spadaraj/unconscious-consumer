@@ -361,6 +361,43 @@
       pointer-events: none;
     }
 
+    .curve path {
+      stroke-dashoffset: var(--curve-len, 9999);
+      stroke-dasharray:  var(--curve-len, 9999);
+      transition: none;
+    }
+
+    .curve circle {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .curve.animate path {
+      transition: stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+      stroke-dashoffset: 0;
+    }
+
+    .curve.animate circle {
+      animation:
+        cv-dot-appear 0.35s ease forwards 1.5s,
+        cv-dot-pulse  2.6s ease-in-out infinite 1.9s;
+    }
+
+    @keyframes cv-dot-appear {
+      to { opacity: 1; }
+    }
+
+    @keyframes cv-dot-pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.5); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .curve.animate path   { transition: none; stroke-dashoffset: 0; }
+      .curve.animate circle { animation: none; opacity: 1; }
+    }
+
     /* --- Responsive --- */
     @media (max-width: 560px) {
       .cv-wrap { padding: 88px 22px 60px; }
@@ -634,6 +671,29 @@
     el.style.transitionDelay = Math.min(i * 55, 240) + 'ms';
     io.observe(el);
   });
+
+  // ===== HERO CURVE =====
+  (function () {
+    const svg  = document.querySelector('.curve');
+    const path = svg && svg.querySelector('path');
+    if (!svg || !path) return;
+
+    function init() {
+      const len = path.getTotalLength();
+      svg.style.setProperty('--curve-len', len);
+
+      new IntersectionObserver((entries, obs) => {
+        if (entries[0].isIntersecting) {
+          svg.classList.add('animate');
+          obs.disconnect();
+        }
+      }, { threshold: 0.3 }).observe(svg);
+    }
+
+    document.fonts && document.fonts.ready
+      ? document.fonts.ready.then(init)
+      : init();
+  })();
 
 </script>
 

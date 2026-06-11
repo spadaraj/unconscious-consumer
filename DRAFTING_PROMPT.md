@@ -11,9 +11,11 @@ kickoff prompt for each new article.
    - `VOICE_GUIDE.md` — how the writing should sound
    - `TUC_DESIGN_BRIEF.md` — brand, audience, hard constraints
    - `CONTENT_PLAN.md` — the backlog and the orphan list (for `related` suggestions)
-   - 2–3 strong sample articles as voice reference. Good picks:
-     *Less is More: Unpacking the Power of Scarcity Bias*, *From Page to Practice: Thinking,
-     Fast and Slow*, *Behind Dark Patterns*. (Copy each piece's text from `articles.json`.)
+   - 2–3 strong sample articles as voice reference — already extracted as clean, paste-ready
+     text in `writing-samples/`:
+     - `writing-samples/unpacking-the-power-of-scarcity-bias.md` (consumer-psychology)
+     - `writing-samples/thinking-fast-and-slow-consumer-behaviour.md` (behavioural-economics)
+     - `writing-samples/behind-dark-patterns.md` (user-experience)
 3. **Set the project's custom instructions** to the block below.
 
 ## Project custom instructions (paste verbatim)

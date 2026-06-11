@@ -62,13 +62,24 @@ URLs (e.g. `/user-experience/behind-dark-patterns...`) to `/article.html?slug=..
 permanent redirects, and maps old category paths to `/?filter=<category>`. When you rename a
 slug or move an article, update the matching redirect here.
 
+## Content workflow
+
+The site is **Substack-first**: new essays are published on Substack, and the site shows a
+card that links out (`hosting: "substack"`). See **`PUBLISHING.md`** for the step-by-step
+(it's a single `articles.json` edit) and **`CONTENT_PLAN.md`** for the editorial backlog and
+a corpus audit (category balance, orphaned articles, cover coverage).
+
 ## Key conventions
 
-- **The four categories are a fixed enum:** `consumer-psychology`, `behavioural-economics`,
-  `user-experience`, `undercurrents`. They appear as the keys/keyspace in `app.js`
-  (`HERO_LABELS`, `getCategoryTag`), `article.html` (`CAT_LABELS`, `CAT_CLASSES`), `covers.js`,
-  CSS tag classes (`tag-cp`/`tag-be`/`tag-ux`/`tag-uc`), and `vercel.json`. Adding a category
-  means touching all of these.
+- **The category enum has four keys, but `undercurrents` is retired from promotion.** The
+  active categories are `consumer-psychology`, `behavioural-economics`, `user-experience`;
+  do not file new articles under `undercurrents`. The key still exists (labels, `tag-uc`
+  class, `vercel.json` redirect) so the 10 legacy Undercurrents articles keep rendering and
+  stay reachable by URL — but the discovery/filter pill has been removed from `index.html`
+  and `article.html`. The enum keys appear in `app.js` (`HERO_LABELS`, `getCategoryTag`),
+  `article.html` (`CAT_LABELS`, `CAT_CLASSES`), `covers.js`, CSS tag classes
+  (`tag-cp`/`tag-be`/`tag-ux`/`tag-uc`), and `vercel.json`. Adding a category means touching
+  all of these.
 - **`?filter=<category>` URL param** deep-links the homepage to a filtered view; the discovery
   pills and article-page category links rely on it.
 - **Article titles may contain emoji in the data, but they are stripped at render time**

@@ -2,7 +2,8 @@
 
 A living strategy doc for new writing on **The Unconscious Consumer** (site + Substack).
 Drafting happens in a Claude Project; this file plans *what* to write and tracks the health
-of the existing catalogue. For *how* to publish a finished piece, see `PUBLISHING.md`.
+of the existing catalogue. For *how* to set up drafting see `DRAFTING_PROMPT.md` +
+`VOICE_GUIDE.md`; for *how* to publish a finished piece see `PUBLISHING.md`.
 
 *Snapshot generated from `articles.json` on 2026-06-11. Regenerate when it drifts.*
 

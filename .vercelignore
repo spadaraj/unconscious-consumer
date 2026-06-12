@@ -1,0 +1,3 @@
+# Editorial archive and workflow files — keep in git, but don't deploy to the live site.
+content/
+writing-samples/

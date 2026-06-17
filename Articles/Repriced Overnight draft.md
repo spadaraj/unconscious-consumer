@@ -1,0 +1,106 @@
+# Repriced Overnight: How AI Moved the Benchmark in Your Head
+
+*Category: user-experience · ~9 min read · draft — June 2026*
+*Excerpt: Half your tools feel clunky now, and not one of them changed. The reference point did — silently, below awareness. A look at how AI repriced software you already owned, and why you blame the wrong thing.*
+
+---
+
+When Siri arrived in 2011, it felt like a small piece of the future had slipped into your pocket. For more than a decade after, we forgave its limitations — the misheard requests, the "here's what I found on the web," the flat refusals — because that was simply what a voice assistant was. We had nothing better to measure it against, so we measured it against nothing, and it passed.
+
+Then, in late 2022, you held a real conversation with ChatGPT. And the next time you asked Siri to do something modestly complicated, it felt prehistoric.
+
+Here is the strange part. Siri had not changed. The software in your hand was, line for line, the same assistant it had been the week before. Apple shipped nothing worse. And yet its value to you fell off a cliff — so far that Apple has since [spent years and a reported billion dollars a year](https://www.macrumors.com/guide/llm-siri/) trying to rebuild it. The product stood still. Something else moved.
+
+Have you noticed how often that happens now? A tool you used happily a year ago suddenly irritates you, though it is identical to the version you once liked. That feeling is not a quirk. It is the most underappreciated consequence of the AI moment, and it has very little to do with interfaces.
+
+## *TL;DR*
+- *AI did not just add a feature people wanted. It moved an invisible benchmark, lowering the perceived value of software you already owned — without that software changing at all.*
+- *The mechanism is reference-dependence: we judge things against a baseline, and the baseline shifted beneath us, below conscious awareness.*
+- *The old "translation tax" — the work of converting your goal into a product's menus and objects — was invisible because it was universal. AI revealed it was optional, and tolerance for it collapsed.*
+- *We misattribute the result, blaming the company, the tool, or ourselves, while the real cause goes unnamed.*
+- *The new benchmark is reliable about effort but unreliable about quality — and that gap is becoming the most exploitable thing in software.*
+
+## The Benchmark Moved, Not the Product
+
+Borrow a word from the markets for a moment. When traders say an asset has been "repriced," they rarely mean the asset changed. A bond can be repriced overnight by a central bank's decision; nothing about the bond is different the next morning, but what people will pay for it is. The thing that moved was the benchmark it is judged against.
+
+Software is being repriced the same way. The tool on your screen is unchanged, but its perceived worth has dropped, because the reference point you measure it against has moved. This is not a metaphor stretched for effect — it is a description of a well-documented feature of human judgement. [Kahneman and Tversky's work on reference-dependent preferences](http://www.communicationcache.com/uploads/1/0/8/8/10887248/experts_amateurs_and_real_estate-_an_anchoring-and-adjustment_perspective_on_property_pricing_decisions.pdf) established that we do not evaluate options in absolute terms; we evaluate them as gains or losses relative to a reference point. Change the reference point and you change the verdict, even when the option itself is fixed.
+
+Why did the old friction never bother us before? Because it was everywhere. The work of translating a human intention — "find out why this campaign underperformed" — into a product's particular language of menus, filters, objects and settings was a cost we paid on every tool, all day, for years. A cost that universal stops registering as a cost at all. It becomes the water you cannot see you are swimming in; it becomes the reference point itself.
+
+And the moment one category of tools stopped charging that tax, something predictable happened to the rest. We are, it turns out, [reliably averse to cognitive effort](https://pubmed.ncbi.nlm.nih.gov/20853993/) — and tellingly, that aversion operates without our awareness of it. In behavioural-economic terms, [mental effort actively discounts the value of a reward](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0068210), much as a delay or a risk does. So when the effort was suddenly revealed as unnecessary, tolerance for it did not gently soften. It collapsed. You cannot un-know that the tax was optional.
+
+## The Stories We Tell Ourselves
+
+Before going further, an honest concession. The repricing is one force, and it usually sits *on top of* real problems rather than replacing them. Wikis do rot. Some support teams really did deprioritise their customers. The claim here is narrower and more interesting than "your complaint is wrong." It is that the *shift in your reference point* is unconscious, while the *complaint it produces* is conscious — confidently aimed, and often aimed at the wrong target.
+
+Watch how the same hidden mechanism wears four different costumes.
+
+**We blame the company.** For fifteen years, the support ticket — choose a category, fill the form, join the queue — was industry best practice, and we rated it acceptable. Then we resolved a problem by describing it in plain language to an AI agent, and the same form began to read as a company hiding from us behind a wall of dropdowns. The form did not change. The inference we draw from it did.
+
+**We blame the tool.** Your team's wiki "became a mess." Did it? The pages are the same pages; the search is the same search. What changed is that retrieval-as-answer became the new anchor, and retrieval-as-a-list-of-links got repriced against it overnight. It is no accident that an entire category of enterprise-search products appeared to promise answers rather than links — the vendors detected the repricing before users could name it.
+
+**We blame ourselves.** A marketer drops a spreadsheet into a chatbot and asks why a channel is slipping, and receives a fluent, caveated answer in seconds. Monday morning, back in the dashboard, she is fighting date filters and conflicting definitions of "conversion" — and quietly concludes, *I'm just not a data person.* Note that the job was not even the same one; the ad hoc question got repriced, not the governed report. But the repricing turned inward, and became self-blame. This is the most quietly corrosive version of all.
+
+**And sometimes we simply give up and call it the weather.** "Spreadsheets are just tedious." "Ticketing is just bureaucratic." This is not a complaint but a resignation — the tax normalised into a law of nature, accepted rather than questioned. As I have written before about [scarcity](https://theunconsciousconsumer.com/article.html?slug=unpacking-the-power-of-scarcity-bias), the most powerful biases are the ones we stop noticing.
+
+One unconscious force; four conscious cover stories. Three accusations and a shrug.
+
+## "Isn't This Just Progress?"
+
+The sharpest objection to all of this is worth meeting head-on, because someone will raise it: is this not simply how technology has always worked? The graphical interface repriced the command line. The smartphone repriced the desktop. Every era's new paradigm makes the last one feel clumsy. What, exactly, is new?
+
+Two things are new, and both matter.
+
+The first is *speed*. Previous repricings unfolded over years, slowly enough that users and companies could see them coming and adapt in stride. This one arrived in months. Consider Stack Overflow, the forum that was the beating heart of how programmers solved problems for fifteen years. Using its own published data, the volume of new questions [fell by roughly a third in a single year](https://www.infoworld.com/article/3988468/what-comes-after-stack-overflow.html) — from about 87,000 in March 2023 to under 59,000 a year later — and kept sliding to levels not seen since 2009. The translation step (turn your problem into a searchable query, scan the threads, adapt a stranger's answer) was repriced almost the instant a tool removed it.
+
+Notice, too, that Stack Overflow's decline had begun before ChatGPT existed, amid long-standing complaints that its moderation felt hostile to newcomers. That is the co-presence point made concrete: the repricing did not invent the decay. It *accelerated* a decline that was already underway — which is exactly why the felt collapse was so sudden.
+
+The second thing that is new is *cross-category transfer*. You are no longer repriced only by a direct competitor. You are repriced by an unrelated tool in someone else's domain, because expectations do not stay in their lane. The person who learns from a chatbot that software can simply understand them carries that expectation into your product, whatever your product does. A whole generation of users has, in effect, been quietly re-onboarded by a tool you do not control.
+
+## The Catch: The Anchor Bends Toward "Feels Effortless"
+
+Here the story turns, and the comfortable version of it has to give way.
+
+Everything so far suggests the repricing is legitimate — the tax was real, your irritation justified. But the new benchmark has a flaw that should make any thoughtful designer uneasy. It is **reliable about effort and unreliable about quality.** It correctly detects that the old translation tax was unnecessary. It then quietly, and incorrectly, infers that the effortless thing must also be the better thing. Those are two different judgements about two different properties, and the second does not follow from the first.
+
+The culprit is a deep one. We tend to read the ease of processing something — its *fluency* — as a signal of its truth and competence. Decades of research show that [a statement made easier to process is judged more likely to be true](https://doi.org/10.1006/ccog.1999.0386), independent of whether it is. A confident, articulate, instantly produced answer simply *feels* more authoritative than a hesitant or effortful one. A caveat worth keeping: this research concerns how we judge statements, not how we judge an interactive system — extending it to "we rate a fluent AI as more competent" is a reasonable inference, not a proven law. But it points somewhere uncomfortable. Layer on top of it our well-studied tendency [to over-rely on automation that appears reliable](https://journals.sagepub.com/doi/10.1518/001872097778543886), and two independent forces converge on the same destination: we trust the fluent machine more than its accuracy has earned.
+
+And this is where the ethical question this site keeps returning to resurfaces. Is this influence ingenious, or is it manipulative? Because if fluency resets the benchmark in a company's favour, then companies now have an incentive to optimise for the *feeling* of competence rather than the fact of it. That is a new species of dark pattern. It does not deceive you about a price or a pre-ticked box, as the [dark patterns I have written about before](https://theunconsciousconsumer.com/article.html?slug=behind-dark-patterns) do. It deceives you about a system's *reliability* — the one thing fluency is least equipped to certify.
+
+
+Klarna offers an instructive, and frequently mistold, illustration. The Swedish fintech [claimed its AI assistant was doing the work of 700 customer-service agents](https://www.customerexperiencedive.com/news/klarna-says-ai-agent-work-853-employees/805987/), a figure it has since raised to 853. The popular version of the story is that this failed and the company crawled back to humans. It did not; Klarna is still scaling its AI and remains bullish. What actually happened is subtler and more useful: the assistant genuinely excelled at the high-volume, simple tier, but degraded on complex and emotionally charged cases, so the company [reintroduced human agents for that tier](https://www.fintechweekly.com/magazine/articles/klarna-hires-customer-service-after-ai-pivot). Its chief executive's own diagnosis — that the company had "focused too much on efficiency and cost" — is very nearly a verbatim statement of the effort-versus-quality split. The thing that felt like a solved problem and the thing that was a solved problem were not the same thing.
+
+There is a longer-run cost lurking here, too. The more we let a fluent system carry the work of thinking, planning and drafting, the more we offload — and cognitive offloading, while real and often useful, can hollow out our understanding of how a task is actually done. Whether this tips into genuine *deskilling* is not yet settled; the early evidence is mixed and was widely overstated in the press. But it is the right thing to keep a wary eye on.
+
+## Blindsided, or Responsive
+
+If the repricing happens *to* you, the only strategic question that matters is whether you see it coming.
+
+Siri is the textbook case of being blindsided. For the better part of four years, the product that pioneered the consumer voice assistant has been visibly scrambling to respond to a benchmark that moved without warning. Grammarly shows the other path. In 2019, its sentence-level corrections felt like quiet magic. Once people experienced "rewrite this in a warmer tone," accepting commas one at a time began to feel like manual labour — and the company, recognising the repricing, rebuilt itself around generative rewriting rather than waiting to be hollowed out.
+
+The lesson is emphatically *not* "add a chatbot." It is: find your own invisible tax — the specific place your users still translate their intent into your taxonomy — before a competitor reveals it for you. And note the cruel asymmetry. Expense software like Concur was hated *before* AI; its friction was always visible, named, complained about, and survived anyway on the strength of procurement lock-in. A visible tax you can at least bargain with. An invisible one, newly exposed and misattributed, is far more dangerous — because you cannot bargain with a feeling.
+
+## What To Do About It
+
+For product and design teams, the shift is less a technical brief than a perceptual one. A few pairings to work with.
+
+**Reference-dependence → Find your anchor-setter.** Identify which adjacent AI experience is currently resetting your users' expectations. It is probably not your category rival; it is whatever tool most recently retrained them.
+
+**Effort aversion → Audit the translation tax.** Walk your product and mark every screen where a user must convert a human goal into your internal structure. Each one is now a repricing risk, not just a usability nit.
+
+**Misattribution → Read complaints as signals, not verdicts.** Mine support logs and churn notes for "clunky," "got worse," and "I'm not good at this." Treat them as evidence the benchmark moved, not as literal faults in your feature set.
+
+**The fluency trap → Measure outcomes, not the feeling.** Track resolved results, not satisfaction at the moment of contact. The most dangerous product is the one that feels wonderful and quietly fails — and the second-most-dangerous is a rival who ships exactly that.
+
+## The Last Word
+
+For thirty years, the project of good design was to make software easier to *use* — to smooth the path along which a person operated the machine. The repricing marks the end of that era and the start of a stranger one, in which good design is measured by how easy software is to *work with*, as though it were a capable colleague rather than a building you must learn to navigate.
+
+The uncomfortable truth underneath it is that "good usability" is no longer something you wholly own. It has become a moving figure — a gap between what your product asks of a person and what some other experience, in some other category, has just taught them to expect. You can ship a flawless tool and still be repriced downward overnight by a benchmark you never agreed to.
+
+There is something worth reclaiming in simply seeing the mechanism for what it is. The next time a familiar tool irritates you for no reason you can name, pause on that flash of irritation. It is rarely the tool that changed. It is the reference point in your head, moved quietly by something you used somewhere else — the invisible made briefly visible, the unconscious brought, for a moment, into the light.
+
+---
+
+*Want to share your thoughts? Feel free to share them in the comments section below or on social media.*

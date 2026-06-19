@@ -184,6 +184,30 @@ const observer = new IntersectionObserver((entries) => {
 
 observer.observe(loadMoreZone);
 
+// Pause infinite scroll while smooth-scrolling to an in-page anchor that sits
+// below the articles grid (otherwise the sentinel is crossed mid-scroll, loads
+// more articles, and pushes the anchor target further away).
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', () => {
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    const target = document.getElementById(href.slice(1));
+    const articlesEl = document.getElementById('articles');
+    if (!target || !articlesEl) return;
+    if (target.offsetTop <= articlesEl.offsetTop) return;
+    observer.unobserve(loadMoreZone);
+    const reattach = () => {
+      observer.observe(loadMoreZone);
+      window.removeEventListener('wheel', reattach);
+      window.removeEventListener('touchmove', reattach);
+      window.removeEventListener('keydown', reattach);
+    };
+    window.addEventListener('wheel', reattach, { once: true, passive: true });
+    window.addEventListener('touchmove', reattach, { once: true, passive: true });
+    window.addEventListener('keydown', reattach, { once: true });
+  });
+});
+
 // ===== FILTER BUTTONS =====
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {

@@ -192,7 +192,7 @@
 
     // ===== RENDER =====
     function renderArticle(article, allArticles) {
-      var articleUrl = BASE_URL + '/article.html?slug=' + article.slug;
+      var articleUrl = BASE_URL + '/articles/' + article.slug;
       var cleanTitle = stripEmoji(article.title);
 
       // Head meta
@@ -259,7 +259,7 @@
               var relTagLabel = CAT_LABELS[rel.category] || rel.category;
               var relTitle = stripEmoji(rel.title);
               relatedCardsHtml += [
-                '<a href="article.html?slug=' + rel.slug + '" class="related-card">',
+                '<a href="/articles/' + rel.slug + '" class="related-card">',
                 '  <span class="card-tag ' + relTagClass + '">' + relTagLabel + '</span>',
                 '  <h3 class="related-card-title">' + relTitle + '</h3>',
                 '  <p class="related-card-excerpt">' + rel.excerpt + '</p>',
@@ -308,7 +308,13 @@
     }
 
     // ===== LOAD ARTICLE =====
-    var slug = new URLSearchParams(window.location.search).get('slug');
+    var slug = window.location.pathname.replace(/^\/articles\//, '').replace(/\/$/, '');
+    if (!slug || slug === 'article.html') {
+      slug = new URLSearchParams(window.location.search).get('slug') || '';
+      if (slug) {
+        window.location.replace('/articles/' + slug);
+      }
+    }
 
     if (!slug) {
       window.location.href = '/';

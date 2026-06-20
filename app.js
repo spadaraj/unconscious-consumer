@@ -65,7 +65,7 @@ function updateCategoryHero() {
 // ===== ARTICLE LINK HELPERS =====
 function articleHref(article) {
   if (article.substackUrl) return article.substackUrl;
-  return 'article.html?slug=' + article.slug;
+  return '/articles/' + article.slug;
 }
 
 function articleTarget(article) {
@@ -420,7 +420,7 @@ function renderFeaturedHero(article) {
   })();
 
   if (featuredLinkEl) {
-    var href   = article.substackUrl || ('article.html?slug=' + article.slug);
+    var href   = article.substackUrl || ('/articles/' + article.slug);
     var target = article.substackUrl ? ' target="_blank" rel="noopener"' : '';
     featuredLinkEl.innerHTML =
       'Featured: <a href="' + href + '"' + target + '>' +

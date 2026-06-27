@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  body{margin:0;background:#F5F0E8;color:#1A1816;font-family:'Inter',system-ui,sans-serif;}
+  ::selection{background:#FAE8E1;color:#A8421A;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="background:#F5F0E8;min-height:100vh;">
+
+  <!-- Reading progress -->
+  <div style="position:fixed;top:0;left:0;right:0;height:3px;background:rgba(26,24,22,0.07);z-index:300;">
+    <div ref="{{ progressRef }}" style="height:100%;width:0%;background:#C4531A;transition:width 0.08s linear;"></div>
+  </div>
+
+  <!-- Site header -->
+  <header style="position:sticky;top:0;z-index:200;background:#1A1816;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 28px;max-width:1240px;margin:0 auto;">
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#F5F0E8;letter-spacing:0.01em;">The Unconscious Consumer</div>
+      <div style="display:flex;align-items:center;gap:18px;">
+        <nav style="display:flex;gap:4px;">
+          <a href="#" style="padding:6px 12px;font-size:13px;font-weight:500;color:#F5F0E8;background:rgba(255,255,255,0.1);border-radius:6px;text-decoration:none;">Articles</a>
+          <a href="#" style="padding:6px 12px;font-size:13px;font-weight:500;color:rgba(245,240,232,0.62);border-radius:6px;text-decoration:none;" style-hover="color:#F5F0E8;background:rgba(255,255,255,0.06);">About</a>
+          <a href="#" style="padding:6px 12px;font-size:13px;font-weight:500;color:rgba(245,240,232,0.62);border-radius:6px;text-decoration:none;" style-hover="color:#F5F0E8;background:rgba(255,255,255,0.06);">CV</a>
+        </nav>
+        <div style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(245,240,232,0.65);font-size:14px;cursor:pointer;" style-hover="color:#F5F0E8;border-color:rgba(255,255,255,0.4);">☀</div>
+        <a href="#" style="background:#C4531A;color:#fff;padding:8px 16px;font-size:12px;font-weight:600;border-radius:100px;text-decoration:none;white-space:nowrap;" style-hover="background:#A8421A;">Subscribe</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Article -->
+  <main style="display:grid;grid-template-columns:1fr min(720px, calc(100% - 48px)) 1fr;padding:0 0 80px;">
+
+    <!-- Hero -->
+    <div style="grid-column:1 / -1;padding:40px 24px 0;">
+      <figure style="max-width:1080px;margin:0 auto;">
+        <div style="position:relative;border-radius:14px;overflow:hidden;height:440px;background:linear-gradient(135deg,#0F0B09 0%,#1A1816 58%,#2A1A12 100%);display:flex;align-items:flex-end;padding:40px;box-shadow:0 12px 40px rgba(0,0,0,0.16);">
+          <div style="position:absolute;right:48px;top:50%;transform:translateY(-50%);font-size:200px;line-height:1;opacity:0.14;user-select:none;">🧠</div>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.66),rgba(0,0,0,0.12) 55%,transparent);"></div>
+          <div style="position:relative;z-index:2;max-width:760px;display:flex;flex-direction:column;gap:16px;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,232,0.72);">Consumer Psychology</span>
+            <h1 style="font-family:'Playfair Display',serif;font-size:3.1rem;font-weight:700;line-height:1.12;color:#F5F0E8;margin:0;text-wrap:balance;">The Endowment Effect: Why We Overvalue What We Own</h1>
+          </div>
+        </div>
+        <figcaption style="font-size:12px;color:#9A948E;margin-top:12px;text-align:center;font-style:italic;">Once it’s yours, it’s worth more — even when nothing about it has changed.</figcaption>
+      </figure>
+    </div>
+
+    <!-- Excerpt + byline -->
+    <div style="grid-column:2;padding-top:48px;">
+      <p style="font-family:'Playfair Display',serif;font-size:1.45rem;font-style:italic;font-weight:600;color:#6B6560;line-height:1.5;margin:0 0 28px;text-wrap:pretty;">Once we own something, we value it more than we did before we owned it. The mechanism is well-documented. The implications are still badly underused.</p>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FAE8E1;color:#C4531A;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;">AS</div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <div style="font-size:14px;font-weight:600;color:#1A1816;">Adam Spadaro</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9A948E;">
+            <span>Jun 22, 2026</span><span>·</span><span>8 min read</span>
+          </div>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #D4CFC7;margin:32px 0 0;">
+    </div>
+
+    <!-- TOC -->
+    <aside style="grid-column:1;justify-self:end;align-self:start;position:sticky;top:96px;width:204px;margin-right:56px;padding-top:48px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#9A948E;margin-bottom:16px;">On this page</div>
+      <nav style="display:flex;flex-direction:column;gap:2px;">
+        <sc-for list="{{ toc }}" as="item" hint-placeholder-count="5">
+          <a href="#" data-toc="{{ item.id }}" onClick="{{ item.onClick }}" style="font-size:13px;font-weight:500;line-height:1.4;color:#9A948E;text-decoration:none;padding:6px 0 6px 14px;border-left:2px solid transparent;transition:color 0.18s,border-color 0.18s;">{{ item.label }}</a>
+        </sc-for>
+      </nav>
+    </aside>
+
+    <!-- Body -->
+    <article style="grid-column:2;padding-top:40px;">
+
+      <h2 id="sec-mug" data-section="sec-mug" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:8px 0 18px;scroll-margin-top:96px;">The mug that started it</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">In 1990, Richard Thaler ran an experiment that should have been unremarkable. He handed half the participants in a room a Cornell coffee mug and asked everyone to name a price — sellers to sell, buyers to buy. The mugs were identical. The prices were not.<sup><a href="#fn1" style="color:#C4531A;text-decoration:none;font-weight:600;padding:0 1px;scroll-margin-top:96px;">1</a></sup></p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Sellers valued their mugs at roughly twice what buyers were willing to pay. The only thing separating the two groups was ownership. Once you held the mug, <strong style="font-weight:600;color:#1A1816;">it became worth more to you</strong> than it was to the person who hadn’t yet held it.</p>
+
+      <!-- Figure: bar chart -->
+      <figure style="margin:36px 0;background:#FFFFFF;border:1px solid #D4CFC7;border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#9A948E;margin-bottom:20px;">Fig. 1 · Median valuation — Cornell mug study</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:64px;font-size:13px;font-weight:600;color:#6B6560;flex-shrink:0;">Sellers</div>
+            <div style="flex:1;height:30px;background:#EDE8DF;border-radius:6px;overflow:hidden;"><div style="width:96%;height:100%;background:#C4531A;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;color:#fff;font-size:13px;font-weight:600;">$5.78</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:64px;font-size:13px;font-weight:600;color:#6B6560;flex-shrink:0;">Buyers</div>
+            <div style="flex:1;height:30px;background:#EDE8DF;border-radius:6px;overflow:hidden;"><div style="width:37%;height:100%;background:#1A1816;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;color:#fff;font-size:13px;font-weight:600;">$2.21</div></div>
+          </div>
+        </div>
+        <figcaption style="font-size:13px;color:#9A948E;line-height:1.6;margin-top:18px;">Sellers demanded more than twice what buyers would pay — for the same mug, assigned at random minutes earlier.</figcaption>
+      </figure>
+
+      <h2 id="sec-mechanism" data-section="sec-mechanism" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">The mechanism</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The endowment effect is an expression of <a href="#" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">loss aversion</a> — the finding that losses register as roughly twice as painful as equivalent gains feel good.<sup><a href="#fn2" style="color:#C4531A;text-decoration:none;font-weight:600;padding:0 1px;scroll-margin-top:96px;">2</a></sup> When you own something, giving it up is filed as a loss. For the buyer, acquiring it is filed as a gain. The same transaction feels different depending on which side of ownership you happen to be standing on.</p>
+
+      <blockquote style="border-left:3px solid #C4531A;padding:6px 0 6px 22px;margin:32px 0;">
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;font-weight:600;color:#1A1816;line-height:1.45;margin:0;">The mere act of ownership changes an object’s value — not its utility, not its scarcity, just the fact of possession.</p>
+      </blockquote>
+
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Crucially, the effect shows up before any rational story can form. Brain-imaging work finds the shift in valuation arrives fast and pre-reflective — closer to a reflex than a calculation.<sup><a href="#fn3" style="color:#C4531A;text-decoration:none;font-weight:600;padding:0 1px;scroll-margin-top:96px;">3</a></sup> By the time you’re reasoning about whether to keep the thing, the premium is already baked in.</p>
+
+      <h2 id="sec-pricing" data-section="sec-pricing" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">What it means for pricing</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Free trials exploit this deliberately. Let someone use a product for thirty days and they no longer evaluate whether it’s worth paying for — they evaluate whether losing it is worth avoiding. That’s a different calculation, and it systematically favours conversion.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The same logic explains lenient return policies. A generous window looks like a concession to the buyer. In practice it gets the product into the customer’s hands, where ownership quietly does the persuading. Returns fall not because the policy is rarely used, but because the thing is already, psychologically, theirs.</p>
+
+      <h2 id="sec-design" data-section="sec-design" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">Designing against it</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">If you’re building for the person rather than against them, the endowment effect is worth naming out loud. A subscriber who can’t bring themselves to cancel isn’t necessarily a satisfied subscriber — they may just be loss-averse. Designs that surface the real cost of keeping something, and make leaving frictionless, treat the bias as a thing to disclose rather than a lever to pull.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 8px;">The mug isn’t special. The ownership is. Once you can see the premium, you can decide whether it’s one you actually want to pay.</p>
+
+      <!-- Footnotes / references -->
+      <hr style="border:none;border-top:1px solid #D4CFC7;margin:48px 0 28px;">
+      <section id="sec-notes" data-section="sec-notes" style="scroll-margin-top:96px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;color:#1A1816;margin:0 0 20px;">References</h2>
+        <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:fn;">
+          <li id="fn1" style="display:flex;gap:12px;font-size:14px;line-height:1.6;color:#6B6560;scroll-margin-top:96px;"><span style="color:#C4531A;font-weight:600;flex-shrink:0;">1.</span><span>Kahneman, D., Knetsch, J. L., & Thaler, R. H. (1990). <em>Experimental Tests of the Endowment Effect and the Coase Theorem.</em> Journal of Political Economy, 98(6), 1325–1348.</span></li>
+          <li id="fn2" style="display:flex;gap:12px;font-size:14px;line-height:1.6;color:#6B6560;scroll-margin-top:96px;"><span style="color:#C4531A;font-weight:600;flex-shrink:0;">2.</span><span>Kahneman, D., & Tversky, A. (1979). <em>Prospect Theory: An Analysis of Decision under Risk.</em> Econometrica, 47(2), 263–291.</span></li>
+          <li id="fn3" style="display:flex;gap:12px;font-size:14px;line-height:1.6;color:#6B6560;scroll-margin-top:96px;"><span style="color:#C4531A;font-weight:600;flex-shrink:0;">3.</span><span>Knutson, B., et al. (2008). <em>Neural Antecedents of the Endowment Effect.</em> Neuron, 58(5), 814–822.</span></li>
+        </ol>
+      </section>
+    </article>
+
+    <!-- Newsletter -->
+    <div style="grid-column:1 / -1;padding:64px 24px 0;">
+      <div style="max-width:720px;margin:0 auto;background:#1A1816;border-radius:16px;padding:48px 44px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.12);">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C4531A;margin-bottom:14px;">The Unconscious Consumer</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:700;color:#F5F0E8;line-height:1.25;margin:0 0 12px;text-wrap:balance;">Get the next essay in your inbox</h2>
+        <p style="font-size:15px;color:rgba(245,240,232,0.62);line-height:1.6;margin:0 auto 28px;max-width:420px;">One piece a week on the psychology behind the choices we don’t notice making. No noise.</p>
+        <sc-if value="{{ notSubscribed }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ onSubscribe }}" style="display:flex;gap:10px;max-width:440px;margin:0 auto;">
+            <input ref="{{ emailRef }}" type="email" required placeholder="you@email.com" style="flex:1;min-width:0;height:48px;padding:0 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.06);color:#F5F0E8;font-size:14px;font-family:'Inter',sans-serif;outline:none;" style-focus="border-color:#C4531A;background:rgba(255,255,255,0.1);">
+            <button type="submit" style="height:48px;padding:0 26px;border-radius:100px;border:none;background:#C4531A;color:#fff;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 4px 20px rgba(196,83,26,0.4);" style-hover="background:#A8421A;">Subscribe</button>
+          </form>
+        </sc-if>
+        <sc-if value="{{ subscribed }}">
+          <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(196,83,26,0.16);color:#F5F0E8;padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;">
+            <span style="color:#C4531A;font-size:16px;">✓</span> You’re in. Check your inbox to confirm.
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- Related reading -->
+    <div style="grid-column:1 / -1;padding:72px 24px 0;">
+      <div style="max-width:1080px;margin:0 auto;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;color:#1A1816;margin:0;">Further reading</h2>
+          <a href="#" style="font-size:13px;font-weight:600;color:#C4531A;text-decoration:none;" style-hover="color:#A8421A;">All articles →</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+          <sc-for list="{{ related }}" as="card" hint-placeholder-count="3">
+            <a href="#" style="text-decoration:none;background:#FFFFFF;border:1px solid #D4CFC7;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;flex-direction:column;transition:transform 0.22s,box-shadow 0.22s;" style-hover="transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.12);">
+              <div style="height:150px;background:{{ card.cover }};display:flex;align-items:center;justify-content:center;font-size:42px;">{{ card.emoji }}</div>
+              <div style="padding:22px;display:flex;flex-direction:column;gap:10px;flex:1;">
+                <span style="align-self:flex-start;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:#FAE8E1;color:#C4531A;">{{ card.tag }}</span>
+                <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;line-height:1.35;color:#1A1816;flex:1;">{{ card.title }}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid #E8E3DA;margin-top:auto;">
+                  <span style="font-size:12px;color:#9A948E;">{{ card.date }}</span>
+                  <span style="font-size:12px;font-weight:600;color:#C4531A;">Read →</span>
+                </div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background:#1A1816;border-top:1px solid rgba(255,255,255,0.08);padding:40px 28px;">
+    <div style="max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#F5F0E8;">The Unconscious Consumer</div>
+      <nav style="display:flex;gap:20px;">
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">Articles</a>
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">About</a>
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">Substack</a>
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">RSS</a>
+      </nav>
+      <div style="font-size:12px;color:#6B6560;">© 2026 Adam Spadaro</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { subscribed: false };
+  rootRef = React.createRef();
+  progressRef = React.createRef();
+  emailRef = React.createRef();
+
+  componentDidMount() {
+    this._onScroll = this.handleScroll.bind(this);
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll, { passive: true });
+    this.handleScroll();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+  }
+
+  handleScroll() {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    const pct = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
+    if (this.progressRef.current) this.progressRef.current.style.width = (pct * 100).toFixed(2) + '%';
+
+    const root = this.rootRef.current;
+    if (!root) return;
+    const secs = Array.from(root.querySelectorAll('[data-section]'));
+    let active = secs.length ? secs[0].getAttribute('data-section') : null;
+    for (const s of secs) {
+      if (s.getBoundingClientRect().top - 120 <= 0) active = s.getAttribute('data-section');
+    }
+    root.querySelectorAll('[data-toc]').forEach(a => {
+      const on = a.getAttribute('data-toc') === active;
+      a.style.color = on ? '#C4531A' : '#9A948E';
+      a.style.borderLeftColor = on ? '#C4531A' : 'transparent';
+      a.style.fontWeight = on ? '600' : '500';
+    });
+  }
+
+  scrollToId(id) {
+    const root = this.rootRef.current;
+    if (!root) return;
+    const el = root.querySelector('#' + id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 88;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  renderVals() {
+    const toc = [
+      { id: 'sec-mug', label: 'The mug that started it' },
+      { id: 'sec-mechanism', label: 'The mechanism' },
+      { id: 'sec-pricing', label: 'What it means for pricing' },
+      { id: 'sec-design', label: 'Designing against it' },
+      { id: 'sec-notes', label: 'References' },
+    ].map(i => ({ ...i, onClick: (e) => { e.preventDefault(); this.scrollToId(i.id); } }));
+
+    const related = [
+      { tag: 'Behavioural Economics', title: 'Repriced Overnight: The Hidden Cost of AI Comparison', date: 'Jun 15, 2026', emoji: '📊', cover: 'linear-gradient(135deg,#1A2020 0%,#0D2020 100%)' },
+      { tag: 'User Experience', title: 'The Scarcity Bias and Why Designers Keep Getting It Wrong', date: 'Jun 1, 2026', emoji: '🔍', cover: 'linear-gradient(135deg,#1A1830 0%,#100C28 100%)' },
+      { tag: 'Undercurrents', title: 'Loss Aversion: The Asymmetry Running Quietly Underneath', date: 'May 24, 2026', emoji: '⚖️', cover: 'linear-gradient(135deg,#1A1816 0%,#2A1A12 100%)' },
+    ];
+
+    return {
+      rootRef: this.rootRef,
+      progressRef: this.progressRef,
+      emailRef: this.emailRef,
+      toc,
+      related,
+      subscribed: this.state.subscribed,
+      notSubscribed: !this.state.subscribed,
+      onSubscribe: (e) => { e.preventDefault(); this.setState({ subscribed: true }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

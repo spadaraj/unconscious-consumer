@@ -41,9 +41,9 @@
 </head>
 <body>
 
-  <div id="reading-progress"></div>
+  <div id="reading-progress"><div id="reading-progress-fill"></div></div>
 
-  <!-- ===== LAYER 1: FIXED HEADER ===== -->
+  <!-- ===== SITE HEADER ===== -->
   <header class="site-header" id="site-header">
     <div class="header-inner">
       <a href="index.html" class="logo">
@@ -63,26 +63,8 @@
     </div>
   </header>
 
-  <!-- ===== LAYER 2: DISCOVERY BAR ===== -->
-  <nav class="discovery-bar" id="discovery-bar">
-    <div class="discovery-bar-inner">
-      <a href="index.html" class="discovery-pill" id="pill-all">All</a>
-      <a href="index.html?filter=consumer-psychology" class="discovery-pill" id="pill-consumer-psychology">Consumer Psychology</a>
-      <a href="index.html?filter=behavioural-economics" class="discovery-pill" id="pill-behavioural-economics">Behavioural Economics</a>
-      <a href="index.html?filter=user-experience" class="discovery-pill" id="pill-user-experience">User Experience</a>
-      <a href="index.html?filter=undercurrents" class="discovery-pill" id="pill-undercurrents">Undercurrents</a>
-    </div>
-  </nav>
-
-  <!-- ===== ARTICLE ===== -->
-  <main class="article-page-main">
-    <div class="article-container">
-
-      <!-- Article content injected here -->
-      <div id="article-content" class="article-content-wrap"></div>
-
-    </div>
-  </main>
+  <!-- ===== ARTICLE MAIN (3-column grid, content injected by JS) ===== -->
+  <main class="article-main" id="article-main"></main>
 
   <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
@@ -132,10 +114,173 @@
       localStorage.setItem('theme', next);
     });
 
-    // ===== HEADER SHRINK + READING PROGRESS =====
+    // ===== CATEGORY HELPERS =====
+    var CAT_LABELS = {
+      'consumer-psychology': 'Consumer Psychology',
+      'behavioural-economics': 'Behavioural Economics',
+      'user-experience': 'User Experience',
+      'undercurrents': 'Undercurrents'
+    };
+    var CAT_CLASSES = {
+      'consumer-psychology': 'tag-cp',
+      'behavioural-economics': 'tag-be',
+      'user-experience': 'tag-ux',
+      'undercurrents': 'tag-uc'
+    };
+    var CAT_GRADIENTS = {
+      'consumer-psychology': 'linear-gradient(135deg,#1A1816 0%,#2A1A12 100%)',
+      'behavioural-economics': 'linear-gradient(135deg,#1A2020 0%,#0D2020 100%)',
+      'user-experience': 'linear-gradient(135deg,#1A1830 0%,#100C28 100%)',
+      'undercurrents': 'linear-gradient(135deg,#201A10 0%,#1A1208 100%)'
+    };
+    var CAT_EMOJIS = {
+      'consumer-psychology': '🧠',
+      'behavioural-economics': '📊',
+      'user-experience': '🔍',
+      'undercurrents': '🌊'
+    };
+
+    // ===== HELPERS =====
+    var BASE_URL = 'https://theunconsciousconsumer.com';
+
+    function stripEmoji(str) {
+      return str.replace(/[\u{1F300}-\u{1FAD6}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|️|⃣/gu, '').trim();
+    }
+
+    function stripImages(html) {
+      return html
+        .replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '')
+        .replace(/<img(?![^>]*class="(?:book-cover|data-viz)")[^>]*\/?>/gi, '');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        var d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch(e) { return dateStr; }
+    }
+
+    // ===== TOC =====
+    function slugify(text) {
+      return text.toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
+    function buildToc(bodyEl) {
+      var tocEl = document.getElementById('article-toc');
+      var tocNav = document.getElementById('article-toc-nav');
+      if (!tocEl || !tocNav) return;
+
+      var headings = bodyEl.querySelectorAll('h2');
+      if (headings.length < 2) {
+        tocEl.style.display = 'none';
+        return;
+      }
+
+      var usedIds = {};
+      headings.forEach(function(h) {
+        var base = slugify(h.textContent.trim());
+        var id = base;
+        if (usedIds[base]) {
+          usedIds[base]++;
+          id = base + '-' + usedIds[base];
+        } else {
+          usedIds[base] = 1;
+        }
+        h.id = id;
+        h.setAttribute('data-section', id);
+        h.style.scrollMarginTop = '96px';
+
+        var a = document.createElement('a');
+        a.href = '#' + id;
+        a.setAttribute('data-toc', id);
+        a.className = 'article-toc__link';
+        a.textContent = h.textContent.trim();
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = document.getElementById(id);
+          if (target) {
+            window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 88, behavior: 'smooth' });
+          }
+        });
+        tocNav.appendChild(a);
+      });
+    }
+
+    function updateTocSpy() {
+      var sections = document.querySelectorAll('[data-section]');
+      var tocLinks = document.querySelectorAll('[data-toc]');
+      if (!sections.length || !tocLinks.length) return;
+
+      var active = sections[0].getAttribute('data-section');
+      sections.forEach(function(s) {
+        if (s.getBoundingClientRect().top - 120 <= 0) {
+          active = s.getAttribute('data-section');
+        }
+      });
+
+      tocLinks.forEach(function(a) {
+        var on = a.getAttribute('data-toc') === active;
+        a.style.color = on ? '#C4531A' : '';
+        a.style.borderLeftColor = on ? '#C4531A' : 'transparent';
+        a.style.fontWeight = on ? '600' : '500';
+      });
+    }
+
+    // ===== IMAGE ENTRANCE ANIMATION =====
+    function initImageAnimation(bodyEl) {
+      bodyEl.querySelectorAll('img.book-cover, img.data-viz').forEach(function(img) {
+        img.setAttribute('data-focus-img', '1');
+      });
+
+      var imgs = bodyEl.querySelectorAll('img[data-focus-img]');
+      imgs.forEach(function(img) {
+        img.style.opacity = '0';
+        img.style.transform = 'translateY(34px) scale(0.975)';
+        img.style.transition = 'opacity 1.1s ease, transform 1.1s cubic-bezier(0.16,1,0.3,1)';
+        img.dataset.revealed = 'false';
+      });
+
+      function revealImages() {
+        var vh = window.innerHeight;
+        bodyEl.querySelectorAll('img[data-focus-img]').forEach(function(img) {
+          if (img.dataset.revealed === 'true') return;
+          var rect = img.getBoundingClientRect();
+          if (rect.top < vh * 0.86) {
+            img.style.opacity = '1';
+            img.style.transform = 'none';
+            img.dataset.revealed = 'true';
+          }
+        });
+      }
+
+      window.addEventListener('scroll', revealImages, { passive: true });
+      revealImages();
+
+      // Force-reveal images already in viewport after initial paint
+      setTimeout(function() {
+        var vh = window.innerHeight;
+        bodyEl.querySelectorAll('img[data-focus-img]').forEach(function(img) {
+          if (img.dataset.revealed === 'true') return;
+          var rect = img.getBoundingClientRect();
+          if (rect.top < vh && rect.bottom > 0) {
+            img.style.opacity = '1';
+            img.style.transform = 'none';
+            img.dataset.revealed = 'true';
+          }
+        });
+      }, 1200);
+    }
+
+    // ===== SCROLL HANDLER =====
     var header = document.getElementById('site-header');
-    var progressBar = document.getElementById('reading-progress');
+    var progressFill = document.getElementById('reading-progress-fill');
     var lastScrollY = 0;
+
     window.addEventListener('scroll', function() {
       var currentScrollY = window.scrollY;
 
@@ -153,47 +298,24 @@
       lastScrollY = currentScrollY;
 
       // Reading progress bar
-      var articleEl = document.querySelector('.article-page-main');
-      if (articleEl) {
-        var scrollable = articleEl.offsetTop + articleEl.offsetHeight - window.innerHeight;
-        var pct = scrollable > 0 ? Math.min(100, (currentScrollY / scrollable) * 100) : 0;
-        progressBar.style.setProperty('--progress', pct);
-      }
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - doc.clientHeight;
+      var pct = max > 0 ? Math.min(100, Math.max(0, (currentScrollY / max) * 100)) : 0;
+      if (progressFill) progressFill.style.width = pct.toFixed(2) + '%';
+
+      // TOC scroll-spy
+      updateTocSpy();
     }, { passive: true });
-
-    // ===== CATEGORY HELPERS =====
-    var CAT_LABELS = {
-      'consumer-psychology': 'Consumer Psychology',
-      'behavioural-economics': 'Behavioural Economics',
-      'user-experience': 'User Experience',
-      'undercurrents': 'Undercurrents'
-    };
-    var CAT_CLASSES = {
-      'consumer-psychology': 'tag-cp',
-      'behavioural-economics': 'tag-be',
-      'user-experience': 'tag-ux',
-      'undercurrents': 'tag-uc'
-    };
-
-    // ===== HELPERS =====
-    var BASE_URL = 'https://theunconsciousconsumer.com';
-
-    function stripEmoji(str) {
-      return str.replace(/[\u{1F300}-\u{1FAD6}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|\uFE0F|\u20E3/gu, '').trim();
-    }
-
-    function stripImages(html) {
-      // Strip <figure> wrappers entirely (scraped, not curated)
-      // Strip <img> tags unless they have class="book-cover" or class="data-viz"
-      return html
-        .replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '')
-        .replace(/<img(?![^>]*class="(?:book-cover|data-viz)")[^>]*\/?>/gi, '');
-    }
 
     // ===== RENDER =====
     function renderArticle(article, allArticles) {
       var articleUrl = BASE_URL + '/articles/' + article.slug;
       var cleanTitle = stripEmoji(article.title);
+      var tagClass = CAT_CLASSES[article.category] || 'tag-cp';
+      var tagLabel = CAT_LABELS[article.category] || article.category;
+      var heroGradient = CAT_GRADIENTS[article.category] || 'linear-gradient(135deg,#1A1816 0%,#2A1A12 100%)';
+      var heroEmoji = CAT_EMOJIS[article.category] || '📖';
+      var displayDate = formatDate(article.date);
 
       // Head meta
       document.title = cleanTitle + ' — The Unconscious Consumer';
@@ -204,7 +326,6 @@
       document.querySelector('meta[name="twitter:title"]').setAttribute('content', cleanTitle);
       document.querySelector('meta[name="twitter:description"]').setAttribute('content', article.excerpt);
 
-      // og:image + twitter:image — prefer article coverImage, then first body image
       var imgUrl = article.coverImage
         ? BASE_URL + '/' + article.coverImage
         : (function() {
@@ -217,94 +338,161 @@
       }
       document.querySelector('link[rel="canonical"]').setAttribute('href', articleUrl);
 
-      var tagClass = CAT_CLASSES[article.category] || 'tag-cp';
-      var tagLabel = CAT_LABELS[article.category] || article.category;
-
-      // Mark the matching discovery pill as active
-      var activePill = document.getElementById('pill-' + article.category);
-      if (activePill) {
-        activePill.classList.add('active');
+      // --- HERO ---
+      var heroInner;
+      if (article.coverImage) {
+        heroInner = [
+          '<img class="article-hero-v2__img" src="' + article.coverImage + '" alt="' + cleanTitle.replace(/"/g, '&quot;') + '" loading="eager">',
+          '<div class="article-hero-v2__scrim"></div>'
+        ].join('');
       } else {
-        document.getElementById('pill-all').classList.add('active');
+        heroInner = '<span class="article-hero-v2__emoji">' + heroEmoji + '</span>';
       }
 
-      var bodySection;
-      if (article.bodyHtml) {
-        bodySection = '<div class="article-body">' + stripImages(article.bodyHtml) + '</div>';
-      } else {
-        var substackLink = article.substackUrl || 'https://theunconsciousconsumer.substack.com';
-        bodySection = [
-          '<div class="article-subscribe-cta">',
-          '  <div class="subscribe-cta-inner">',
-          '    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="substack-icon-lg"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>',
-          '    <h2>Read this on Substack</h2>',
-          '    <p>This article is published as part of The Unconscious Consumer newsletter on Substack — where new essays land directly in your inbox every week.</p>',
-          '    <a href="' + substackLink + '" target="_blank" rel="noopener" class="btn btn-substack">',
-          '      Read on Substack →',
-          '    </a>',
-          '    <span class="substack-note">Free to subscribe · No spam · Unsubscribe anytime</span>',
-          '  </div>',
-          '</div>'
-        ].join('\n');
-      }
+      var heroHtml = [
+        '<div class="article-hero-v2-wrap">',
+        '  <figure class="article-hero-v2">',
+        '    <div class="article-hero-v2__img-wrap" style="background:' + heroGradient + '">',
+        heroInner,
+        '      <div class="article-hero-v2__overlay">',
+        '        <span class="article-hero-v2__eyebrow">' + tagLabel + '</span>',
+        '        <h1 class="article-hero-v2__title">' + cleanTitle + '</h1>',
+        '      </div>',
+        '    </div>',
+        '  </figure>',
+        '</div>'
+      ].join('\n');
 
-      var endingSection = '';
-      if (article.bodyHtml) {
-        var relatedCardsHtml = '';
-        if (article.related && article.related.length > 0 && allArticles) {
-          article.related.forEach(function(relSlug) {
-            var rel = allArticles.find(function(a) { return a.slug === relSlug; });
-            if (rel) {
-              var relTagClass = CAT_CLASSES[rel.category] || 'tag-cp';
-              var relTagLabel = CAT_LABELS[rel.category] || rel.category;
-              var relTitle = stripEmoji(rel.title);
-              relatedCardsHtml += [
-                '<a href="/articles/' + rel.slug + '" class="related-card">',
-                '  <span class="card-tag ' + relTagClass + '">' + relTagLabel + '</span>',
-                '  <h3 class="related-card-title">' + relTitle + '</h3>',
-                '  <p class="related-card-excerpt">' + rel.excerpt + '</p>',
-                '  <span class="related-card-link">Read →</span>',
-                '</a>'
-              ].join('\n');
-            }
-          });
-        }
-        endingSection = [
-          '<div class="article-ending">',
-          '  <hr class="article-ending-divider" />',
-          relatedCardsHtml ? '  <p class="continue-label">Continue reading</p>' : '',
-          relatedCardsHtml ? '  <div class="related-cards">' + relatedCardsHtml + '</div>' : '',
-          '  <div class="article-footer-nav">',
-          '    <a href="index.html" class="btn btn-outline">← Back to All Articles</a>',
-          '    <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">Subscribe on Substack</a>',
-          '  </div>',
-          '</div>'
-        ].join('\n');
-      }
-
-      var heroHtml = article.coverImage
-        ? '<div class="article-hero"><img src="' + article.coverImage + '" alt="' + cleanTitle + '" class="article-hero-img" loading="eager"></div>'
-        : '';
-
-      document.getElementById('article-content').innerHTML = [
-        '<div class="article-header' + (article.coverImage ? ' article-header--has-hero' : '') + '">',
-        heroHtml,
-        '  <div class="article-header-text">',
-        '    <a href="index.html" class="article-back">← All Articles</a>',
-        '    <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
-        '    <h1 class="article-title">' + cleanTitle + '</h1>',
-        '    <p class="article-excerpt">' + article.excerpt + '</p>',
-        '    <div class="article-meta-row">',
-        '      <span class="article-date">' + article.date + '</span>',
-        '      <span class="article-dot">·</span>',
-        '      <span class="article-read-time">' + article.readTime + '</span>',
+      // --- DECK + BYLINE ---
+      var deckHtml = [
+        '<div class="article-deck-wrap">',
+        '  <p class="article-deck">' + article.excerpt + '</p>',
+        '  <div class="article-byline">',
+        '    <div class="article-byline__avatar">AS</div>',
+        '    <div>',
+        '      <div class="article-byline__name">Adam Spadaro</div>',
+        '      <div class="article-byline__meta">' + displayDate + ' · ' + article.readTime + '</div>',
         '    </div>',
         '  </div>',
-        '</div>',
-        '<hr class="article-header-divider" />',
-        bodySection,
-        endingSection
+        '  <hr class="article-byline__divider">',
+        '</div>'
       ].join('\n');
+
+      // --- BODY ---
+      var hasBody = !!article.bodyHtml;
+      var bodyColHtml;
+      var tocHtml;
+
+      if (hasBody) {
+        tocHtml = [
+          '<aside class="article-toc" id="article-toc">',
+          '  <div class="article-toc__label">On this page</div>',
+          '  <nav class="article-toc__nav" id="article-toc-nav"></nav>',
+          '</aside>'
+        ].join('\n');
+
+        bodyColHtml = [
+          '<article class="article-body-col" id="article-body-col">',
+          '  <div class="article-body">' + stripImages(article.bodyHtml) + '</div>',
+          '</article>'
+        ].join('\n');
+      } else {
+        // Substack-hosted article
+        tocHtml = '';
+        var substackLink = article.substackUrl || 'https://theunconsciousconsumer.substack.com';
+        bodyColHtml = [
+          '<article class="article-body-col" id="article-body-col">',
+          '  <div class="article-subscribe-cta">',
+          '    <div class="subscribe-cta-inner">',
+          '      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="substack-icon-lg"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>',
+          '      <h2>Read this on Substack</h2>',
+          '      <p>This article is published as part of The Unconscious Consumer newsletter on Substack — where new essays land directly in your inbox.</p>',
+          '      <a href="' + substackLink + '" target="_blank" rel="noopener" class="btn btn-substack">Read on Substack →</a>',
+          '      <span class="substack-note">Free to subscribe · No spam · Unsubscribe anytime</span>',
+          '    </div>',
+          '  </div>',
+          '</article>'
+        ].join('\n');
+      }
+
+      // --- NEWSLETTER BLOCK (only for local articles) ---
+      var newsletterHtml = '';
+      if (hasBody) {
+        newsletterHtml = [
+          '<div class="article-newsletter-wrap">',
+          '  <div class="article-newsletter">',
+          '    <div class="article-newsletter__eyebrow">The Unconscious Consumer</div>',
+          '    <h2 class="article-newsletter__heading">Get the next essay in your inbox</h2>',
+          '    <p class="article-newsletter__sub">One piece every two weeks on the psychology behind the choices we don\'t notice making. No noise.</p>',
+          '    <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn-substack-large">Subscribe on Substack</a>',
+          '    <p style="margin-top:16px"><span class="substack-note">Free to read · No spam · Unsubscribe anytime</span></p>',
+          '  </div>',
+          '</div>'
+        ].join('\n');
+      }
+
+      // --- FURTHER READING (only for local articles with related entries) ---
+      var furtherReadingHtml = '';
+      if (hasBody && article.related && article.related.length > 0 && allArticles) {
+        var relCards = '';
+        article.related.forEach(function(relSlug) {
+          var rel = allArticles.find(function(a) { return a.slug === relSlug; });
+          if (!rel) return;
+          var relTagClass = CAT_CLASSES[rel.category] || 'tag-cp';
+          var relTagLabel = CAT_LABELS[rel.category] || rel.category;
+          var relTitle = stripEmoji(rel.title);
+          var relGradient = CAT_GRADIENTS[rel.category] || 'linear-gradient(135deg,#1A1816 0%,#2A1A12 100%)';
+          var relEmoji = CAT_EMOJIS[rel.category] || '📖';
+          var relDate = formatDate(rel.date);
+          relCards += [
+            '<a href="/articles/' + rel.slug + '" class="article-further-reading__card">',
+            '  <div class="article-further-reading__cover" style="background:' + relGradient + '">' + relEmoji + '</div>',
+            '  <div class="article-further-reading__body">',
+            '    <span class="card-tag ' + relTagClass + '">' + relTagLabel + '</span>',
+            '    <div class="article-further-reading__card-title">' + relTitle + '</div>',
+            '    <div class="article-further-reading__footer">',
+            '      <span class="article-further-reading__date">' + relDate + '</span>',
+            '      <span class="article-further-reading__read">Read →</span>',
+            '    </div>',
+            '  </div>',
+            '</a>'
+          ].join('\n');
+        });
+
+        if (relCards) {
+          furtherReadingHtml = [
+            '<div class="article-further-reading-wrap">',
+            '  <div class="article-further-reading">',
+            '    <div class="article-further-reading__header">',
+            '      <h2 class="article-further-reading__title">Further reading</h2>',
+            '      <a href="index.html" class="article-further-reading__all">All articles →</a>',
+            '    </div>',
+            '    <div class="article-further-reading__grid">',
+            relCards,
+            '    </div>',
+            '  </div>',
+            '</div>'
+          ].join('\n');
+        }
+      }
+
+      document.getElementById('article-main').innerHTML = [
+        heroHtml,
+        deckHtml,
+        tocHtml,
+        bodyColHtml,
+        newsletterHtml,
+        furtherReadingHtml
+      ].join('\n');
+
+      // Post-render: TOC and image animation
+      if (hasBody) {
+        var bodyCol = document.getElementById('article-body-col');
+        if (bodyCol) {
+          buildToc(bodyCol);
+          initImageAnimation(bodyCol);
+        }
+      }
     }
 
     // ===== LOAD ARTICLE =====

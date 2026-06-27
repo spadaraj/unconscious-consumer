@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  body{margin:0;background:#F5F0E8;color:#1A1816;font-family:'Inter',system-ui,sans-serif;}
+  ::selection{background:#FAE8E1;color:#A8421A;}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="background:#F5F0E8;min-height:100vh;">
+
+  <!-- Reading progress -->
+  <div style="position:fixed;top:0;left:0;right:0;height:3px;background:rgba(26,24,22,0.07);z-index:300;">
+    <div ref="{{ progressRef }}" style="height:100%;width:0%;background:#C4531A;transition:width 0.08s linear;"></div>
+  </div>
+
+  <!-- Site header -->
+  <header style="position:sticky;top:0;z-index:200;background:#1A1816;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 28px;max-width:1240px;margin:0 auto;">
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#F5F0E8;letter-spacing:0.01em;">The Unconscious Consumer</div>
+      <div style="display:flex;align-items:center;gap:18px;">
+        <nav style="display:flex;gap:4px;">
+          <a href="#" style="padding:6px 12px;font-size:13px;font-weight:500;color:#F5F0E8;background:rgba(255,255,255,0.1);border-radius:6px;text-decoration:none;">Articles</a>
+          <a href="#" style="padding:6px 12px;font-size:13px;font-weight:500;color:rgba(245,240,232,0.62);border-radius:6px;text-decoration:none;" style-hover="color:#F5F0E8;background:rgba(255,255,255,0.06);">About</a>
+          <a href="#" style="padding:6px 12px;font-size:13px;font-weight:500;color:rgba(245,240,232,0.62);border-radius:6px;text-decoration:none;" style-hover="color:#F5F0E8;background:rgba(255,255,255,0.06);">CV</a>
+        </nav>
+        <div style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(245,240,232,0.65);font-size:14px;cursor:pointer;" style-hover="color:#F5F0E8;border-color:rgba(255,255,255,0.4);">☀</div>
+        <a href="#" style="background:#C4531A;color:#fff;padding:8px 16px;font-size:12px;font-weight:600;border-radius:100px;text-decoration:none;white-space:nowrap;" style-hover="background:#A8421A;">Subscribe</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Article -->
+  <main style="display:grid;grid-template-columns:1fr min(720px, calc(100% - 48px)) 1fr;padding:0 0 80px;">
+
+    <!-- Hero -->
+    <div style="grid-column:1 / -1;padding:40px 24px 0;">
+      <figure style="max-width:1080px;margin:0 auto;">
+        <div style="position:relative;border-radius:14px;overflow:hidden;height:460px;background:linear-gradient(135deg,#0F0B09 0%,#1A1816 60%);box-shadow:0 12px 40px rgba(0,0,0,0.16);">
+          <img src="https://substackcdn.com/image/fetch/$s_!lkbp!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fac83f053-ce88-4eef-bfdf-8085cc4f7fc1_1672x941.png" alt="Repriced Overnight" data-focus-img="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.1s ease, transform 1.1s cubic-bezier(0.16,1,0.3,1);">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.78),rgba(0,0,0,0.25) 52%,rgba(0,0,0,0.18));"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:44px 48px;display:flex;flex-direction:column;gap:16px;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,232,0.78);">Behavioural Economics</span>
+            <h1 style="font-family:'Playfair Display',serif;font-size:3.1rem;font-weight:700;line-height:1.12;color:#F5F0E8;margin:0;max-width:780px;text-wrap:balance;">Repriced Overnight</h1>
+          </div>
+        </div>
+      </figure>
+    </div>
+
+    <!-- Deck + byline -->
+    <div style="grid-column:2;padding-top:48px;">
+      <p style="font-family:'Playfair Display',serif;font-size:1.45rem;font-style:italic;font-weight:600;color:#6B6560;line-height:1.5;margin:0 0 28px;text-wrap:pretty;">Your tools didn’t get worse. You just met something that made them look it.</p>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FAE8E1;color:#C4531A;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;">AS</div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <div style="font-size:14px;font-weight:600;color:#1A1816;">Adam Spadaro</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9A948E;">
+            <span>Jun 19, 2026</span><span>·</span><span>12 min read</span>
+          </div>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #D4CFC7;margin:32px 0 0;">
+    </div>
+
+    <!-- TOC -->
+    <aside style="grid-column:1;justify-self:end;align-self:start;position:sticky;top:96px;width:212px;margin-right:48px;padding-top:48px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#9A948E;margin-bottom:16px;">On this page</div>
+      <nav style="display:flex;flex-direction:column;gap:2px;">
+        <sc-for list="{{ toc }}" as="item" hint-placeholder-count="7">
+          <a href="#" data-toc="{{ item.id }}" onClick="{{ item.onClick }}" style="font-size:13px;font-weight:500;line-height:1.4;color:#9A948E;text-decoration:none;padding:6px 0 6px 14px;border-left:2px solid transparent;transition:color 0.18s,border-color 0.18s;">{{ item.label }}</a>
+        </sc-for>
+      </nav>
+    </aside>
+
+    <!-- Body -->
+    <article style="grid-column:2;padding-top:40px;">
+
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:8px 0 26px;">For most of its life, Siri has been a punchline. The mishearings, the “here’s what I found on the web”, the flat refusals: people have been ridiculing them since roughly 2012. And yet we kept using it, because the mockery was graded on a curve. A voice assistant was measured against other voice assistants, and by that standard Siri was adequate. The jokes were about a flawed product, not a doomed category.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Then, in late 2022, you held a real conversation with ChatGPT. The next time you asked Siri to do something modestly complicated, the experience felt different in kind, not merely in degree. No longer a flawed assistant, but a relic.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The strange part is that Siri had not changed. The software in your hand was, line for line, the same assistant it had been the week before. Apple shipped nothing worse. Its value to you still fell off a cliff, so far that Apple has since <a href="https://www.macrumors.com/guide/llm-siri/" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">spent years and a reported billion dollars a year</a> trying to rebuild it. The product stood still. Something else moved.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Have you noticed how often that happens now? A tool you used without complaint a year ago suddenly irritates you, though it is identical to the version you tolerated then. That feeling is not a quirk. It may be the most underappreciated consequence of the current software moment, and it has very little to do with interfaces.</p>
+
+      <h2 id="sec-benchmark" data-section="sec-benchmark" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">The Benchmark Moved, Not the Product</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Borrow a word from the markets. When traders say an asset has been “repriced”, they rarely mean the asset changed. A bond can be repriced overnight by a central bank’s decision; nothing about the bond is different the next morning, but what people will pay for it is. What moved was the benchmark it is judged against.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Software is being repriced the same way. The tool on your screen is unchanged, but its perceived worth has dropped, because the reference point you measure it against has moved. This is not a metaphor stretched for effect. It is a plain description of a well-documented feature of human judgement. <a href="http://www.communicationcache.com/uploads/1/0/8/8/10887248/experts_amateurs_and_real_estate-_an_anchoring-and-adjustment_perspective_on_property_pricing_decisions.pdf" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">Kahneman and Tversky’s work on reference-dependent preferences</a> established that we do not evaluate options in absolute terms; we evaluate them as gains or losses relative to a reference point. Change the reference point and you change the verdict, even when the option itself is fixed.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">So why did the old friction never bother us? Because it was everywhere. The work of translating a human intention (”find out why this campaign underperformed”) into a product’s particular language of menus, filters, objects and settings was a cost we paid on every tool, all day, for years. A cost that universal stops registering as a cost at all. It becomes the water you are swimming in. It becomes the reference point itself.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The moment one category of tools stopped charging that tax, something predictable happened to the rest. We are <a href="https://pubmed.ncbi.nlm.nih.gov/20853993/" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">reliably averse to cognitive effort</a>, and tellingly, that aversion operates without our awareness. In behavioural-economic terms, <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0068210" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">mental effort discounts the value of a reward</a> in much the same way a delay or a risk does. When the effort was suddenly revealed as unnecessary, tolerance for it did not gently soften. It collapsed. You cannot un-know that the tax was optional.</p>
+
+      <figure style="margin:36px 0;">
+        <img src="https://substackcdn.com/image/fetch/$s_!Y2TX!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffd295cff-4e3f-4a65-81f3-9fc112849347_1672x941.png" alt="" loading="lazy" data-focus-img="1" style="width:100%;display:block;border-radius:12px;border:1px solid #D4CFC7;background:#EDE8DF;transition:opacity 1.1s ease, transform 1.1s cubic-bezier(0.16,1,0.3,1);">
+      </figure>
+
+      <h2 id="sec-stories" data-section="sec-stories" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">The Stories We Tell Ourselves</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">An honest concession before going further. The repricing is one force among several, and it usually sits on top of real problems rather than replacing them. Wikis do rot. Some support teams really did deprioritize their customers. The claim here is narrower than “your complaint is wrong”. It is that the shift in your reference point is unconscious, while the complaint it produces is conscious, confidently aimed, and often aimed at the wrong target.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The same hidden mechanism wears four different costumes.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;"><strong style="font-weight:600;color:#1A1816;">We blame the company.</strong> For fifteen years, the support ticket (choose a category, fill the form, join the queue) was industry best practice, and we rated it acceptable. Then we resolved a problem by describing it in plain language to a conversational agent, and the same form began to read as a company hiding behind a wall of dropdowns. The form did not change. The inference we draw from it did.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;"><strong style="font-weight:600;color:#1A1816;">We blame the tool.</strong> Your team’s wiki “became a mess”. Did it? The pages are the same pages; the search is the same search. What changed is that retrieval-as-answer became the new anchor, and a list of links got repriced against it overnight. It is no accident that an entire category of enterprise-search products appeared promising answers rather than links. The vendors detected the repricing before users could name it.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;"><strong style="font-weight:600;color:#1A1816;">We blame ourselves.</strong> A marketer drops a spreadsheet into a chatbot, asks why a channel is slipping, and receives a fluent, caveated answer in seconds. On Monday morning, back in the dashboard, she is fighting date filters and conflicting definitions of “conversion”, and quietly concludes that she is just not a data person. Note that the job was not even the same one; the ad hoc question got repriced, not the governed report. But the repricing turned inward and became self-blame, which is the most quietly corrosive version of all.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;"><strong style="font-weight:600;color:#1A1816;">And sometimes we give up and call it the weather.</strong> “Spreadsheets are just tedious.” “Ticketing is just bureaucratic.” That is not a complaint but a resignation, the tax normalised into a law of nature. As I have written before about <a href="https://theunconsciousconsumer.com/article.html?slug=unpacking-the-power-of-scarcity-bias" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">scarcity</a>, the most powerful biases are the ones we stop noticing.</p>
+
+      <h2 id="sec-progress" data-section="sec-progress" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">“Isn’t This Just Progress?”</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The sharpest objection is worth meeting head-on. Is this not simply how technology has always worked? The graphical interface repriced the command line. The smartphone repriced the desktop. Every era’s new paradigm makes the last one feel clumsy. What, exactly, is new?</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Two things, and both matter.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The first is speed. Previous repricings unfolded over years, slowly enough that users and companies could adapt in stride. This one arrived in months. Consider Stack Overflow, the forum that sat at the heart of how programmers solved problems for fifteen years. By its own published data, the volume of new questions <a href="https://www.infoworld.com/article/3988468/what-comes-after-stack-overflow.html" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">fell by roughly a third in a single year</a>, from about 87,000 in March 2023 to under 59,000 a year later, and kept sliding to levels last seen in 2009. The translation step (turn your problem into a searchable query, scan the threads, adapt a stranger’s answer) was repriced almost the instant a tool removed it.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">It is worth noting that Stack Overflow’s decline had begun before ChatGPT existed, amid long-running complaints that its moderation felt hostile to newcomers. The repricing did not invent the decay. It accelerated a decline already underway, which is exactly why the collapse felt so sudden.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The second new thing is cross-category transfer. You are no longer repriced only by a direct competitor. You are repriced by an unrelated tool in someone else’s domain, because expectations do not stay in their lane. The person who learns that software can simply understand them carries that expectation into your product, whatever your product does. A whole generation of users has, in effect, been quietly re-onboarded by a tool you do not control.</p>
+
+      <figure style="margin:36px 0;">
+        <img src="https://substackcdn.com/image/fetch/$s_!UV2G!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe1998ecc-a357-4aee-b6c8-ccc7cbb47ded_1672x941.png" alt="" loading="lazy" data-focus-img="1" style="width:100%;display:block;border-radius:12px;border:1px solid #D4CFC7;background:#EDE8DF;transition:opacity 1.1s ease, transform 1.1s cubic-bezier(0.16,1,0.3,1);">
+      </figure>
+
+      <h2 id="sec-manipulative" data-section="sec-manipulative" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">Ingenious or Manipulative?</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Here the story turns. Everything so far suggests the repricing is legitimate: the tax was real, and your irritation justified. But the new benchmark has a flaw that should make any thoughtful designer uneasy. It is reliable about effort and unreliable about quality. It correctly detects that the old translation tax was unnecessary. It then quietly, and incorrectly, infers that the effortless thing must also be the better thing. Those are two different judgements about two different properties, and the second does not follow from the first.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The culprit runs deep. We tend to read the ease of processing something, what psychologists call fluency, as a signal of truth and competence. Decades of research show that <a href="https://doi.org/10.1006/ccog.1999.0386" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">a statement made easier to process is judged more likely to be true</a>, independent of whether it is. A confident, articulate, instantly produced answer simply feels more authoritative than a hesitant or effortful one. One caveat worth keeping: that research concerns how we judge statements, not interactive systems, so extending it to “we rate a fluent tool as more competent” is a reasonable inference rather than a proven law. Layer on top of it our well-studied tendency <a href="https://journals.sagepub.com/doi/10.1518/001872097778543886" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">to over-rely on automation that appears reliable</a>, and two independent forces converge on the same destination. We trust the fluent machine more than its accuracy has earned.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">This is where the ethical question this site keeps returning to resurfaces. If fluency resets the benchmark in a company’s favour, then companies now have an incentive to optimise for the feeling of competence rather than the fact of it. That is a new species of dark pattern. It does not deceive you about a price or a pre-ticked box, as the <a href="https://theunconsciousconsumer.com/article.html?slug=behind-dark-patterns" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">dark patterns I have written about before</a> do. It deceives you about a system’s reliability, the one thing fluency is least equipped to certify.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Klarna offers an instructive and frequently mistold illustration. The Swedish fintech <a href="https://www.customerexperiencedive.com/news/klarna-says-ai-agent-work-853-employees/805987/" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">claimed its AI assistant was doing the work of 700 customer-service agents</a>, a figure it later raised to 853. The popular version of the story is that the experiment failed and the company crawled back to humans. It did not; Klarna is still scaling its AI and remains publicly bullish. What actually happened is subtler and more useful. The assistant genuinely excelled at the high-volume, simple tier, but degraded on complex and emotionally charged cases, so the company <a href="https://www.fintechweekly.com/magazine/articles/klarna-hires-customer-service-after-ai-pivot" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">reintroduced human agents for that tier</a>. Its chief executive’s own diagnosis, that the company had “focused too much on efficiency and cost”, is very nearly a verbatim statement of the effort-versus-quality split. The thing that felt like a solved problem and the thing that was a solved problem were not the same thing.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">There is a longer-run cost lurking here too. The more we let a fluent system carry the work of thinking, planning and drafting, the more we offload, and cognitive offloading can hollow out our understanding of how a task is actually done. Whether this tips into genuine deskilling is not yet settled; the early evidence is mixed and was widely overstated in the press. But it deserves a wary eye.</p>
+
+      <h2 id="sec-blindsided" data-section="sec-blindsided" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">Blindsided, or Responsive</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">If the repricing happens to you, the only strategic question that matters is whether you see it coming.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">Siri is the textbook case of being blindsided. For the better part of four years, the product that pioneered the consumer voice assistant has been visibly scrambling to respond to a benchmark that moved without warning. Grammarly shows the other path. In 2019, its sentence-level corrections felt like quiet magic. Once people experienced “rewrite this in a warmer tone”, accepting commas one at a time began to feel like manual labour, and the company, recognizing the repricing, rebuilt itself around generative rewriting rather than waiting to be hollowed out.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The lesson is emphatically not “add a chatbot”. It is to find your own invisible tax, the specific place your users still translate their intent into your taxonomy, before a competitor reveals it for you. And note the cruel asymmetry. Expense software like Concur was hated long before this moment; its friction was always visible, named and complained about, and the product survived anyway on the strength of procurement lock-in. A visible tax can at least be bargained with. An invisible one, newly exposed and misattributed, is far more dangerous, because you cannot bargain with a feeling.</p>
+
+      <h2 id="sec-actions" data-section="sec-actions" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">Actionable Recommendations</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">For <a href="https://theunconsciousconsumer.substack.com/p/why-product-teams-misunderstand-their" target="_blank" rel="noopener" style="color:#C4531A;text-decoration:none;border-bottom:1px solid rgba(196,83,26,0.32);" style-hover="border-bottom-color:#C4531A;">product and design teams</a>, the shift is less a technical brief than a perceptual one.</p>
+      <ul style="margin:0 0 26px;padding:0;list-style:none;display:flex;flex-direction:column;gap:18px;">
+        <li style="position:relative;padding-left:22px;font-size:17px;line-height:1.8;color:#1A1816;"><span style="position:absolute;left:0;top:0;color:#C4531A;font-weight:700;">›</span><strong style="font-weight:600;">Reference-dependence.</strong> Identify which adjacent experience is currently resetting your users’ expectations. It is probably not your category rival; it is whatever tool most recently retrained them.</li>
+        <li style="position:relative;padding-left:22px;font-size:17px;line-height:1.8;color:#1A1816;"><span style="position:absolute;left:0;top:0;color:#C4531A;font-weight:700;">›</span><strong style="font-weight:600;">Effort aversion.</strong> Audit the translation tax. Walk through your product and mark every screen where a user must convert a human goal into your internal structure. Each one is now a repricing risk, not just a usability nit.</li>
+        <li style="position:relative;padding-left:22px;font-size:17px;line-height:1.8;color:#1A1816;"><span style="position:absolute;left:0;top:0;color:#C4531A;font-weight:700;">›</span><strong style="font-weight:600;">Misattribution.</strong> Read complaints as signals, not verdicts. Mine support logs and churn notes for “clunky”, “got worse” and “I’m not good at this”, and treat them as evidence the benchmark moved rather than as literal faults in your feature set.</li>
+        <li style="position:relative;padding-left:22px;font-size:17px;line-height:1.8;color:#1A1816;"><span style="position:absolute;left:0;top:0;color:#C4531A;font-weight:700;">›</span><strong style="font-weight:600;">Processing fluency.</strong> Measure outcomes, not feelings. Track resolved results rather than satisfaction at the moment of contact. The most dangerous product is one that feels wonderful and quietly fails. The second most dangerous is a rival who ships exactly that.</li>
+      </ul>
+
+      <h2 id="sec-lastword" data-section="sec-lastword" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;line-height:1.3;color:#1A1816;margin:52px 0 18px;scroll-margin-top:96px;">The Last Word</h2>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">For thirty years, the project of good design was to make software easier to use, to smooth the path along which a person operated the machine. The repricing marks the end of that era and the start of a stranger one, in which good design is measured by how easy software is to work with, as though it were a capable colleague rather than a building you must learn to navigate.</p>
+      <blockquote style="border-left:3px solid #C4531A;padding:6px 0 6px 22px;margin:32px 0;">
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;font-weight:600;color:#1A1816;line-height:1.45;margin:0;">You can ship a flawless tool and still be repriced downward overnight by a benchmark you never agreed to.</p>
+      </blockquote>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 26px;">The uncomfortable truth underneath is that “good usability” is no longer something you wholly own. It has become a moving figure: the gap between what your product asks of a person and what some other experience, in some other category, has just taught them to expect.</p>
+      <p style="font-size:17px;line-height:1.8;color:#1A1816;margin:0 0 8px;">Still, there is something worth reclaiming in simply seeing the mechanism. The next time a familiar tool irritates you for no reason you can name, pause on that flash of irritation. It is rarely the tool that changed. It is the reference point in your head, moved quietly by something you used somewhere else. Noticing that will not move the benchmark back. But it is the difference between being repriced and knowing you have been.</p>
+    </article>
+
+    <!-- Newsletter -->
+    <div style="grid-column:1 / -1;padding:64px 24px 0;">
+      <div style="max-width:720px;margin:0 auto;background:#1A1816;border-radius:16px;padding:48px 44px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.12);">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C4531A;margin-bottom:14px;">The Unconscious Consumer</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:700;color:#F5F0E8;line-height:1.25;margin:0 0 12px;text-wrap:balance;">Get the next essay in your inbox</h2>
+        <p style="font-size:15px;color:rgba(245,240,232,0.62);line-height:1.6;margin:0 auto 28px;max-width:420px;">One piece a week on the psychology behind the choices we don’t notice making. No noise.</p>
+        <sc-if value="{{ notSubscribed }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ onSubscribe }}" style="display:flex;gap:10px;max-width:440px;margin:0 auto;">
+            <input ref="{{ emailRef }}" type="email" required placeholder="you@email.com" style="flex:1;min-width:0;height:48px;padding:0 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.06);color:#F5F0E8;font-size:14px;font-family:'Inter',sans-serif;outline:none;" style-focus="border-color:#C4531A;background:rgba(255,255,255,0.1);">
+            <button type="submit" style="height:48px;padding:0 26px;border-radius:100px;border:none;background:#C4531A;color:#fff;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 4px 20px rgba(196,83,26,0.4);" style-hover="background:#A8421A;">Subscribe</button>
+          </form>
+        </sc-if>
+        <sc-if value="{{ subscribed }}">
+          <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(196,83,26,0.16);color:#F5F0E8;padding:14px 24px;border-radius:100px;font-size:14px;font-weight:500;">
+            <span style="color:#C4531A;font-size:16px;">✓</span> You’re in. Check your inbox to confirm.
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- Related reading -->
+    <div style="grid-column:1 / -1;padding:72px 24px 0;">
+      <div style="max-width:1080px;margin:0 auto;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;color:#1A1816;margin:0;">Further reading</h2>
+          <a href="#" style="font-size:13px;font-weight:600;color:#C4531A;text-decoration:none;" style-hover="color:#A8421A;">All articles →</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+          <sc-for list="{{ related }}" as="card" hint-placeholder-count="3">
+            <a href="#" style="text-decoration:none;background:#FFFFFF;border:1px solid #D4CFC7;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;flex-direction:column;transition:transform 0.22s,box-shadow 0.22s;" style-hover="transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.12);">
+              <div style="height:150px;background:{{ card.cover }};display:flex;align-items:center;justify-content:center;font-size:42px;">{{ card.emoji }}</div>
+              <div style="padding:22px;display:flex;flex-direction:column;gap:10px;flex:1;">
+                <span style="align-self:flex-start;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:#FAE8E1;color:#C4531A;">{{ card.tag }}</span>
+                <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;line-height:1.35;color:#1A1816;flex:1;">{{ card.title }}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid #E8E3DA;margin-top:auto;">
+                  <span style="font-size:12px;color:#9A948E;">{{ card.date }}</span>
+                  <span style="font-size:12px;font-weight:600;color:#C4531A;">Read →</span>
+                </div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background:#1A1816;border-top:1px solid rgba(255,255,255,0.08);padding:40px 28px;">
+    <div style="max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#F5F0E8;">The Unconscious Consumer</div>
+      <nav style="display:flex;gap:20px;">
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">Articles</a>
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">About</a>
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">Substack</a>
+        <a href="#" style="font-size:13px;color:rgba(245,240,232,0.6);text-decoration:none;" style-hover="color:#F5F0E8;">RSS</a>
+      </nav>
+      <div style="font-size:12px;color:#6B6560;">© 2026 Adam Spadaro</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { subscribed: false };
+  rootRef = React.createRef();
+  progressRef = React.createRef();
+  emailRef = React.createRef();
+
+  componentDidMount() {
+    this._onScroll = this.handleScroll.bind(this);
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll, { passive: true });
+
+    // Prime the subtle one-time fade + rise; handleScroll reveals each image in view
+    const root = this.rootRef.current;
+    if (root) {
+      root.querySelectorAll('[data-focus-img]').forEach(img => {
+        img.style.opacity = '0';
+        img.style.transform = 'translateY(34px) scale(0.975)';
+      });
+    }
+    this.handleScroll();
+    // Safety: only rescue images that are actually on screen (don't pre-reveal
+    // below-the-fold images, or they'd never animate in on scroll)
+    this._revealTimer = setTimeout(() => {
+      if (!root) return;
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      root.querySelectorAll('[data-focus-img]').forEach(img => {
+        const r = img.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) {
+          img.dataset.revealed = '1';
+          img.style.opacity = '1';
+          img.style.transform = 'none';
+        }
+      });
+    }, 1200);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+    if (this._revealTimer) clearTimeout(this._revealTimer);
+  }
+
+  handleScroll() {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    const pct = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
+    if (this.progressRef.current) this.progressRef.current.style.width = (pct * 100).toFixed(2) + '%';
+
+    const root = this.rootRef.current;
+    if (!root) return;
+    const secs = Array.from(root.querySelectorAll('[data-section]'));
+    let active = secs.length ? secs[0].getAttribute('data-section') : null;
+    for (const s of secs) {
+      if (s.getBoundingClientRect().top - 120 <= 0) active = s.getAttribute('data-section');
+    }
+    root.querySelectorAll('[data-toc]').forEach(a => {
+      const on = a.getAttribute('data-toc') === active;
+      a.style.color = on ? '#C4531A' : '#9A948E';
+      a.style.borderLeftColor = on ? '#C4531A' : 'transparent';
+      a.style.fontWeight = on ? '600' : '500';
+    });
+
+    // One-time fade + rise reveal once each image edges into view
+    const vh = window.innerHeight || doc.clientHeight;
+    root.querySelectorAll('[data-focus-img]').forEach(img => {
+      const r = img.getBoundingClientRect();
+      if (img.dataset.revealed !== '1' && r.top < vh * 0.86) {
+        img.dataset.revealed = '1';
+        img.style.opacity = '1';
+        img.style.transform = 'none';
+      }
+    });
+  }
+
+  scrollToId(id) {
+    const root = this.rootRef.current;
+    if (!root) return;
+    const el = root.querySelector('#' + id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 88;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  renderVals() {
+    const toc = [
+      { id: 'sec-benchmark', label: 'The Benchmark Moved, Not the Product' },
+      { id: 'sec-stories', label: 'The Stories We Tell Ourselves' },
+      { id: 'sec-progress', label: '“Isn’t This Just Progress?”' },
+      { id: 'sec-manipulative', label: 'Ingenious or Manipulative?' },
+      { id: 'sec-blindsided', label: 'Blindsided, or Responsive' },
+      { id: 'sec-actions', label: 'Actionable Recommendations' },
+      { id: 'sec-lastword', label: 'The Last Word' },
+    ].map(i => ({ ...i, onClick: (e) => { e.preventDefault(); this.scrollToId(i.id); } }));
+
+    const related = [
+      { tag: 'Behavioural Economics', title: 'Why Product Teams Misunderstand Their Customers', date: 'Jun 12, 2026', emoji: '🎯', cover: 'linear-gradient(135deg,#1A2020 0%,#0D2020 100%)' },
+      { tag: 'Consumer Psychology', title: 'Unpacking the Power of Scarcity Bias', date: 'May 30, 2026', emoji: '⏳', cover: 'linear-gradient(135deg,#1A1816 0%,#2A1A12 100%)' },
+      { tag: 'User Experience', title: 'Behind Dark Patterns: Designing Against the User', date: 'May 18, 2026', emoji: '🕳️', cover: 'linear-gradient(135deg,#1A1830 0%,#100C28 100%)' },
+    ];
+
+    return {
+      rootRef: this.rootRef,
+      progressRef: this.progressRef,
+      emailRef: this.emailRef,
+      toc,
+      related,
+      subscribed: this.state.subscribed,
+      notSubscribed: !this.state.subscribed,
+      onSubscribe: (e) => { e.preventDefault(); this.setState({ subscribed: true }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

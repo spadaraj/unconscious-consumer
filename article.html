@@ -319,7 +319,7 @@
     if (!slug) {
       window.location.href = '/';
     } else {
-      fetch('articles.json')
+      fetch('/articles.json')
         .then(function(r) { return r.json(); })
         .then(function(articles) {
           var article = articles.find(function(a) { return a.slug === slug; });

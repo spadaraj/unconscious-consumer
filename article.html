@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
 
@@ -46,7 +46,7 @@
   <!-- ===== LAYER 1: FIXED HEADER ===== -->
   <header class="site-header" id="site-header">
     <div class="header-inner">
-      <a href="index.html" class="logo">
+      <a href="/" class="logo">
         <span class="logo-main">The Unconscious Consumer</span>
       </a>
       <div class="header-actions">
@@ -54,7 +54,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
           Subscribe
         </a>
-        <a href="index.html#about" class="nav-link">About</a>
+        <a href="/#about" class="nav-link">About</a>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
           <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -66,11 +66,11 @@
   <!-- ===== LAYER 2: DISCOVERY BAR ===== -->
   <nav class="discovery-bar" id="discovery-bar">
     <div class="discovery-bar-inner">
-      <a href="index.html" class="discovery-pill" id="pill-all">All</a>
-      <a href="index.html?filter=consumer-psychology" class="discovery-pill" id="pill-consumer-psychology">Consumer Psychology</a>
-      <a href="index.html?filter=behavioural-economics" class="discovery-pill" id="pill-behavioural-economics">Behavioural Economics</a>
-      <a href="index.html?filter=user-experience" class="discovery-pill" id="pill-user-experience">User Experience</a>
-      <a href="index.html?filter=undercurrents" class="discovery-pill" id="pill-undercurrents">Undercurrents</a>
+      <a href="/" class="discovery-pill" id="pill-all">All</a>
+      <a href="/?filter=consumer-psychology" class="discovery-pill" id="pill-consumer-psychology">Consumer Psychology</a>
+      <a href="/?filter=behavioural-economics" class="discovery-pill" id="pill-behavioural-economics">Behavioural Economics</a>
+      <a href="/?filter=user-experience" class="discovery-pill" id="pill-user-experience">User Experience</a>
+      <a href="/?filter=undercurrents" class="discovery-pill" id="pill-undercurrents">Undercurrents</a>
     </div>
   </nav>
 
@@ -275,7 +275,7 @@
           relatedCardsHtml ? '  <p class="continue-label">Continue reading</p>' : '',
           relatedCardsHtml ? '  <div class="related-cards">' + relatedCardsHtml + '</div>' : '',
           '  <div class="article-footer-nav">',
-          '    <a href="index.html" class="btn btn-outline">← Back to All Articles</a>',
+          '    <a href="/" class="btn btn-outline">← Back to All Articles</a>',
           '    <a href="https://theunconsciousconsumer.substack.com" target="_blank" rel="noopener" class="btn btn-substack">Subscribe on Substack</a>',
           '  </div>',
           '</div>'
@@ -283,14 +283,14 @@
       }
 
       var heroHtml = article.coverImage
-        ? '<div class="article-hero"><img src="' + article.coverImage + '" alt="' + cleanTitle + '" class="article-hero-img" loading="eager"></div>'
+        ? '<div class="article-hero"><img src="/' + article.coverImage + '" alt="' + cleanTitle + '" class="article-hero-img" loading="eager"></div>'
         : '';
 
       document.getElementById('article-content').innerHTML = [
         '<div class="article-header' + (article.coverImage ? ' article-header--has-hero' : '') + '">',
         heroHtml,
         '  <div class="article-header-text">',
-        '    <a href="index.html" class="article-back">← All Articles</a>',
+        '    <a href="/" class="article-back">← All Articles</a>',
         '    <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
         '    <h1 class="article-title">' + cleanTitle + '</h1>',
         '    <p class="article-excerpt">' + article.excerpt + '</p>',

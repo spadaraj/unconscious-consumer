@@ -4,5 +4,7 @@
 data/prompt-corpora/raw/
 data/prompt-corpora/.venv/
 data/prompt-corpora/derived/corpus.db
+data/prompt-corpora/derived/corpus.db-*
+data/prompt-corpora/derived/validation_sample.csv
 data/prompt-corpora/scripts/__pycache__/
 data/prompt-corpora/**/*.pyc

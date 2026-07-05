@@ -1,0 +1,17 @@
+{
+  "rows_written": 500,
+  "stratum_sizes": {
+    "uniform": 250,
+    "feature:has_role_assignment": 25,
+    "feature:has_template_structure": 25,
+    "feature:has_meta_instruction": 25,
+    "feature:is_interpersonal_draft": 25,
+    "feature:is_reassurance": 25,
+    "feature:asks_for_options": 25,
+    "feature:asks_for_decision": 25,
+    "feature:is_purchase": 25,
+    "feature:has_please": 25,
+    "feature:is_retry_turn": 25
+  },
+  "seed": 20260707
+}

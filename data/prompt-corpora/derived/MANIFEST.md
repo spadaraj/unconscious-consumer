@@ -90,4 +90,11 @@ Seven PNG charts in `derived/charts/`.
 
 ## Stage 4 — Validation sample
 
-_pending_
+Full run details in `derived/stage4_stats.json`.
+
+- **Total rows:** 500
+- **Strata:** 250 stratified (25 rows × 10 feature-positive strata) + 250 uniform random. Every feature column populated for all 500 rows.
+- **File:** `derived/validation_sample.csv` — **not committed** (contains raw user text; excluded via `.gitignore` per the brief's privacy rule). Regenerate deterministically with `.venv/bin/python scripts/04_validation_sample.py`.
+- **Design purpose:** the feature-positive strata oversample the rare heuristics (is_purchase, is_reassurance) so precision is estimable at all. The uniform 250 gives recall-side coverage — the labeller can spot heuristic misses on turns the regex didn't fire on.
+
+Adam / chat editor take it from here for the model-assisted labelling pass.

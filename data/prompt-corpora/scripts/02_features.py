@@ -62,6 +62,9 @@ def create_schema(conn):
       -- angle 5: per-turn retry marker (aggregated in conv_features)
       is_retry_turn INTEGER,
 
+      -- fiction / roleplay flag (added in the clean pass)
+      looks_like_fiction INTEGER,
+
       PRIMARY KEY (conv_id, turn_index)
     );
 
@@ -120,6 +123,8 @@ def extract_turn(text):
 
     is_retry = bool(P.RETRY_TURN.search(text)) if text else False
 
+    is_fiction = P.looks_like_fiction(text)
+
     return (
         int(has_role), int(has_template), tmpl_count, int(has_meta),
         int(is_draft), int(is_reassurance),
@@ -128,6 +133,7 @@ def extract_turn(text):
         int(has_please), int(has_thanks), int(has_apology), int(has_hedge), int(is_greeting),
         word_len, q_vs_imp, goal_abs,
         int(is_retry),
+        int(is_fiction),
     )
 
 
@@ -135,6 +141,10 @@ def main():
     conn = sqlite3.connect(str(DB_PATH))
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
+    # DROP both feature tables so schema additions (looks_like_fiction) take
+    # effect. Rows are regenerated from `turns` in this run.
+    conn.execute("DROP TABLE IF EXISTS features")
+    conn.execute("DROP TABLE IF EXISTS conv_features")
     create_schema(conn)
 
     total_turns = conn.execute("SELECT COUNT(*) FROM turns").fetchone()[0]
@@ -149,8 +159,8 @@ def main():
         " is_reassurance, asks_for_options, asks_for_decision, imperative_verb, "
         " is_purchase, has_please, has_thanks, has_apology, has_hedge, "
         " is_greeting, word_len, question_vs_imperative, "
-        " goal_abstraction_heuristic, is_retry_turn) "
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        " goal_abstraction_heuristic, is_retry_turn, looks_like_fiction) "
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
     )
 
     write_conn = sqlite3.connect(str(DB_PATH))

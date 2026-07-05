@@ -151,6 +151,63 @@ HAS_HEDGE = re.compile(
 GREETING = re.compile(r"^\s*(?:hi|hello|hey|good morning|good afternoon)\b", I)
 
 
+# --- Ingest-side filter: assistant-text-mislabelled-as-user ------------------
+#
+# WildChat contains a small handful of turns where assistant replies are
+# stored under role='user' — often with a leading `🤖` emoji marker.
+# `extract_user_turns` drops any turn matching these patterns.
+
+ASSISTANT_TELL = re.compile(
+    r"^\s*("
+    r"🤖"                                 # WildChat's own assistant marker
+    r"|I apologize for the confusion"
+    r"|I'?m sorry,? but as an AI"
+    r"|As an AI language model"
+    r"|I'?ll do my best to assist"
+    r"|Certainly! Here"
+    r")",
+    I,
+)
+
+
+# --- Fiction / roleplay detector (structural, added in the clean pass) -------
+#
+# `looks_like_fiction` fires when 2+ signal categories are present. Flag only
+# — not a filter. The dominant contamination in the original pass was fiction /
+# roleplay dialogue where "please" / "sorry" / "thank you" are characters
+# talking to each other, not users being polite to the model. See
+# CORRECTION_NOTES.md.
+
+FICTION_DIALOGUE_LINE = re.compile(
+    r"(?m)^\s*(?:[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?|NAME_\d+|\[[A-Za-z_]+\])\s*:\s*",
+)
+FICTION_STAGE_SCENE = re.compile(
+    r"\((?:In|At|Meanwhile|Suddenly|Inside|Outside|Later|The\s+scene|The\s+next)\s",
+    I,
+)
+FICTION_STAGE_ACTION = re.compile(r"\*[^*\n]{3,120}\*")
+FICTION_FRAMING = re.compile(
+    r"\b(roleplay|role-play|let'?s play|in character|stay in character)\b",
+    I,
+)
+
+
+def looks_like_fiction(text):
+    """True when 2+ fiction/roleplay signal categories fire."""
+    if not text:
+        return False
+    signals = 0
+    if len(FICTION_DIALOGUE_LINE.findall(text)) >= 2:
+        signals += 1
+    if FICTION_STAGE_SCENE.search(text):
+        signals += 1
+    if FICTION_STAGE_ACTION.search(text):
+        signals += 1
+    if FICTION_FRAMING.search(text):
+        signals += 1
+    return signals >= 2
+
+
 # --- Cross-cutting -----------------------------------------------------------
 
 WORD_TOKEN = re.compile(r"\S+")

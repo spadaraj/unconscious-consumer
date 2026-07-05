@@ -91,14 +91,29 @@ def month_key(ts):
 
 
 def extract_user_turns(conversation):
-    """Yield (user_turn_index, text, assistant_reply_char_len) for each user turn."""
+    """Yield (user_turn_index, text, assistant_reply_char_len) for each user turn.
+
+    Drops turns that WildChat mislabels as user role but which are clearly
+    assistant text (leading 🤖 marker or canonical assistant openers). See
+    patterns.ASSISTANT_TELL and CORRECTION_NOTES.md.
+    """
     if not conversation:
         return
+    # Local import so this module stays runnable stand-alone
+    from pathlib import Path
+    import sys as _sys
+    _here = str(Path(__file__).resolve().parent)
+    if _here not in _sys.path:
+        _sys.path.insert(0, _here)
+    import patterns as _P
+
     user_i = 0
     for i, turn in enumerate(conversation):
         if turn.get("role") != "user":
             continue
         text = turn.get("content") or ""
+        if _P.ASSISTANT_TELL.match(text):
+            continue
         reply_len = None
         for j in range(i + 1, len(conversation)):
             role_j = conversation[j].get("role")

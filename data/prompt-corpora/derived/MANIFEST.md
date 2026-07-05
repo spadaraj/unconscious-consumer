@@ -52,7 +52,17 @@ By source:
 
 ## Stage 2 — Features
 
-_pending_
+Full run details in `derived/stage2_stats.json`.
+
+- **`features` rows:** 405,483 (one per user turn)
+- **`conv_features` rows:** 199,397 (one per conversation)
+- **Elapsed:** ~4 minutes
+
+### Sanity spot checks
+
+- Politeness marker rates (all conversations): please 10.99%, thanks 2.09%, apology 1.11%, hedge 1.15%. All in the single-digit to low-double-digit range the plan predicted.
+- Top imperative verbs: write, give, make, create, name, tell, generate, explain, rewrite, describe, translate, list. Matches the plan's expectation that write/make/create/explain dominate.
+- Question-vs-imperative split: 22% imperative, 28% question, 50% other (large "other" bucket is declarative statements, code pastes, and mid-conversation follow-ups).
 
 ## Stage 3 — Aggregates
 

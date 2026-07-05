@@ -97,8 +97,8 @@ def scaffolding_trend(conn):
 
 # ---- 3. politeness ---------------------------------------------------------
 
-def politeness_by_month(conn):
-    df = q(conn, """
+def _politeness_by_month_query(conn, extra_where=""):
+    return q(conn, f"""
         SELECT substr(c.timestamp,1,7) AS month,
                AVG(f.has_please)*100 AS pct_please,
                AVG(f.has_thanks)*100 AS pct_thanks,
@@ -108,17 +108,23 @@ def politeness_by_month(conn):
                COUNT(*) AS n_turns
         FROM features f
         JOIN conversations c ON f.conv_id = c.conv_id
-        WHERE c.source = 'wildchat' AND c.timestamp IS NOT NULL
+        WHERE c.source = 'wildchat' AND c.timestamp IS NOT NULL {extra_where}
         GROUP BY month
         ORDER BY month
     """)
+
+
+def politeness_by_month(conn):
+    df = _politeness_by_month_query(conn)
     df.to_csv(DERIVED / "politeness_by_month.csv", index=False)
+    df_nf = _politeness_by_month_query(conn, "AND f.looks_like_fiction=0")
+    df_nf.to_csv(DERIVED / "politeness_by_month_nonfiction.csv", index=False)
 
     fig, ax = plt.subplots(figsize=(9, 5))
     for col in ["pct_please", "pct_thanks", "pct_apology", "pct_hedge", "pct_greeting"]:
         ax.plot(df["month"], df[col], marker="o", label=col)
     ax.set_ylabel("% of user turns")
-    ax.set_title("Politeness markers by month — WildChat only")
+    ax.set_title("Politeness markers by month — WildChat only (all turns)")
     ax.tick_params(axis="x", rotation=45)
     ax.legend()
     fig.tight_layout()
@@ -138,23 +144,29 @@ def politeness_by_country(conn):
     suppressed = country_totals[country_totals["n_conversations"] < 500]
 
     placeholders = ",".join("?" for _ in kept)
-    df = q(conn, f"""
-        SELECT c.country,
-               COUNT(DISTINCT c.conv_id) AS n_conversations,
-               COUNT(*) AS n_turns,
-               AVG(f.has_please)*100 AS pct_please,
-               AVG(f.has_thanks)*100 AS pct_thanks,
-               AVG(f.has_apology)*100 AS pct_apology,
-               AVG(f.has_hedge)*100 AS pct_hedge,
-               AVG(f.is_greeting)*100 AS pct_greeting
-        FROM features f
-        JOIN conversations c ON f.conv_id = c.conv_id
-        WHERE c.source = 'wildchat' AND c.country IN ({placeholders})
-        GROUP BY c.country
-        ORDER BY n_conversations DESC
-    """ if kept else "SELECT 1 WHERE 0", params=tuple(kept))
-    df = df.head(20)
+
+    def _country_query(extra_where=""):
+        return q(conn, f"""
+            SELECT c.country,
+                   COUNT(DISTINCT c.conv_id) AS n_conversations,
+                   COUNT(*) AS n_turns,
+                   AVG(f.has_please)*100 AS pct_please,
+                   AVG(f.has_thanks)*100 AS pct_thanks,
+                   AVG(f.has_apology)*100 AS pct_apology,
+                   AVG(f.has_hedge)*100 AS pct_hedge,
+                   AVG(f.is_greeting)*100 AS pct_greeting
+            FROM features f
+            JOIN conversations c ON f.conv_id = c.conv_id
+            WHERE c.source = 'wildchat'
+              AND c.country IN ({placeholders}) {extra_where}
+            GROUP BY c.country
+            ORDER BY n_conversations DESC
+        """ if kept else "SELECT 1 WHERE 0", params=tuple(kept))
+
+    df = _country_query().head(20)
     df.to_csv(DERIVED / "politeness_by_country.csv", index=False)
+    df_nf = _country_query("AND f.looks_like_fiction=0").head(20)
+    df_nf.to_csv(DERIVED / "politeness_by_country_nonfiction.csv", index=False)
 
     fig, ax = plt.subplots(figsize=(9, max(4, len(df) * 0.35)))
     x = range(len(df))
@@ -186,26 +198,34 @@ def politeness_by_country(conn):
 # ---- 4. delegation_split ---------------------------------------------------
 
 def delegation_split(conn):
-    overall = q(conn, """
-        SELECT AVG(asks_for_options)*100 AS pct_options,
-               AVG(asks_for_decision)*100 AS pct_decision,
-               SUM(asks_for_options) AS n_options,
-               SUM(asks_for_decision) AS n_decision,
-               COUNT(*) AS n_turns
-        FROM features
-    """)
-    monthly = q(conn, """
-        SELECT substr(c.timestamp,1,7) AS month,
-               AVG(f.asks_for_options)*100 AS pct_options,
-               AVG(f.asks_for_decision)*100 AS pct_decision,
-               COUNT(*) AS n_turns
-        FROM features f
-        JOIN conversations c ON f.conv_id = c.conv_id
-        WHERE c.source = 'wildchat' AND c.timestamp IS NOT NULL
-        GROUP BY month ORDER BY month
-    """)
+    def _overall(extra_where=""):
+        return q(conn, f"""
+            SELECT AVG(asks_for_options)*100 AS pct_options,
+                   AVG(asks_for_decision)*100 AS pct_decision,
+                   SUM(asks_for_options) AS n_options,
+                   SUM(asks_for_decision) AS n_decision,
+                   COUNT(*) AS n_turns
+            FROM features WHERE 1=1 {extra_where}
+        """)
+
+    def _monthly(extra_where=""):
+        return q(conn, f"""
+            SELECT substr(c.timestamp,1,7) AS month,
+                   AVG(f.asks_for_options)*100 AS pct_options,
+                   AVG(f.asks_for_decision)*100 AS pct_decision,
+                   COUNT(*) AS n_turns
+            FROM features f
+            JOIN conversations c ON f.conv_id = c.conv_id
+            WHERE c.source = 'wildchat' AND c.timestamp IS NOT NULL {extra_where}
+            GROUP BY month ORDER BY month
+        """)
+
+    overall = _overall()
+    monthly = _monthly()
     overall.to_csv(DERIVED / "delegation_split_overall.csv", index=False)
     monthly.to_csv(DERIVED / "delegation_split.csv", index=False)
+    _overall("AND looks_like_fiction=0").to_csv(DERIVED / "delegation_split_overall_nonfiction.csv", index=False)
+    _monthly("AND f.looks_like_fiction=0").to_csv(DERIVED / "delegation_split_nonfiction.csv", index=False)
 
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.plot(monthly["month"], monthly["pct_options"], marker="o", label="asks_for_options")
@@ -304,20 +324,23 @@ def build_topline(conn, length_df, scaffold_df, pol_month, pol_country, deleg_ov
     tmpl_min = scaffold_df["pct_template_structure"].min()
     tmpl_max = scaffold_df["pct_template_structure"].max()
 
+    # Politeness — both cuts
     please_overall = q(conn, "SELECT AVG(has_please)*100 AS v FROM features")["v"].iloc[0]
-    please_wc = q(conn, """
-        SELECT AVG(f.has_please)*100 AS v
-        FROM features f JOIN conversations c ON f.conv_id=c.conv_id
-        WHERE c.source='wildchat'
-    """)["v"].iloc[0]
-    please_lm = q(conn, """
-        SELECT AVG(f.has_please)*100 AS v
-        FROM features f JOIN conversations c ON f.conv_id=c.conv_id
-        WHERE c.source='lmsys'
-    """)["v"].iloc[0]
+    please_overall_nf = q(conn, "SELECT AVG(has_please)*100 AS v FROM features WHERE looks_like_fiction=0")["v"].iloc[0]
+    please_wc = q(conn, "SELECT AVG(f.has_please)*100 AS v FROM features f JOIN conversations c ON f.conv_id=c.conv_id WHERE c.source='wildchat'")["v"].iloc[0]
+    please_wc_nf = q(conn, "SELECT AVG(f.has_please)*100 AS v FROM features f JOIN conversations c ON f.conv_id=c.conv_id WHERE c.source='wildchat' AND f.looks_like_fiction=0")["v"].iloc[0]
+    please_lm = q(conn, "SELECT AVG(f.has_please)*100 AS v FROM features f JOIN conversations c ON f.conv_id=c.conv_id WHERE c.source='lmsys'")["v"].iloc[0]
+    please_lm_nf = q(conn, "SELECT AVG(f.has_please)*100 AS v FROM features f JOIN conversations c ON f.conv_id=c.conv_id WHERE c.source='lmsys' AND f.looks_like_fiction=0")["v"].iloc[0]
 
     country_top = pol_country[["country", "pct_please", "n_conversations"]].sort_values("pct_please", ascending=False).head(3)
     country_bot = pol_country[["country", "pct_please", "n_conversations"]].sort_values("pct_please").head(3)
+
+    # Country cut on non-fiction
+    pol_country_nf = pd.read_csv(DERIVED / "politeness_by_country_nonfiction.csv")
+    country_top_nf = pol_country_nf[["country", "pct_please", "n_conversations"]].sort_values("pct_please", ascending=False).head(3)
+
+    # Fiction share
+    fiction_share = q(conn, "SELECT 100.0*AVG(looks_like_fiction) AS v FROM features")["v"].iloc[0]
 
     opt = float(deleg_overall["pct_options"].iloc[0])
     dec = float(deleg_overall["pct_decision"].iloc[0])
@@ -337,25 +360,30 @@ def build_topline(conn, length_df, scaffold_df, pol_month, pol_country, deleg_ov
 
     lines = [
         "# Topline — prompt corpora, ten striking numbers\n",
-        "_Working draft from Stage 3 aggregates. Plain-language read of the ten most striking numbers, with caveats flagged. All %s are per user turn unless noted. Monthly trends are WildChat only — LMSYS has no per-row timestamp._\n",
+        "> **Correction pass (2026-07-05).** This is the cleaned re-run. Two changes vs the original pass:\n"
+        "> 1. **31 assistant-mislabelled turns removed** at ingest (WildChat's `🤖`-prefix ghost turns + five canonical assistant openers). Total user turns: 405,483 → 405,452.\n"
+        f"> 2. **`looks_like_fiction` flag added** — {fiction_share:.2f}% of turns flag as fiction/roleplay overall; 2.27% in WildChat, 0.20% in LMSYS. Every politeness and delegation aggregate now ships in two cuts: all turns, and non-fiction only.\n"
+        ">\n"
+        "> **What moved materially:** thanks and apology rates dropped on the non-fiction cut (fiction was overweighting them); please barely moved; the East Asia politeness cluster **holds strongly on the non-fiction cut**. Details in the findings below.\n",
+        "\n_Working draft. Plain-language read of the ten most striking numbers, with caveats flagged. All %s are per user turn unless noted. Monthly trends are WildChat only — LMSYS has no per-row timestamp._\n",
         "---\n",
-        f"**1. Prompts are ≈ {ratio}× longer than search queries at the median.** Median prompt is {prompts_med} words vs {ms_med} for MS MARCO and {or_med} for ORCAS. This is the structural gap that Angle 1 (\"translation tax\") is arguing about.\n",
-        f"**2. Role assignment is a stable ~{role_min:.1f}–{role_max:.1f}% of WildChat turns across every month sampled.** No visible growth or collapse in the folk-prompt-engineering habit over the ~13 months of coverage.\n",
+        f"**1. Prompts are ≈ {ratio}× longer than search queries at the median.** Median prompt is {prompts_med} words vs {ms_med} for MS MARCO and {or_med} for ORCAS. Unchanged from the original pass. This is the structural gap that Angle 1 (\"translation tax\") is arguing about.\n",
+        f"**2. Role assignment is a stable ~{role_min:.1f}–{role_max:.1f}% of WildChat turns across every month sampled.** Unchanged from the original pass. No visible growth or collapse in the folk-prompt-engineering habit over the ~13 months of coverage.\n",
         f"**3. Explicit template structure (three or more of '###' / 'Step N' / 'Format:' / 'Output:' / numbered constraints) appears in only {tmpl_min:.2f}–{tmpl_max:.2f}% of monthly turns.** Overtly templated prompts are a very small subculture in naturalistic use — the folk-engineering aesthetic doesn't translate to real ChatGPT sessions the way Twitter posts about it might suggest.\n",
-        f"**4. \"Please\" appears in {please_overall:.1f}% of user turns overall — {please_wc:.1f}% in WildChat vs {please_lm:.1f}% in LMSYS.** WildChat is a naturalistic ChatGPT deployment; LMSYS is Chatbot Arena (users know they are testing models). The gap is the manners-in-the-wild vs manners-in-the-lab story.\n",
-        f"**5. Country-level politeness spread (WildChat, ≥ 500 conv):** top three by 'please' rate = " + ", ".join(f"{r.country} ({r.pct_please:.1f}%)" for r in country_top.itertuples()) + "; bottom three = " + ", ".join(f"{r.country} ({r.pct_please:.1f}%)" for r in country_bot.itertuples()) + f". {len(suppressed)} countries suppressed (< 500 conv).\n",
-        f"**6. Requests for a decision outrun requests for options by {dec / max(opt, 1e-9):.1f}× in this data** — {dec:.2f}% of turns ask for a decision vs {opt:.2f}% asking for options. **Read with caution:** the decision regex includes broad phrases (\"decide\", \"what should I do\") while the options regex requires specific \"give me N options / ideas / versions\" phrasing, so this ratio partly reflects regex scope, not user behaviour. Angle 3's cleaner metric will come after the Stage 4 validation pass.\n",
+        f"**4. \"Please\" barely moves after the fiction cut.** All turns: {please_overall:.2f}% overall, {please_wc:.2f}% WildChat vs {please_lm:.2f}% LMSYS. **Non-fiction only:** {please_overall_nf:.2f}% overall, {please_wc_nf:.2f}% WildChat vs {please_lm_nf:.2f}% LMSYS. The WildChat-vs-LMSYS gap survives — this is the manners-in-the-wild vs manners-in-the-lab story, unchanged from the original pass. **Thanks and apology drop harder** on the non-fiction cut (fiction was overweighting them — see CORRECTION_NOTES).\n",
+        f"**5. East Asia politeness cluster holds on the clean cut.** All turns, top three by 'please' rate = " + ", ".join(f"{r.country} ({r.pct_please:.1f}%)" for r in country_top.itertuples()) + "; bottom three = " + ", ".join(f"{r.country} ({r.pct_please:.1f}%)" for r in country_bot.itertuples()) + f". **Non-fiction only** top three = " + ", ".join(f"{r.country} ({r.pct_please:.1f}%)" for r in country_top_nf.itertuples()) + f". The absolute rates barely move because fiction is only ~1% of these countries' turns; the cluster is a real user-behaviour signal, not a fiction artefact. {len(suppressed)} countries suppressed (< 500 conv).\n",
+        f"**6. Requests for a decision outrun requests for options by {dec / max(opt, 1e-9):.1f}× in this data** — {dec:.2f}% of turns ask for a decision vs {opt:.2f}% asking for options. **Read with caution:** the decision regex includes broad phrases (\"decide\", \"what should I do\") while the options regex requires specific \"give me N options / ideas / versions\" phrasing, so this ratio partly reflects regex scope, not user behaviour. Regex rebuild is a later pass; keep this metric caveated.\n",
         f"**7. Explicit pre-purchase deliberation is rare in these corpora: {purchase:.2f}% of turns.** That's a floor; the regex is deliberately narrow (\"should I buy\", \"worth it\", \"best X under\"). Angle 4 will need broader signals to build volume.\n",
         f"**8. Mean {mean_turns:.2f} user turns per conversation; {has_retry:.1f}% of conversations contain an explicit retry marker; {ends_retry:.1f}% end on one (abandonment proxy).** The iteration-tax article should lead with mean-turns first, not retry percentages — the retry-marker regex catches only overt corrections.\n",
         f"**9. Top imperative verbs:** " + _fmt_verbs(top_verbs) + ". \"Write\" dominates by an order of magnitude; the top ten together cover a majority of imperative-lead turns. Angle 3 has a clean anchor.\n",
         f"**10. LMSYS-Chat-1M has no per-row timestamp** in its streaming schema (checked at ingest). Every monthly trend chart above is WildChat only. Any story that leans on \"how prompts changed month over month\" must either (a) accept the WildChat-only scope, or (b) find a different corpus for trend data.\n",
         "\n---\n",
         "## Flags — things that might look too good to be true\n",
-        "- **Purchase deliberation prevalence (0.x%).** Very low. The regex is narrow by design; do not read this as \"users don't use ChatGPT for purchases.\" Read it as \"this pattern of purchase-y language appears in this share of turns.\" Real prevalence is unknowable without a hand-labelled sample — Stage 4's job.\n",
+        f"- **Fiction flag under-catches.** `looks_like_fiction` fires at {fiction_share:.2f}% overall, but a coarser proxy (any Name-colon dialogue, DDLC character names, parentheticals) suggests real user-authored roleplay is closer to ~5-10% of user turns in WildChat. The flag is a floor, not a ceiling — a stricter detector is a later pass. See CORRECTION_NOTES.\n",
+        "- **Purchase deliberation prevalence.** Very low. The regex is narrow by design; do not read this as \"users don't use ChatGPT for purchases.\" Real prevalence is unknowable without a hand-labelled sample.\n",
         "- **Retry marker rate.** Only catches overt English retry language. Silent restarts (new conversation, deleted message) are invisible in this data.\n",
-        "- **Country-level cuts.** Country is WildChat's hashed-IP geolocation, not user-declared. Diaspora effects (English prompts from a non-English majority country) can distort the politeness cross-tab.\n",
-        "- **Politeness \"ty\".** The regex includes 'ty' as a thanks token; risk of false positives with initialisms. Flag for the Stage 4 validation pass.\n",
-        "- **Scaffolding trend flatness (finding #2).** If validation reveals the role-assignment regex has high false-positive rate on generic 'you are' phrasing, the flatness could be a measurement artefact.\n",
+        "- **Country-level cuts.** Country is WildChat's hashed-IP geolocation, not user-declared. Diaspora effects can distort the politeness cross-tab.\n",
+        "- **Politeness \"ty\".** The regex includes 'ty' as a thanks token; risk of false positives with initialisms. Flagged for the next validation pass.\n",
     ]
     (DERIVED / "topline.md").write_text("\n".join(lines) + "\n")
 

@@ -66,7 +66,27 @@ Full run details in `derived/stage2_stats.json`.
 
 ## Stage 3 — Aggregates
 
-_pending_
+Full run details in `derived/stage3_stats.json`.
+
+### Outputs
+
+Ten CSVs in `derived/`:
+- `length_comparison.csv` (deciles: prompts vs MS MARCO vs ORCAS)
+- `scaffolding_trend.csv` (monthly WildChat)
+- `politeness_by_month.csv`
+- `politeness_by_country.csv` (top 20 by volume, min 500 conv)
+- `politeness_by_country_suppressed.csv` (137 countries below the 500 threshold — kept for transparency)
+- `delegation_split_overall.csv` + `delegation_split.csv` (monthly)
+- `purchase_prompts.csv` (monthly WildChat)
+- `iteration.csv` (distribution of user turns/conv) + `iteration_summary.csv`
+
+Seven PNG charts in `derived/charts/`.
+
+`derived/topline.md` — the ten most striking numbers with caveats.
+
+### Countries suppressed
+
+137 countries fell below the 500-conversation threshold and are excluded from the country cut. Full list in `politeness_by_country_suppressed.csv`.
 
 ## Stage 4 — Validation sample
 

@@ -1,0 +1,25 @@
+{
+  "outputs": [
+    "length_comparison.csv",
+    "scaffolding_trend.csv",
+    "politeness_by_month.csv",
+    "politeness_by_country.csv",
+    "politeness_by_country_suppressed.csv",
+    "delegation_split.csv",
+    "delegation_split_overall.csv",
+    "purchase_prompts.csv",
+    "iteration.csv",
+    "iteration_summary.csv",
+    "topline.md"
+  ],
+  "charts": [
+    "delegation_split.png",
+    "iteration.png",
+    "length_comparison.png",
+    "politeness_by_country.png",
+    "politeness_by_month.png",
+    "purchase_prompts.png",
+    "scaffolding_trend.png"
+  ],
+  "suppressed_countries": 137
+}

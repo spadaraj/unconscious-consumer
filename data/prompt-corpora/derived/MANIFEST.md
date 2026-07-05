@@ -98,3 +98,30 @@ Full run details in `derived/stage4_stats.json`.
 - **Design purpose:** the feature-positive strata oversample the rare heuristics (is_purchase, is_reassurance) so precision is estimable at all. The uniform 250 gives recall-side coverage — the labeller can spot heuristic misses on turns the regex didn't fire on.
 
 Adam / chat editor take it from here for the model-assisted labelling pass.
+
+---
+
+## Correction pass (2026-07-05) — user-turns-only re-extraction
+
+Editorial labelling of the original `validation_sample.csv` flagged that many politeness/apology firings were assistant text or user-authored fiction. This pass responded. Full audit in `derived/CORRECTION_NOTES.md`.
+
+### What changed
+
+- **Stage 1b — assistant-tell filter.** `patterns.ASSISTANT_TELL` drops turns starting with `🤖` (WildChat's own assistant-echo marker) or any of five canonical assistant openers. `scripts/01b_clean.py` applied the same filter as a DELETE against the existing DB. **31 rows dropped**; `turns` 405,483 → 405,452. 40-row verification gate: PASS. `conversations.n_turns` rebuilt.
+- **Stage 2b — `looks_like_fiction` column.** New feature-table column, populated for every user turn via structural heuristics in `patterns.looks_like_fiction` (2+ of: multi-speaker dialogue lines, stage-direction parens, asterisk actions, roleplay framing). **1.28% of turns flag as fiction overall** (2.27% WildChat, 0.20% LMSYS). `features` and `conv_features` regenerated from clean turns.
+- **Stage 3b — two cuts.** Every politeness and delegation aggregate now ships in both an all-turns and a non-fiction-only CSV. Charts remain single-cut for readability. `topline.md` rewritten with a correction header and what-changed callouts.
+- **Stage 4b — clean re-sample.** `validation_sample.csv` re-drawn from the cleaned `turns` table, same 500-row stratified design, `looks_like_fiction` column included. 43 of 500 rows are fiction-flagged. Still gitignored.
+
+### Row counts after correction
+
+| Table | Rows |
+|---|---:|
+| `conversations` | 199,397 (unchanged) |
+| `turns` | 405,452 (was 405,483; −31 assistant-tells) |
+| `features` | 405,452 (regenerated with `looks_like_fiction` column) |
+| `conv_features` | 199,392 (was 199,397; 5 conversations lost all user turns to the filter) |
+| `queries` | 400,000 (unchanged) |
+
+### Deferred
+
+- No regex rebuilds this pass, per the brief. The politeness "ty" false-positive risk, the decision-vs-options regex-scope asymmetry, and the fiction-flag under-catch on prose fiction / inline-quote dialogue are all documented in `topline.md` and `CORRECTION_NOTES.md` for a later, editor-informed refinement pass.

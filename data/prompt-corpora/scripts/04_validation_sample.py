@@ -51,6 +51,7 @@ FEATURE_COLS = [
     "has_please", "has_thanks", "has_apology", "has_hedge", "is_greeting",
     "is_retry_turn", "word_len",
     "question_vs_imperative", "goal_abstraction_heuristic",
+    "looks_like_fiction",
 ]
 
 

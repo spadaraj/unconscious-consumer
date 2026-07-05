@@ -1,0 +1,32 @@
+{
+  "seed": 20260704,
+  "counts": {
+    "conversations_total": 199397,
+    "turns_total": 405483,
+    "queries_total": 400000,
+    "conversations_by_source": {
+      "lmsys": 100000,
+      "wildchat": 99397
+    },
+    "queries_by_source": {
+      "msmarco": 200000,
+      "orcas": 200000
+    }
+  },
+  "stats": {
+    "wildchat": {
+      "skipped": true
+    },
+    "lmsys": {
+      "skipped": true
+    },
+    "msmarco": {
+      "skipped": true
+    },
+    "orcas": {
+      "total_unique_seen": 10405309,
+      "sampled": 200000,
+      "elapsed_seconds": 804.4
+    }
+  }
+}

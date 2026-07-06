@@ -1,0 +1,8 @@
+{
+  "site_url": "https://theunconsciousconsumer.com",
+  "substack_url": "https://theunconsciousconsumer.substack.com",
+  "notes_per_day": 3,
+  "restack_top_n": 5,
+  "notes_per_article": 5,
+  "claude_model": "claude-opus-4-8"
+}

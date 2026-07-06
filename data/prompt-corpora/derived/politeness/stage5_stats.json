@@ -1,0 +1,18 @@
+{
+  "conv_floor": 500,
+  "template_min_conv": 20,
+  "prefix_len": 200,
+  "n_countries": 29,
+  "n_template_clusters": 98,
+  "midjourney_templated_turns": 16775,
+  "partials": {
+    "ef_controlling_pdi": {
+      "rho": -0.185,
+      "n": 19
+    },
+    "pdi_controlling_ef": {
+      "rho": -0.15,
+      "n": 19
+    }
+  }
+}

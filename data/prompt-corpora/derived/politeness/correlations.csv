@@ -1,0 +1,6 @@
+index,rho,p,n,rho_excl_east_asia,n_excl_east_asia
+hofstede_power_distance,0.06,0.7655,27,-0.121,22
+hofstede_individualism,-0.36,0.0651,27,-0.02,22
+globe_humane_orientation,-0.067,0.7607,23,-0.04,18
+globe_assertiveness,0.222,0.3079,23,0.548,18
+ef_epi,-0.031,0.8955,21,0.233,18

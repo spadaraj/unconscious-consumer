@@ -1,0 +1,30 @@
+wildchat_name,iso3,hofstede_name,globe_name,ef_slug,english_native_or_official,notes
+Taiwan,TWN,Taiwan,Taiwan,,0,EF EPI 2025 does not list Taiwan; genuine EF-null (not native-English)
+China,CHN,China,China,china,0,
+Japan,JPN,Japan,Japan,japan,0,
+Hong Kong,HKG,Hong Kong,Hong Kong,hong-kong,0,
+Singapore,SGP,Singapore,Singapore,,1,English is a primary official language; EF EPI excludes it
+Israel,ISR,Israel,Israel,israel,0,
+Malaysia,MYS,Malaysia,Malaysia,malaysia,0,
+Morocco,MAR,Morocco,Morocco,morocco,0,
+United States,USA,U.S.A.,USA,,1,native English; EF-null
+Pakistan,PAK,Pakistan,,pakistan,0,English co-official but population majority L2; EF scores it. GLOBE-null
+Germany,DEU,Germany,Germany (WEST),germany,0,GLOBE splits East/West; using WEST (dominant) and noting it
+Australia,AUS,Australia,Australia,,1,native English; EF-null
+The Netherlands,NLD,Netherlands,Netherlands,netherlands,0,
+Vietnam,VNM,Vietnam,,vietnam,0,GLOBE-null
+United Kingdom,GBR,Great Britain,England,,1,native English; EF-null. GLOBE society is England (Anglo cluster)
+Iran,IRN,Iran,IRAN,iran,0,
+Italy,ITA,Italy,Italy,italy,0,
+Egypt,EGY,Egypt,Egypt,egypt,0,
+Romania,ROU,Romania,,romania,0,GLOBE-null
+Philippines,PHL,Philippines,Philippines,philippines,0,English co-official but population majority L2; EF scores it
+Canada,CAN,Canada,Canada (English-speaking),,1,native English; EF-null. GLOBE English-speaking sample
+Jamaica,JAM,Jamaica,,,1,native English; EF-null. GLOBE-null
+Türkiye,TUR,Turkey,Turkey,turkey,0,
+France,FRA,France,France,france,0,
+Saudi Arabia,SAU,Saudi Arabia,,saudi-arabia,0,GLOBE-null
+India,IND,India,India,india,0,English co-official but population majority L2; EF scores it
+Russia,RUS,Russia,Russia,russia,0,
+Estonia,EST,Estonia,,estonia,0,GLOBE-null
+New Zealand,NZL,New Zealand,New Zealand,,1,native English; EF-null

@@ -38,7 +38,16 @@ jobs:
           git add notes/today.html
           if git diff --cached --quiet; then
             echo "No changes to commit."
-          else
-            git commit -m "Daily notes for $(date -u +%Y-%m-%d)"
-            git push
+            exit 0
           fi
+          git commit -m "Daily notes for $(date -u +%Y-%m-%d)"
+          # Retry with rebase on conflict (e.g. weekly workflow pushed at the same time)
+          for i in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push failed on attempt $i, pulling with rebase and retrying..."
+            git pull --rebase origin main
+          done
+          echo "Push failed after 5 attempts"
+          exit 1

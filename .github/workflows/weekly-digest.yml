@@ -40,7 +40,16 @@ jobs:
           git add notes/digest.html
           if git diff --cached --quiet; then
             echo "No changes to commit."
-          else
-            git commit -m "Weekly restack digest for $(date -u +%Y-%m-%d)"
-            git push
+            exit 0
           fi
+          git commit -m "Weekly restack digest for $(date -u +%Y-%m-%d)"
+          # Retry with rebase on conflict (e.g. daily workflow pushed at the same time)
+          for i in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push failed on attempt $i, pulling with rebase and retrying..."
+            git pull --rebase origin main
+          done
+          echo "Push failed after 5 attempts"
+          exit 1

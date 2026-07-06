@@ -125,3 +125,18 @@ Editorial labelling of the original `validation_sample.csv` flagged that many po
 ### Deferred
 
 - No regex rebuilds this pass, per the brief. The politeness "ty" false-positive risk, the decision-vs-options regex-scope asymmetry, and the fiction-flag under-catch on prose fiction / inline-quote dialogue are all documented in `topline.md` and `CORRECTION_NOTES.md` for a later, editor-informed refinement pass.
+
+---
+
+## Stage 6 (2026-07-05) — translation-tax structural analysis
+
+`scripts/06_translation_tax.py`. Structural comparison of freehand prompts (non-fiction, non-template) vs MS MARCO / ORCAS queries, with the ANALYSIS_RULES decontaminate-then-recut gate baked in. Outputs in `derived/translation_tax/` (CSVs, 2 charts, `EVIDENCE.md`). Freehand prompt population: **356,930** turns (both corpora, non-fiction, templates removed at the ≥20-conversation prefix threshold). The function-word lexicon and pronoun detection were later promoted into `patterns.py`; a re-run confirmed the published figures reproduce **identically** (function-word ratio 0.383/0.101; first/second person 31.8/26.6/2.3/0.8; median words 16).
+
+## Viz exports (2026-07-06) — translation-tax article visuals
+
+`scripts/06_viz_exports.py`. Two committable, text-free exports in `derived/viz/`, both on the freehand cut, **seed 20260707**. Lexicon and pronoun detection imported from `patterns.py` (single source of truth) — the same objects behind the published figures, not reimplemented.
+
+- **`barcode_sample.json`** — 220 messages per group (prompts, orcas). Each message stored as a sequence of `[char_length, is_function]` word segments (word-class only, never text), capped at 60 words with `"truncated": true` where clipped. Ids are blake2 hashes (`w_`/`q_` prefix), unjoinable to text. Sanity means (mean function-word share this sample): prompts 36.5% vs published 38.3, orcas 10.0% vs 10.1 — both inside the ±2-point gate. Privacy verified: 440/440 records are integer arrays + hashed ids only.
+- **`pronoun_dots.csv`** — 1,000 messages per group; columns `group, dot_id, has_first_person, has_second_person`. No text. Sanity rates (commented header): prompts first 29.1% (pub 31.8) / second 26.9% (pub 26.6); orcas first 1.7% (pub 2.3) / second 0.6% (pub 0.8) — all inside the ±3-point gate.
+
+ORCAS language filter for the viz samples: light Latin-script heuristic (≥90% Latin letters, ≥1 word), since langdetect is unreliable on ~3-word queries; noted rather than langdetect-filtered.

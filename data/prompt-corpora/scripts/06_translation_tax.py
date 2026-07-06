@@ -34,48 +34,34 @@ OUT = ROOT / "derived" / "translation_tax"
 CHARTS = OUT / "charts"
 CHARTS.mkdir(parents=True, exist_ok=True)
 
+SCRIPTS = Path(__file__).resolve().parent
+import sys
+sys.path.insert(0, str(SCRIPTS))
+import patterns as P  # single source of truth for the lexicon + pronoun detection
+
 TEMPLATE_MIN_CONV = 20   # same threshold as ANALYSIS_RULES / stage 5
-PREFIX_LEN = 200
 
-# Compact English function-word set (articles, pronouns, prepositions, auxiliaries,
-# conjunctions, particles). Function-word density is a classic register measure:
-# natural prose runs high; keyword queries run low.
-FUNCTION_WORDS = set("""
-a an the this that these those i me my mine we us our you your he him his she her it its they them their
-am is are was were be been being do does did have has had will would shall should can could may might must
-of in on at to from by for with about as into over under between through during before after above below
-and or but nor so yet because if then than that which who whom whose when where why how
-not no s t of please could would can you i want need make write give tell show help
-""".split())
-
-_word_re = re.compile(r"[a-z']+")
-_norm_re = re.compile(r"[\s\d]+")
-_first_person = re.compile(r"\b(i|i'm|i've|i'd|i'll|my|mine|me|we|our|us)\b", re.I)
-_second_person = re.compile(r"\b(you|your|yours|you're|u)\b", re.I)
 _question_lead = re.compile(r"^\s*(who|what|when|where|why|how|which|can|could|would|should|is|are|do|does|did|will|may|am)\b", re.I)
 
 
 def norm_prefix(text):
-    if not text:
-        return ""
-    return _norm_re.sub(" ", text.lower()).strip()[:PREFIX_LEN]
+    return P.norm_prefix(text)
 
 
 def structural(text):
-    """Return dict of structural flags/measures for one text."""
+    """Return dict of structural flags/measures for one text. Function-word ratio and
+    pronoun detection come from patterns.py so this is the same measurement the viz
+    exports and the published figures use."""
     if not text:
         text = ""
     stripped = text.strip()
-    words = _word_re.findall(text.lower())
-    n = len(words)
-    fw = sum(1 for w in words if w in FUNCTION_WORDS)
     return {
         "word_len": len(re.findall(r"\S+", text)),
         "ends_terminal": int(bool(stripped) and stripped[-1] in ".?!"),
-        "first_person": int(bool(_first_person.search(text))),
-        "second_person": int(bool(_second_person.search(text))),
+        "first_person": int(P.has_first_person(text)),
+        "second_person": int(P.has_second_person(text)),
         "question": int("?" in text or bool(_question_lead.match(text))),
-        "function_word_ratio": (fw / n) if n else 0.0,
+        "function_word_ratio": P.function_word_ratio(text),
     }
 
 
@@ -184,7 +170,7 @@ def main():
 
     # ---- run-state -----------------------------------------------------------
     (OUT / "stage6_stats.json").write_text(json.dumps({
-        "template_min_conv": TEMPLATE_MIN_CONV, "prefix_len": PREFIX_LEN,
+        "template_min_conv": TEMPLATE_MIN_CONV, "prefix_len": P.PREFIX_LEN,
         "n_prompts_nonfiction": len(raw_prompts),
         "n_prompts_freehand": len(freehand),
         "n_template_prompts": int(raw_prompts["is_template"].sum()),

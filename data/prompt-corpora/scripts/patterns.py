@@ -241,3 +241,78 @@ def first_imperative_verb(text):
 
 def word_count(text):
     return len(WORD_TOKEN.findall(text)) if text else 0
+
+
+# --- Register / structural measures (translation-tax + viz exports) ----------
+#
+# Single source of truth for the function-word lexicon, pronoun detection, and the
+# prompt-template prefix normaliser. Stage 6 (06_translation_tax.py) and the viz
+# exports (06_viz_exports.py) both import from here so the published figures
+# (function-word ratio 0.38/0.10; first/second person 31.8/26.6/2.3/0.8) and any
+# visualisation built from them are the SAME measurement, not a reimplementation.
+
+# Compact English function-word set (articles, pronouns, prepositions, auxiliaries,
+# conjunctions, particles). Function-word density is a classic register measure:
+# natural prose runs high; keyword search queries run low.
+FUNCTION_WORDS = set("""
+a an the this that these those i me my mine we us our you your he him his she her it its they them their
+am is are was were be been being do does did have has had will would shall should can could may might must
+of in on at to from by for with about as into over under between through during before after above below
+and or but nor so yet because if then than that which who whom whose when where why how
+not no s t of please could would can you i want need make write give tell show help
+""".split())
+
+# Tokeniser used to compute the function-word ratio: alphabetic runs on lowercased
+# text (drops digits and punctuation). Distinct from WORD_TOKEN (\S+), which is the
+# word_len tokeniser used for segment widths in the barcode wall.
+FUNCTION_WORD_TOKEN = re.compile(r"[a-z']+")
+
+# Pronoun detection — matches the published first/second-person figures.
+FIRST_PERSON = re.compile(r"\b(i|i'm|i've|i'd|i'll|my|mine|me|we|our|us)\b", I)
+SECOND_PERSON = re.compile(r"\b(you|your|yours|you're|u)\b", I)
+
+# Prompt-template prefix key: lowercase, collapse whitespace+digits, first 200 chars.
+# A prefix appearing in >= 20 distinct conversations is a circulating template.
+PREFIX_LEN = 200
+_PREFIX_STRIP = re.compile(r"[\s\d]+")
+
+
+def norm_prefix(text):
+    if not text:
+        return ""
+    return _PREFIX_STRIP.sub(" ", text.lower()).strip()[:PREFIX_LEN]
+
+
+def function_word_ratio(text):
+    """Share of alphabetic tokens that are function words. This is the exact
+    per-message measurement whose mean is the published 0.38 (prompts) / 0.10 (orcas)."""
+    tokens = FUNCTION_WORD_TOKEN.findall(text.lower()) if text else []
+    n = len(tokens)
+    if not n:
+        return 0.0
+    return sum(1 for w in tokens if w in FUNCTION_WORDS) / n
+
+
+def has_first_person(text):
+    return bool(FIRST_PERSON.search(text)) if text else False
+
+
+def has_second_person(text):
+    return bool(SECOND_PERSON.search(text)) if text else False
+
+
+def word_class_sequence(text, cap=None):
+    """For the barcode wall: per visible word (WORD_TOKEN / \\S+, matching word_len),
+    return [char_length, is_function] in original order. is_function is decided by the
+    token's normalised alphabetic form against FUNCTION_WORDS. Returns (seq, truncated)."""
+    toks = WORD_TOKEN.findall(text) if text else []
+    truncated = False
+    if cap is not None and len(toks) > cap:
+        toks = toks[:cap]
+        truncated = True
+    seq = []
+    for tok in toks:
+        norm = "".join(ch for ch in tok.lower() if ch.isalpha() or ch == "'")
+        is_fn = 1 if (norm and norm in FUNCTION_WORDS) else 0
+        seq.append([len(tok), is_fn])
+    return seq, truncated

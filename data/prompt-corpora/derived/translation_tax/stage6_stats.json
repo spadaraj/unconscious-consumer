@@ -1,0 +1,84 @@
+{
+  "template_min_conv": 20,
+  "prefix_len": 200,
+  "n_prompts_nonfiction": 398812,
+  "n_prompts_freehand": 356930,
+  "n_template_prompts": 41882,
+  "pct_prompts_templated": 10.5,
+  "comparison": [
+    {
+      "group": "prompts_freehand",
+      "n": 356930,
+      "median_words": 16,
+      "p25_words": 8,
+      "p75_words": 47,
+      "pct_terminal_punct": 41.7,
+      "pct_first_person": 31.8,
+      "pct_second_person": 26.6,
+      "pct_question_form": 37.3,
+      "mean_function_word_ratio": 0.383
+    },
+    {
+      "group": "queries_msmarco",
+      "n": 200000,
+      "median_words": 6,
+      "p25_words": 5,
+      "p75_words": 8,
+      "pct_terminal_punct": 6.9,
+      "pct_first_person": 3.2,
+      "pct_second_person": 4.7,
+      "pct_question_form": 73.3,
+      "mean_function_word_ratio": 0.332
+    },
+    {
+      "group": "queries_orcas",
+      "n": 200000,
+      "median_words": 3,
+      "p25_words": 2,
+      "p75_words": 4,
+      "pct_terminal_punct": 0.3,
+      "pct_first_person": 2.3,
+      "pct_second_person": 0.8,
+      "pct_question_form": 9.6,
+      "mean_function_word_ratio": 0.101
+    }
+  ],
+  "recut": [
+    {
+      "measure": "median_words",
+      "raw_nonfiction": 17.0,
+      "freehand": 16.0,
+      "delta": -1.0
+    },
+    {
+      "measure": "pct_terminal_punct",
+      "raw_nonfiction": 38.8,
+      "freehand": 41.7,
+      "delta": 2.9
+    },
+    {
+      "measure": "pct_first_person",
+      "raw_nonfiction": 33.9,
+      "freehand": 31.8,
+      "delta": -2.1
+    },
+    {
+      "measure": "pct_second_person",
+      "raw_nonfiction": 31.0,
+      "freehand": 26.6,
+      "delta": -4.4
+    },
+    {
+      "measure": "pct_question_form",
+      "raw_nonfiction": 34.8,
+      "freehand": 37.3,
+      "delta": 2.5
+    },
+    {
+      "measure": "mean_function_word_ratio",
+      "raw_nonfiction": 0.376,
+      "freehand": 0.383,
+      "delta": 0.007
+    }
+  ]
+}

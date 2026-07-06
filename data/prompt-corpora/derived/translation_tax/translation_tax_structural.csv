@@ -1,0 +1,4 @@
+group,n,median_words,p25_words,p75_words,pct_terminal_punct,pct_first_person,pct_second_person,pct_question_form,mean_function_word_ratio
+prompts_freehand,356930,16,8,47,41.7,31.8,26.6,37.3,0.383
+queries_msmarco,200000,6,5,8,6.9,3.2,4.7,73.3,0.332
+queries_orcas,200000,3,2,4,0.3,2.3,0.8,9.6,0.101

@@ -1,0 +1,7 @@
+measure,raw_nonfiction,freehand,delta
+median_words,17.0,16.0,-1.0
+pct_terminal_punct,38.8,41.7,2.9
+pct_first_person,33.9,31.8,-2.1
+pct_second_person,31.0,26.6,-4.4
+pct_question_form,34.8,37.3,2.5
+mean_function_word_ratio,0.376,0.383,0.007

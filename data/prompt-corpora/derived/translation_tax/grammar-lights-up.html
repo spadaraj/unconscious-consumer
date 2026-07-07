@@ -76,7 +76,7 @@
     <span><i class="sw" style="background:#CFC7B6"></i>content word (the keywords)</span>
     <span>width = characters</span>
   </div>
-  <p class="foot">Freehand cut &middot; 90 of 220 sampled per group &middot; measured across 356,930 prompts and 200,000 ORCAS queries &middot; word-class sequences only, no message text.</p>
+  <p class="foot">Freehand cut &middot; 60 of 220 sampled per group &middot; measured across 356,930 prompts and 200,000 ORCAS queries &middot; word-class sequences only, no message text.</p>
 </div>
 
 <script>
@@ -87,7 +87,9 @@
   const root = document.getElementById('gw');
   const wallsEl = document.getElementById('gw-walls');
   const readoutEl = document.getElementById('gw-readout');
-  let mode = 'prompts';
+  const SHOW = 60; // strips displayed per group (data carries more)
+  // Wide embeds get the side-by-side contrast by default; narrow ones start single.
+  let mode = window.innerWidth >= 720 ? 'both' : 'prompts';
 
   function stats(words){
     const n = words.length;
@@ -114,9 +116,10 @@
   function buildCol(group){
     const col = document.createElement('div'); col.className='col';
     const h = document.createElement('h3'); h.textContent = LABELS[group]; col.appendChild(h);
-    const c = document.createElement('div'); c.className='cnt'; c.textContent = DATA.strips[group].length+' of 220 sampled'; col.appendChild(c);
+    const shown = DATA.strips[group].slice(0, SHOW);
+    const c = document.createElement('div'); c.className='cnt'; c.textContent = shown.length+' of 220 sampled'; col.appendChild(c);
     const strips = document.createElement('div'); strips.className='strips';
-    DATA.strips[group].forEach((m,i)=>{
+    shown.forEach((m,i)=>{
       const s = document.createElement('div'); s.className='strip'; s.style.animationDelay=(i*12)+'ms';
       m.words.forEach(w=>{
         const seg=document.createElement('div');
@@ -139,12 +142,16 @@
     wallsEl.className = 'walls'+(mode==='both'?' two':'');
     if(mode==='both'){ wallsEl.appendChild(buildCol('prompts')); wallsEl.appendChild(buildCol('orcas')); }
     else { wallsEl.appendChild(buildCol(mode)); }
+    root.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.group===mode?'true':'false'));
     defaultReadout();
     sendHeight();
   }
   function sendHeight(){
-    try{ parent.postMessage({type:'gw-height', px: document.documentElement.scrollHeight}, '*'); }catch(e){}
+    // Measure the widget root, not documentElement.scrollHeight — the latter can
+    // never be smaller than the iframe viewport, so height would only ratchet up.
+    try{ parent.postMessage({type:'gw-height', px: root.offsetHeight + 2}, '*'); }catch(e){}
   }
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(root);
 
   root.querySelectorAll('.seg button').forEach(b=>{
     b.addEventListener('click',()=>{

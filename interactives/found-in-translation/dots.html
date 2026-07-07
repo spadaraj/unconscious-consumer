@@ -125,7 +125,12 @@
       '<span><i class="ds" style="background:#D8D0C2"></i>neither</span>';
     sendHeight();
   }
-  function sendHeight(){ try{ parent.postMessage({type:'gw-height', px:document.documentElement.scrollHeight}, '*'); }catch(e){} }
+  function sendHeight(){
+    // Measure the widget root, not documentElement.scrollHeight — the latter can
+    // never be smaller than the iframe viewport, so height would only ratchet up.
+    try{ parent.postMessage({type:'gw-height', px:root.offsetHeight + 2}, '*'); }catch(e){}
+  }
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(root);
 
   root.querySelectorAll('.seg button').forEach(b=>{
     b.addEventListener('click',()=>{

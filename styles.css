@@ -1320,15 +1320,153 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   text-wrap: balance;
 }
 
-/* Interactive data-viz embeds (iframe widgets) */
+/* Interactive data-viz embeds (iframe widgets) — break out of the 680px
+   prose column to an editorial 960px, centred on the column */
 .article-embed {
-  margin: 36px 0;
+  margin: 44px 0;
+  width: min(960px, calc(100vw - 48px));
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 .article-embed iframe {
   width: 100%;
   border: 0;
   display: block;
   border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(26, 24, 22, 0.05), 0 8px 28px rgba(26, 24, 22, 0.07);
+}
+
+/* Inline data figures (static panels) — same breakout, same visual family
+   as the iframe widgets: cream card, terracotta accent, mono annotations */
+.article-figure {
+  width: min(960px, calc(100vw - 48px));
+  margin: 44px 0 44px 50%;
+  transform: translateX(-50%);
+  background: #F5F0E8;
+  border-radius: 14px;
+  padding: 30px 30px 22px;
+  box-shadow: 0 1px 2px rgba(26, 24, 22, 0.05), 0 8px 28px rgba(26, 24, 22, 0.07);
+  font-family: var(--font-sans);
+  color: #1A1816;
+}
+.article-figure .fig-eyebrow {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9A948E;
+  margin: 0 0 8px;
+}
+.article-figure .fig-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  color: #1A1816;
+}
+.article-figure .fig-note {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, ui-monospace, monospace;
+  font-size: 10.5px;
+  color: #9A948E;
+  line-height: 1.5;
+  margin: 14px 0 0;
+}
+
+/* Numbers panel: measure rows with paired bars */
+.fig-rows { display: flex; flex-direction: column; }
+.fig-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 1fr 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+  border-top: 1px solid #E1D9CC;
+}
+.fig-row:first-child { border-top: none; padding-top: 0; }
+.fig-row .fig-lbl { font-size: 14px; color: #3A352F; line-height: 1.35; }
+.fig-row .fig-val {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fig-row .fig-val small {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, ui-monospace, monospace;
+  font-size: 10.5px;
+  color: #9A948E;
+  margin-left: 5px;
+}
+.fig-val--p { color: #C4531A; }
+.fig-val--q { color: #4A6480; }
+.fig-bar {
+  margin-top: 7px;
+  height: 5px;
+  background: #E1D9CC;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.fig-bar i { display: block; height: 100%; border-radius: 3px; }
+.fig-bar--p i { background: #C4531A; }
+.fig-bar--q i { background: #4A6480; }
+.fig-colhead {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6B6560;
+}
+
+/* Integrity panel: recut table + killed-finding callout */
+.fig-split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 26px;
+  align-items: start;
+}
+.fig-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.fig-table th, .fig-table td {
+  text-align: right;
+  padding: 9px 10px;
+  border-bottom: 1px solid #E1D9CC;
+  font-size: 13.5px;
+  color: #1A1816;
+}
+.fig-table th {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6B6560;
+  font-weight: 500;
+}
+.fig-table td:first-child, .fig-table th:first-child { text-align: left; }
+.fig-table .fig-delta {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, ui-monospace, monospace;
+  font-size: 12px;
+  color: #4a7a3e;
+}
+.fig-callout {
+  background: #1A1816;
+  color: #E7E2D9;
+  border-radius: 12px;
+  padding: 22px 24px;
+}
+.fig-callout .fig-callout-big {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.3;
+  margin: 0 0 10px;
+  color: #F5F0E8;
+}
+.fig-callout .fig-callout-big em { color: #E0A542; font-style: normal; }
+.fig-callout p { font-size: 13px; color: #B5AEA2; margin: 0; line-height: 1.55; }
+
+@media (max-width: 720px) {
+  .article-figure { padding: 22px 20px 16px; }
+  .fig-row { grid-template-columns: 1fr auto auto; }
+  .fig-split { grid-template-columns: 1fr; }
 }
 
 /* ===== BODY ===== */

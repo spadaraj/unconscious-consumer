@@ -321,6 +321,23 @@
         bodySection,
         endingSection
       ].join('\n');
+
+      // Scroll-triggered fill for inline data figures: add .fig-inview when a
+      // figure enters the viewport (bars animate to their --w via CSS).
+      var figs = document.querySelectorAll('.article-figure');
+      if ('IntersectionObserver' in window && figs.length) {
+        var figObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(en) {
+            if (en.isIntersecting) {
+              en.target.classList.add('fig-inview');
+              figObserver.unobserve(en.target);
+            }
+          });
+        }, { threshold: 0.35 });
+        figs.forEach(function(f) { figObserver.observe(f); });
+      } else {
+        figs.forEach(function(f) { f.classList.add('fig-inview'); });
+      }
     }
 
     // ===== LOAD ARTICLE =====

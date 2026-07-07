@@ -24,8 +24,6 @@ Public research corpora now contain millions of real messages that ordinary peop
 
 The honest baseline for real search behaviour is ORCAS, a public log of millions of genuine Bing queries that led to clicks; the figures that follow use it. The median query in those click logs is three words. The median prompt is sixteen. Only 0.3 per cent of those search queries end in sentence punctuation, because they are not sentences; 41.7 per cent of prompts do, a gap of roughly 130-fold on the most basic marker of "is this a sentence". The word "I" appears in about 2 per cent of queries and in 31.8 per cent of prompts. "You" appears in under 1 per cent of queries and in 26.6 per cent of prompts: people address the machine, as a matter of course, the way they address someone. And the grammar itself returns. The share of words that are articles, pronouns, prepositions and auxiliaries, the connective tissue of natural language, runs at 0.10 in the query logs, a near-pure keyword bag, and 0.38 in prompts, which is simply ordinary written English.
 
-A note on rigour, because corpora like these are full of traps: they contain roleplay fiction and mass-copied prompt templates, both of which can masquerade as user behaviour. We stripped out both and ran everything again. The numbers above are from the stripped, freehand cut, and they barely moved. A flashier finding from the same dataset, one we rather liked, collapsed entirely under that same test, and we killed it. This one survived. That is why you can trust it.
-
 In plain terms: the moment a machine could parse full intent, people stopped compressing. They did not do it gradually, and nobody instructed them. Given somewhere to put the sentence, the sentence came back.
 
 ## The big text box objection

@@ -26,8 +26,6 @@
 .gw .seg button{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--t2);padding:6px 13px;border-radius:7px;transition:.15s}
 .gw .seg button[aria-pressed=true]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.06)}
 .gw .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.gw .replay{font-family:var(--mono);font-size:11.5px;color:var(--t2);border-bottom:1px dashed var(--line);padding-bottom:1px}
-.gw .replay:hover{color:var(--accent)}
 .gw .readout{min-height:40px;display:flex;align-items:baseline;gap:10px;margin:8px 0 4px;font-variant-numeric:tabular-nums}
 .gw .readout .big{font-family:var(--serif);font-size:21px;color:var(--accent)}
 .gw .readout .lab{font-size:13px;color:var(--t2)}
@@ -64,7 +62,6 @@
       <button data-group="orcas" aria-pressed="false">Search queries</button>
       <button data-group="both" aria-pressed="false">Both</button>
     </div>
-    <button class="replay" id="gw-replay">&#8635; replay</button>
   </div>
 
   <div class="readout" id="gw-readout"></div>
@@ -76,7 +73,7 @@
     <span><i class="sw" style="background:#CFC7B6"></i>content word (the keywords)</span>
     <span>width = characters</span>
   </div>
-  <p class="foot">Freehand cut &middot; 60 of 220 sampled per group &middot; measured across 356,930 prompts and 200,000 ORCAS queries &middot; word-class sequences only, no message text.</p>
+  <p class="foot">60 of 220 sampled per group &middot; measured across 356,930 prompts and 200,000 ORCAS queries &middot; word-class sequences only, no message text.</p>
 </div>
 
 <script>
@@ -161,7 +158,6 @@
       render();
     });
   });
-  document.getElementById('gw-replay').addEventListener('click',render);
   window.addEventListener('load',sendHeight);
   window.addEventListener('resize',sendHeight);
   render();

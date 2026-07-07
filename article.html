@@ -132,6 +132,21 @@
       localStorage.setItem('theme', next);
     });
 
+    // ===== INTERACTIVE-WIDGET IFRAME AUTO-HEIGHT =====
+    // Embedded data-viz iframes broadcast their content height via postMessage
+    // ({type:'gw-height', px}). Match the sender to its iframe and resize it.
+    window.addEventListener('message', function(e) {
+      var d = e.data;
+      if (!d || d.type !== 'gw-height' || typeof d.px !== 'number') return;
+      var frames = document.querySelectorAll('iframe.data-viz');
+      for (var i = 0; i < frames.length; i++) {
+        if (frames[i].contentWindow === e.source) {
+          frames[i].style.height = (d.px + 2) + 'px';
+          break;
+        }
+      }
+    });
+
     // ===== HEADER SHRINK + READING PROGRESS =====
     var header = document.getElementById('site-header');
     var progressBar = document.getElementById('reading-progress');
@@ -293,6 +308,7 @@
         '    <a href="/" class="article-back">← All Articles</a>',
         '    <span class="card-tag ' + tagClass + '">' + tagLabel + '</span>',
         '    <h1 class="article-title">' + cleanTitle + '</h1>',
+        (article.subtitle ? '    <p class="article-subtitle">' + article.subtitle + '</p>' : ''),
         '    <p class="article-excerpt">' + article.excerpt + '</p>',
         '    <div class="article-meta-row">',
         '      <span class="article-date">' + article.date + '</span>',

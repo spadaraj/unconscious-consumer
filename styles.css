@@ -1309,6 +1309,28 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin: 0 0 40px;
 }
 
+/* Discovery-reader subtitle (dek) — shown only when the entry has a subtitle */
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  font-weight: 500;
+  color: #3A352F;
+  line-height: 1.35;
+  margin: 0 0 18px;
+  text-wrap: balance;
+}
+
+/* Interactive data-viz embeds (iframe widgets) */
+.article-embed {
+  margin: 36px 0;
+}
+.article-embed iframe {
+  width: 100%;
+  border: 0;
+  display: block;
+  border-radius: 14px;
+}
+
 /* ===== BODY ===== */
 
 .article-body {

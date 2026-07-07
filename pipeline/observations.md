@@ -11,3 +11,11 @@ As we can do more work faster with a capable assistant, taking the time to fully
 Framing rule: In Notes on this topic, position Adam as the diagnostician who noticed the phenomenon and has active mitigation practices. Not the case study. Avoid direct admissions that undermine his credibility on the current work (no "I couldn't tell if that was mine" without a clear "and here's how I catch it now" follow-up). Universalize where possible ("your internal state", "the temptation with an assistant") rather than autobiographising the loss.
 
 Style rule for this topic: use descriptive alternatives ("assistant", "collaborator", "capable model") or specific tool names ("Claude", "ChatGPT") rather than the bare term "AI". Same aesthetic as CLAUDE.md's article-body rule.
+
+Mitigation loop being tested (3 to 4 weeks starting 2026-07-06):
+
+Hack 1 — The 60-second commit. Before opening the assistant, write a first-pass answer or hypothesis for 60 seconds. Even a wrong one. Activates the generation effect (Slamecka & Graf, 1978), desirable difficulties (Bjork), and encoding specificity (Tulving, 1972). Purpose: create a memory hook the session's material binds to, rather than replaces.
+
+Hack 2 — The closed-tab recall. After the session, close the assistant tab. Write from memory: three decisions I made, why for each, and what I rejected. Then reopen and check. Activates the testing effect (Roediger & Karpicke, 2006), self-explanation (Chi et al., 1989), and metacognitive monitoring. Purpose: retrieval strengthens the memory, and the check calibrates confidence.
+
+Log location: Adam's physical notebook, not the repo. Log entries capture whether each hack was done per session, whether the recall was successful, and honest friction — what felt useful, what felt like theatre. Article B will be drafted from that log in 3 to 4 weeks.

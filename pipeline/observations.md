@@ -19,3 +19,9 @@ Hack 1 — The 60-second commit. Before opening the assistant, write a first-pas
 Hack 2 — The closed-tab recall. After the session, close the assistant tab. Write from memory: three decisions I made, why for each, and what I rejected. Then reopen and check. Activates the testing effect (Roediger & Karpicke, 2006), self-explanation (Chi et al., 1989), and metacognitive monitoring. Purpose: retrieval strengthens the memory, and the check calibrates confidence.
 
 Log location: Adam's physical notebook, not the repo. Log entries capture whether each hack was done per session, whether the recall was successful, and honest friction — what felt useful, what felt like theatre. Article B will be drafted from that log in 3 to 4 weeks.
+
+## 2025 (approximate) — the PR-study observation
+
+At a prior company, Adam needed to complete a study fast for a time-sensitive PR opportunity. It was piled on top of an existing priority list. The study was methodologically sound and produced valid data. But because Adam relied heavily on ChatGPT for the analyses, and moved through them quickly, he had a strong felt sense afterwards that he did not know the data. He could not speak to it the way he could speak to studies he had done the analyses for himself. His phrase: "as a researcher, it felt wrong."
+
+This is the load-bearing concrete example for Article A, Section 4. It grounds the abstract encoding claim in a specific UX-practitioner experience that the reader can inhabit. Handle the framing carefully — the study was correct, the failure was in Adam's encoding of the analyses, not in the analyses themselves.

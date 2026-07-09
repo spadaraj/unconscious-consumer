@@ -630,12 +630,22 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .featured-grid { grid-template-columns: 1.4fr 1fr; }
 }
 .featured-card {
+  position: relative; /* containing block for the stretched card link */
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition);
+}
+/* Stretch the "Read" link's hit area over the whole featured card.
+   z-index must clear the photo overlay (z-index 2/3) or the image area
+   would swallow clicks. */
+.featured-card .card-read-more::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
 }
 .featured-card:hover {
   box-shadow: var(--shadow-lg);

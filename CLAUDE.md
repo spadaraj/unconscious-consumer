@@ -4,6 +4,16 @@ This file is the single source of truth for how articles get conceived, written,
 
 ---
 
+## How to talk to Adam
+
+Applies to every conversation, in chat and in Claude Code.
+
+- Write plainly and clearly. Keep the substance; don't dumb it down.
+- Short sentences. Explain any technical term in a few words the first time it comes up.
+- Say what you did, what you found, and what you need from him. Put questions at the end, numbered.
+
+---
+
 ## What this repo is
 
 The website and content for *The Unconscious Consumer* (theunconsciousconsumer.com), a publication on behavioural science, UX, and dark patterns. The repo lives locally at `/Users/adamspadaro/Documents/unconscious-consumer` and is pushed to GitHub by Adam and Claude Code. The website is **live**.
